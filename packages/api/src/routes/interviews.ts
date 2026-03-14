@@ -172,6 +172,9 @@ app.put('/:id', async (c) => {
   if (!id) return c.json({ error: 'Invalid interview ID' }, 400)
 
   const body = await c.req.json()
+  if (body === null || typeof body !== 'object') {
+    return c.json({ error: 'Request body must be a non-null object' }, 400)
+  }
   const title = typeof body.title === 'string' ? body.title.trim() : ''
   const transcript = typeof body.transcript === 'string' ? body.transcript.trim() : ''
 

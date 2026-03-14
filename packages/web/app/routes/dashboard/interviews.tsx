@@ -393,6 +393,7 @@ export function InterviewsPage() {
                       type="button"
                       className="btn-ghost btn-sm"
                       onClick={handleEditCancel}
+                      disabled={editSaving}
                     >
                       Cancel
                     </button>

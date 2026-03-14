@@ -97,6 +97,20 @@ export function OnboardingPage() {
     setGoalsError('')
   }
 
+  const handleStepClick = (index: number) => {
+    // Prevent jumping forward past incomplete steps
+    if (index > step) {
+      for (let i = 0; i < index; i++) {
+        if (!stepComplete[i]) {
+          setError('Please complete the current step before jumping ahead')
+          return
+        }
+      }
+    }
+    setError('')
+    setStep(index)
+  }
+
   const handleContinue = () => {
     setRoleError('')
     setCompanyNameError('')
@@ -179,7 +193,7 @@ export function OnboardingPage() {
               key={item}
               type="button"
               className={`onboarding-step ${index === step ? 'is-active' : ''} ${stepComplete[index] ? 'is-complete' : ''}`}
-              onClick={() => setStep(index)}
+              onClick={() => handleStepClick(index)}
             >
               <span>{item}</span>
               <small>{index === 0 ? 'Role' : index === 1 ? 'Team' : 'Goals'}</small>

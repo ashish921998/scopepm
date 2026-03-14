@@ -28,6 +28,21 @@ function LandingPage() {
     }
   }, [menuOpen])
 
+  // Reset scroll lock when viewport expands past mobile breakpoint
+  useEffect(() => {
+    if (!menuOpen) return
+
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMenuOpen(false)
+        document.body.style.overflow = ''
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [menuOpen])
+
   const closeMenu = () => setMenuOpen(false)
 
   return (
