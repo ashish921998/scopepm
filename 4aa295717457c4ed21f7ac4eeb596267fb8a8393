@@ -1,0 +1,40 @@
+.factory/library/user-testing.md
+  e535c7f48d5c09b9 25-27,54-69
+.factory/validation/cleanup-infrastructure/user-testing/synthesis.json
+  e535c7f48d5c09b9 1-36
+.factory/validation/cleanup-infrastructure/user-testing/flows/browser-error-boundary.json
+  950ebe14bf44a551 1-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "4aa295717457c4ed21f7ac4eeb596267fb8a8393",
+  "prompts": {
+    "950ebe14bf44a551": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "514488b1-9247-40f2-a69d-cdeaee4beb81",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 39,
+      "total_deletions": 0,
+      "accepted_lines": 39,
+      "overriden_lines": 0
+    },
+    "e535c7f48d5c09b9": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "c4394af9-cc3f-456e-b3e8-a03c84c27d18",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 55,
+      "total_deletions": 0,
+      "accepted_lines": 55,
+      "overriden_lines": 0
+    }
+  }
+}
