@@ -1,0 +1,27 @@
+packages/web/app/routes/reset-password.tsx
+  732c212c24a9d0dd 1-198
+packages/web/app/__tests__/routes/reset-password.test.tsx
+  732c212c24a9d0dd 1-325
+packages/web/app/routeTree.gen.ts
+  732c212c24a9d0dd 14,32-36,104,119,135,153,168,183,200,221-227,346
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "d0a7001978c2213381ae92c64818a692fb455e72",
+  "prompts": {
+    "732c212c24a9d0dd": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "82f7d4ab-02b0-4305-943d-90b4f8aeaf40",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 600,
+      "total_deletions": 56,
+      "accepted_lines": 544,
+      "overriden_lines": 0
+    }
+  }
+}
