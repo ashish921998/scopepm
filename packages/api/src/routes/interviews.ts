@@ -128,7 +128,7 @@ app.post('/:id/analyze', async (c) => {
   }
 
   try {
-    const apiKey = c.env.ANTHROPIC_API_KEY
+    const apiKey = process.env.ANTHROPIC_API_KEY
     if (!apiKey) {
       return c.json({ error: 'Anthropic API key not configured' }, 500)
     }
