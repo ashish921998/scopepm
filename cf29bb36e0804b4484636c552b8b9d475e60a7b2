@@ -1,0 +1,29 @@
+packages/web/app/routes/index.tsx
+  0aa70e4aa01db9c5 2,15-32,44-53,56-71
+packages/web/app/routes/dashboard.tsx
+  0aa70e4aa01db9c5 2,20-22,50-64,94-95,111-120,124-144
+packages/web/app/__tests__/routes/hamburger-nav.test.tsx
+  0aa70e4aa01db9c5 1-304
+packages/web/app/styles/landing.css
+  0aa70e4aa01db9c5 578-669,672-708
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "cf29bb36e0804b4484636c552b8b9d475e60a7b2",
+  "prompts": {
+    "0aa70e4aa01db9c5": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "f59b4673-8ec6-4ac0-a5c9-a93e931372d0",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 534,
+      "total_deletions": 4,
+      "accepted_lines": 533,
+      "overriden_lines": 0
+    }
+  }
+}
