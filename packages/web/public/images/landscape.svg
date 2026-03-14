@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" fill="none">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E8D5C4"/>
+      <stop offset="40%" stop-color="#F0C9A8"/>
+      <stop offset="70%" stop-color="#F5DED0"/>
+      <stop offset="100%" stop-color="#FAFAF8"/>
+    </linearGradient>
+    <linearGradient id="sun-glow" cx="0.7" cy="0.35" r="0.4" fx="0.7" fy="0.35" gradientUnits="objectBoundingBox" spreadMethod="pad">
+      <stop offset="0%" stop-color="#C4553A" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#E8A87C" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#F5DED0" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="mountain-far" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4B8A8"/>
+      <stop offset="100%" stop-color="#E8D5C4"/>
+    </linearGradient>
+    <linearGradient id="mountain-mid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C4A08A"/>
+      <stop offset="100%" stop-color="#D4B8A8"/>
+    </linearGradient>
+    <linearGradient id="mountain-near" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A08070"/>
+      <stop offset="100%" stop-color="#C4A08A"/>
+    </linearGradient>
+    <filter id="soft-blur">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
+    <filter id="cloud-blur">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="1200" height="600" fill="url(#sky)"/>
+
+  <!-- Sun glow -->
+  <circle cx="840" cy="200" r="300" fill="url(#sun-glow)" filter="url(#cloud-blur)"/>
+
+  <!-- Wispy clouds -->
+  <ellipse cx="300" cy="120" rx="180" ry="20" fill="#fff" opacity="0.4" filter="url(#cloud-blur)"/>
+  <ellipse cx="700" cy="80" rx="220" ry="15" fill="#fff" opacity="0.3" filter="url(#cloud-blur)"/>
+  <ellipse cx="1000" cy="140" rx="150" ry="18" fill="#fff" opacity="0.35" filter="url(#cloud-blur)"/>
+  <ellipse cx="500" cy="180" rx="120" ry="12" fill="#F0C9A8" opacity="0.3" filter="url(#cloud-blur)"/>
+
+  <!-- Far mountains -->
+  <path d="M0 450 L100 340 L200 380 L350 290 L500 350 L600 310 L750 280 L900 320 L1000 300 L1100 340 L1200 310 L1200 600 L0 600Z" fill="url(#mountain-far)" opacity="0.5" filter="url(#soft-blur)"/>
+
+  <!-- Mid mountains -->
+  <path d="M0 500 L80 420 L180 450 L300 380 L420 430 L550 370 L680 410 L800 360 L920 400 L1050 380 L1200 420 L1200 600 L0 600Z" fill="url(#mountain-mid)" opacity="0.6"/>
+
+  <!-- Near hills -->
+  <path d="M0 540 L150 470 L300 500 L450 460 L600 490 L750 450 L900 480 L1050 460 L1200 490 L1200 600 L0 600Z" fill="url(#mountain-near)" opacity="0.5"/>
+
+  <!-- Foreground silhouette -->
+  <path d="M0 570 L200 540 L400 555 L600 530 L800 550 L1000 535 L1200 560 L1200 600 L0 600Z" fill="#8B6B5A" opacity="0.3"/>
+</svg>

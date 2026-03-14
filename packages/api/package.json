@@ -1,0 +1,27 @@
+{
+  "name": "api",
+  "type": "module",
+  "scripts": {
+    "dev": "PORT=3001 bun run --watch src/index.ts",
+    "start": "bun run src/index.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "deploy": "wrangler deploy",
+    "deploy:staging": "wrangler deploy --env staging"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.78.0",
+    "@planetscale/database": "^1.19.0",
+    "better-auth": "^1.5.5",
+    "drizzle-orm": "^0.45.1",
+    "hono": "^4.6.0",
+    "postgres": "^3.4.8"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "drizzle-kit": "^0.30.0",
+    "typescript": "^5.7.3",
+    "wrangler": "^4.73.0"
+  }
+}
