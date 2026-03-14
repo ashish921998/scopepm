@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { useState, useEffect } from 'react'
 import { Hero } from '../components/Hero'
 import { Problem } from '../components/Problem'
 import { HowItWorks } from '../components/HowItWorks'
@@ -11,6 +12,24 @@ export const Route = createFileRoute('/')({
 })
 
 function LandingPage() {
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false)
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = ''
+    }
+  }, [menuOpen])
+
+  const closeMenu = () => setMenuOpen(false)
+
   return (
     <>
       <nav className="nav">
@@ -22,8 +41,34 @@ function LandingPage() {
             <Link to="/sign-in" className="nav-link">Sign In</Link>
             <Link to="/sign-up" className="btn-secondary">Sign Up</Link>
           </div>
+          <button
+            className={`hamburger-btn${menuOpen ? ' is-open' : ''}`}
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(prev => !prev)}
+          >
+            <span className="hamburger-bar"></span>
+            <span className="hamburger-bar"></span>
+            <span className="hamburger-bar"></span>
+          </button>
         </div>
       </nav>
+
+      <div
+        className={`mobile-menu${menuOpen ? ' is-open' : ''}`}
+        onClick={(e) => { if (e.target === e.currentTarget) closeMenu() }}
+        aria-hidden={!menuOpen}
+      >
+        <div className="mobile-menu-panel">
+          <nav className="mobile-nav-links">
+            <a href="#how-it-works" className="mobile-nav-link" onClick={closeMenu}>How it works</a>
+            <a href="#features" className="mobile-nav-link" onClick={closeMenu}>Features</a>
+            <Link to="/sign-in" className="mobile-nav-link" onClick={closeMenu}>Sign In</Link>
+            <Link to="/sign-up" className="mobile-nav-link" onClick={closeMenu}>Sign Up</Link>
+          </nav>
+        </div>
+      </div>
+
       <main>
         <Hero />
         <Problem />

@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, Link, Outlet } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useSession, signOut } from '../lib/auth-client'
 import { apiFetch } from '../lib/api'
 
@@ -17,6 +17,9 @@ function DashboardLayout() {
   const [checkingOnboarding, setCheckingOnboarding] = useState(true)
   const [onboardingCompleted, setOnboardingCompleted] = useState(false)
   const [onboardingError, setOnboardingError] = useState('')
+  const [menuOpen, setMenuOpen] = useState(false)
+  // ref used to avoid stale closure in event listener
+  const menuOpenRef = useRef(menuOpen)
 
   useEffect(() => {
     if (isPending) return
@@ -43,6 +46,21 @@ function DashboardLayout() {
 
     void loadOnboarding()
   }, [session, isPending, navigate])
+
+  useEffect(() => {
+    menuOpenRef.current = menuOpen
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && menuOpenRef.current) setMenuOpen(false)
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = ''
+    }
+  }, [menuOpen])
 
   if (isPending || checkingOnboarding) {
     return (
@@ -73,6 +91,8 @@ function DashboardLayout() {
     navigate({ to: '/' })
   }
 
+  const closeMenu = () => setMenuOpen(false)
+
   return (
     <div className="dashboard-page">
       <nav className="nav">
@@ -88,8 +108,40 @@ function DashboardLayout() {
               Sign Out
             </button>
           </div>
+          <button
+            className={`hamburger-btn${menuOpen ? ' is-open' : ''}`}
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(prev => !prev)}
+          >
+            <span className="hamburger-bar"></span>
+            <span className="hamburger-bar"></span>
+            <span className="hamburger-bar"></span>
+          </button>
         </div>
       </nav>
+
+      <div
+        className={`mobile-menu${menuOpen ? ' is-open' : ''}`}
+        onClick={(e) => { if (e.target === e.currentTarget) closeMenu() }}
+        aria-hidden={!menuOpen}
+      >
+        <div className="mobile-menu-panel">
+          <nav className="mobile-nav-links">
+            <Link to="/dashboard" className="mobile-nav-link" onClick={closeMenu}>Dashboard</Link>
+            <Link to="/dashboard/projects" className="mobile-nav-link" onClick={closeMenu}>Projects</Link>
+            <Link to="/dashboard/interviews" className="mobile-nav-link" onClick={closeMenu}>Interviews</Link>
+            <Link to="/dashboard/specs" className="mobile-nav-link" onClick={closeMenu}>Specs</Link>
+            <span className="mobile-nav-user">{session.user.name || session.user.email}</span>
+            <button
+              className="mobile-nav-signout"
+              onClick={() => { closeMenu(); void handleSignOut() }}
+            >
+              Sign Out
+            </button>
+          </nav>
+        </div>
+      </div>
 
       <main className="dashboard-main">
         <Outlet />
