@@ -22,6 +22,9 @@ Dry run completed successfully:
 - No broken assets or missing images
 - Console clean of errors
 
+Cleanup-infrastructure runtime note:
+- The root-route error boundary does not have a reliable natural trigger in normal flows. To validate its fallback UI safely, use an isolated browser-session-only runtime fault (for example, temporarily overriding `Date.prototype.toLocaleDateString`), capture the fallback state, then close the session.
+
 ## Validation Concurrency
 
 **Machine specs:** 16 GB RAM, 10 CPU cores, ~6 GB used at baseline
@@ -48,3 +51,19 @@ Dry run completed successfully:
 
 - AI features (interview analysis, spec generation) cannot be tested (no API key)
 - Password reset email delivery cannot be verified (would need SMTP/email service)
+
+## Flow Validator Guidance: repo-shell
+
+- Surface purpose: source-backed assertions, local health checks, and test-command validation.
+- Isolation boundary: do not edit application code or mission files outside the assigned flow report and evidence directory.
+- Allowed actions: read files, run grep/read-only repo checks, run `bun run test` for package-level validation, run local `curl` health checks against `localhost:3000` and `localhost:3001`.
+- Avoid interfering with browser validators: do not stop shared dev servers and do not mutate shared application data.
+- Evidence should be saved as command output snippets or short text notes in the assigned evidence directory.
+
+## Flow Validator Guidance: browser
+
+- Surface purpose: real web UI validation through `agent-browser` on `http://localhost:3000`.
+- Isolation boundary: use a dedicated browser session; if sign-up is needed, create a unique test account for the assigned flow only.
+- Do not modify shared infrastructure outside normal user actions in the app. Avoid destructive actions on shared records unless the assertion explicitly requires it.
+- Prefer routes and interactions that stay within the assigned assertions. Capture screenshots for key states and note console/network observations in the flow report.
+- Close the browser session before exiting the flow validator.

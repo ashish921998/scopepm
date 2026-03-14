@@ -1,0 +1,63 @@
+{
+  "groupId": "repo-shell-cleanup",
+  "surface": "repo-shell",
+  "assertions": [
+    {
+      "id": "VAL-CLEAN-001",
+      "status": "pass",
+      "reason": "packages/web/app/components/WaitlistForm.tsx is absent and no WaitlistForm references were found under packages/web.",
+      "evidence": [
+        "cleanup-infrastructure/repo-shell-cleanup/VAL-CLEAN-001-waitlistform.txt"
+      ]
+    },
+    {
+      "id": "VAL-CLEAN-002",
+      "status": "pass",
+      "reason": "packages/api/package.json does not contain @planetscale/database in dependencies or devDependencies.",
+      "evidence": [
+        "cleanup-infrastructure/repo-shell-cleanup/VAL-CLEAN-002-planetscale.txt"
+      ]
+    },
+    {
+      "id": "VAL-CLEAN-003",
+      "status": "pass",
+      "reason": "The specs PUT handler explicitly whitelists title, description, priority, status, acceptanceCriteria, and projectId in .set() and does not spread the raw request body.",
+      "evidence": [
+        "cleanup-infrastructure/repo-shell-cleanup/VAL-CLEAN-003-specs-put-whitelist.txt"
+      ]
+    },
+    {
+      "id": "VAL-CLEAN-004",
+      "status": "pass",
+      "reason": "packages/api/.env.example defines DATABASE_URL with a postgresql:// URL.",
+      "evidence": [
+        "cleanup-infrastructure/repo-shell-cleanup/VAL-CLEAN-004-env-example.txt"
+      ]
+    },
+    {
+      "id": "VAL-CLEAN-005",
+      "status": "pass",
+      "reason": "ANTHROPIC_API_KEY access is consistent in packages/api/src and uses process.env in the runtime route handlers.",
+      "evidence": [
+        "cleanup-infrastructure/repo-shell-cleanup/VAL-CLEAN-005-anthropic-key-access.txt"
+      ]
+    },
+    {
+      "id": "VAL-TEST-001",
+      "status": "pass",
+      "reason": "Both packages include vitest config files and test scripts invoking vitest, and bun run test succeeded in packages/api and packages/web with exit code 0 and no config errors.",
+      "evidence": [
+        "cleanup-infrastructure/repo-shell-cleanup/VAL-TEST-001-test-infra-notes.txt",
+        "cleanup-infrastructure/repo-shell-cleanup/VAL-TEST-001-api-test-run.txt",
+        "cleanup-infrastructure/repo-shell-cleanup/VAL-TEST-001-web-test-run.txt"
+      ]
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "toolsUsed": [
+    "Read",
+    "Grep",
+    "Execute"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "groupId": "browser-error-boundary",
+  "surface": "browser",
+  "testedAt": "2026-03-15T03:15:00Z",
+  "assertions": [
+    {
+      "id": "VAL-CLEAN-006",
+      "status": "pass",
+      "reason": "Confirmed the root route defines an errorComponent in packages/web/app/routes/__root.tsx, and a browser-side runtime fault rendered the friendly fallback UI with the message, Try again button, and Go home link.",
+      "evidence": [
+        "packages/web/app/routes/__root.tsx#L5-L89",
+        "cleanup-infrastructure/browser-error-boundary/VAL-CLEAN-006-root-error-boundary.png"
+      ]
+    },
+    {
+      "id": "VAL-CROSS-006",
+      "status": "pass",
+      "reason": "Navigating to an invalid project route showed an in-page error state (Couldn’t load this project / Project not found) instead of a blank screen, and the dashboard navigation remained usable to recover back to the dashboard. A direct fetch to /api/projects/999999 returned 404 with {\"error\":\"Project not found\"}.",
+      "evidence": [
+        "cleanup-infrastructure/browser-error-boundary/VAL-CROSS-006-invalid-project-error.png",
+        "cleanup-infrastructure/browser-error-boundary/VAL-CROSS-006-recovered-dashboard-loaded.png"
+      ]
+    }
+  ],
+  "frictions": [
+    {
+      "description": "No normal user flow reliably triggered the root route error boundary, so I used a temporary browser-session runtime fault to verify the fallback UI and recovery actions without modifying app code.",
+      "resolved": true,
+      "resolution": "Injected a temporary Date.prototype.toLocaleDateString failure only inside the isolated browser session, captured the fallback UI, then closed the session.",
+      "affectedAssertions": [
+        "VAL-CLEAN-006"
+      ]
+    }
+  ],
+  "blockers": [],
+  "toolsUsed": [
+    "agent-browser"
+  ]
+}
