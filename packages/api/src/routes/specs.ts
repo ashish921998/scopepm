@@ -229,9 +229,13 @@ app.put('/:id', async (c) => {
   const [updated] = await db
     .update(featureSpec)
     .set({
-      ...body,
-      projectId: nextProjectId,
+      // Explicit whitelist — never spread raw body to prevent overwriting protected fields
+      title: body.title !== undefined ? String(body.title) : found.title,
+      description: body.description !== undefined ? String(body.description) : found.description,
+      priority: body.priority !== undefined ? String(body.priority) : found.priority,
+      status: body.status !== undefined ? String(body.status) : found.status,
       acceptanceCriteria: body.acceptanceCriteria ? JSON.stringify(body.acceptanceCriteria) : found.acceptanceCriteria,
+      projectId: nextProjectId,
       updatedAt: new Date(),
     })
     .where(eq(featureSpec.id, id))
