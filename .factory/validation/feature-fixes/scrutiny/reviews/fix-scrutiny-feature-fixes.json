@@ -1,0 +1,21 @@
+{
+  "featureId": "fix-scrutiny-feature-fixes",
+  "reviewedAt": "2026-03-14T23:02:03.042178+00:00",
+  "commitId": "7f6b37d",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The fix commit resolves all four prior blocking scrutiny failures in the current production code. Both nav layouts now clear mobile scroll locking on resize to desktop, PUT /api/interviews/:id rejects null/non-object request bodies before reading properties, the interview edit Cancel action is disabled while a save is in flight, and onboarding step buttons no longer allow forward skipping past incomplete steps. I did not find any new blocking implementation issues in the reviewed code paths.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The `fullstack-worker` procedure for cross-cutting changes requires writing tests first for both API and web work, but this scrutiny-fix rerun was still marked as `followedProcedure: true` even though no targeted regression tests were added and the handoff claimed the existing suites already covered the fixed paths. The relevant suites still miss or abstract away several of these exact edge cases, so the shared guidance around rerun coverage/procedure reporting is too loose.",
+      "evidence": "Skill requirement at `/Users/ashishhuddar/scopepm/.factory/skills/fullstack-worker/SKILL.md:27-30`. Handoff at `/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/handoffs/2026-03-14T22-55-51-178Z__fix-scrutiny-feature-fixes__04d289af-55aa-4820-8539-772c9ad079de.json:32-38` says `added: []`, claims the existing tests cover the affected code paths, and still reports `followedProcedure: true`. Current tests remain weak at `packages/web/app/__tests__/routes/hamburger-nav.test.tsx:6-7` (inline nav replicas), `packages/web/app/__tests__/routes/interview-edit.test.tsx:31-32` (mirrored edit component), `packages/api/src/__tests__/interviews.test.ts:80-196` (no null/non-object body case), and `packages/web/app/__tests__/routes/onboarding.test.tsx:51-116` (Continue-flow validation only, no step-indicator click coverage)."
+    }
+  ],
+  "addressesFailureFrom": "/Users/ashishhuddar/scopepm/.factory/validation/feature-fixes/scrutiny/synthesis.json",
+  "summary": "Pass: the rerun fix adequately addresses the four prior blocking scrutiny findings in production code, and I did not identify any new blocking regressions. I noted one shared-state observation about the worker skill/procedure because the handoff claimed adequate coverage without adding targeted tests for the fixed edge cases."
+}

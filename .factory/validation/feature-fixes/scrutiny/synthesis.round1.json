@@ -1,7 +1,7 @@
 {
   "milestone": "feature-fixes",
-  "round": 2,
-  "status": "pass",
+  "round": 1,
+  "status": "fail",
   "validatorsRun": {
     "test": {
       "passed": true,
@@ -20,34 +20,38 @@
     }
   },
   "reviewsSummary": {
-    "total": 9,
-    "passed": 9,
-    "failed": 0,
-    "failedFeatures": []
+    "total": 8,
+    "passed": 4,
+    "failed": 4,
+    "failedFeatures": [
+      "mobile-hamburger-nav",
+      "interview-update-endpoint",
+      "interview-edit-ui",
+      "form-validation-dashboard"
+    ]
   },
-  "resolvedFailures": [
+  "blockingIssues": [
     {
-      "originalFeature": "mobile-hamburger-nav",
-      "fixedBy": "fix-scrutiny-feature-fixes",
-      "evidence": ".factory/validation/feature-fixes/scrutiny/reviews/fix-scrutiny-feature-fixes.json"
+      "featureId": "mobile-hamburger-nav",
+      "severity": "blocking",
+      "description": "Opening the mobile menu and then crossing to desktop width leaves `document.body.style.overflow` stuck at `hidden` because the landing and dashboard layouts never reset `menuOpen` on breakpoint changes."
     },
     {
-      "originalFeature": "interview-update-endpoint",
-      "fixedBy": "fix-scrutiny-feature-fixes",
-      "evidence": ".factory/validation/feature-fixes/scrutiny/reviews/fix-scrutiny-feature-fixes.json"
+      "featureId": "interview-update-endpoint",
+      "severity": "blocking",
+      "description": "`PUT /api/interviews/:id` reads `body.title` and `body.transcript` before guarding that `await c.req.json()` returned an object, so a valid JSON `null` payload throws and returns 500 instead of the required 400 validation response."
     },
     {
-      "originalFeature": "interview-edit-ui",
-      "fixedBy": "fix-scrutiny-feature-fixes",
-      "evidence": ".factory/validation/feature-fixes/scrutiny/reviews/fix-scrutiny-feature-fixes.json"
+      "featureId": "interview-edit-ui",
+      "severity": "blocking",
+      "description": "The interview edit Cancel button stays active during an in-flight save, so a stale PUT completion can later clear a newer edit session and close the wrong form."
     },
     {
-      "originalFeature": "form-validation-dashboard",
-      "fixedBy": "fix-scrutiny-feature-fixes",
-      "evidence": ".factory/validation/feature-fixes/scrutiny/reviews/fix-scrutiny-feature-fixes.json"
+      "featureId": "form-validation-dashboard",
+      "severity": "blocking",
+      "description": "Onboarding step buttons still call `setStep(index)` directly, letting users click ahead without satisfying earlier required fields, so step validation does not truly gate progression."
     }
   ],
-  "blockingIssues": [],
   "nonBlockingIssues": [
     {
       "featureId": "reset-password-page",
@@ -116,12 +120,6 @@
       "suggestion": "Keep `fulfills` mappings aligned with the routes and behaviors each feature actually changes; for this milestone `VAL-CROSS-002` was attached to form-validation-auth even though the auth-gate redirect logic lives in `packages/web/app/routes/dashboard.tsx`.",
       "evidence": "The form-validation-auth review found commit `0399507` changed auth-form validation files and tests only, while the guarded dashboard redirect behavior referenced by `VAL-CROSS-002` is implemented elsewhere.",
       "isSystemic": false
-    },
-    {
-      "target": "fullstack-worker skill",
-      "suggestion": "Clarify scrutiny-fix and rerun expectations: when a cross-cutting fix relies on existing coverage instead of adding targeted regression tests for the exact edge cases being repaired, workers should record a deviation instead of claiming full procedure compliance.",
-      "evidence": "The fix-scrutiny-feature-fixes review found the worker reported `followedProcedure: true` without adding targeted regression tests for the four repaired paths, and the existing suites still miss those exact cases (resize scroll-lock reset, null/non-object interview PUT bodies, in-flight cancel behavior, and onboarding step-indicator skipping).",
-      "isSystemic": true
     }
   ],
   "rejectedObservations": [
@@ -134,5 +132,5 @@
       "reason": "duplicate of the single systemic web-worker skill recommendation already captured above."
     }
   ],
-  "previousRound": ".factory/validation/feature-fixes/scrutiny/synthesis.round1.json"
+  "previousRound": null
 }
