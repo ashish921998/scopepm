@@ -1,22 +1,29 @@
 import { createFileRoute, useNavigate, Link } from '@tanstack/react-router'
 import { useState } from 'react'
 import { authClient } from '../lib/auth-client'
+import { validateSignUp, hasNoErrors, type SignUpErrors } from '../lib/validation'
 
 export const Route = createFileRoute('/sign-up')({
   component: SignUpPage,
 })
 
-function SignUpPage() {
+export function SignUpPage() {
   const navigate = useNavigate()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<SignUpErrors>({})
+  const [serverError, setServerError] = useState('')
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
+    setServerError('')
+
+    const errors = validateSignUp(name, email, password)
+    setFieldErrors(errors)
+    if (!hasNoErrors(errors)) return
+
     setLoading(true)
 
     try {
@@ -28,14 +35,14 @@ function SignUpPage() {
       })
 
       if (signUpError) {
-        setError(signUpError.message || 'Failed to create account')
+        setServerError(signUpError.message || 'Failed to create account')
         setLoading(false)
         return
       }
 
       navigate({ to: '/dashboard' })
     } catch (err) {
-      setError('An unexpected error occurred')
+      setServerError('An unexpected error occurred')
       setLoading(false)
     }
   }
@@ -49,8 +56,8 @@ function SignUpPage() {
           <p className="auth-subtitle">Join Scope to transform your product management workflow</p>
         </div>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
-          {error && <div className="auth-error">{error}</div>}
+        <form className="auth-form" onSubmit={handleSubmit} noValidate>
+          {serverError && <div className="auth-error">{serverError}</div>}
 
           <div className="form-group">
             <label htmlFor="name" className="form-label">Name</label>
@@ -59,10 +66,13 @@ function SignUpPage() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="form-input"
+              className={`form-input${fieldErrors.name ? ' form-input--error' : ''}`}
               placeholder="Your name"
-              required
+              autoComplete="name"
             />
+            {fieldErrors.name && (
+              <span className="field-error">{fieldErrors.name}</span>
+            )}
           </div>
 
           <div className="form-group">
@@ -72,10 +82,13 @@ function SignUpPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="form-input"
+              className={`form-input${fieldErrors.email ? ' form-input--error' : ''}`}
               placeholder="you@example.com"
-              required
+              autoComplete="email"
             />
+            {fieldErrors.email && (
+              <span className="field-error">{fieldErrors.email}</span>
+            )}
           </div>
 
           <div className="form-group">
@@ -85,11 +98,13 @@ function SignUpPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="form-input"
+              className={`form-input${fieldErrors.password ? ' form-input--error' : ''}`}
               placeholder="Create a password (min 8 characters)"
-              minLength={8}
-              required
+              autoComplete="new-password"
             />
+            {fieldErrors.password && (
+              <span className="field-error">{fieldErrors.password}</span>
+            )}
           </div>
 
           <button type="submit" className="btn-primary auth-btn" disabled={loading}>

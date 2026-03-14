@@ -879,6 +879,25 @@ section {
   font-size: 0.875rem;
 }
 
+/* Inline field-level validation error */
+.field-error {
+  display: block;
+  font-size: 0.8125rem;
+  color: #dc2626;
+  margin-top: 0.25rem;
+  line-height: 1.4;
+}
+
+/* Input error border state */
+.form-input--error {
+  border-color: rgba(220, 38, 38, 0.5);
+}
+
+.form-input--error:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+}
+
 .auth-switch {
   text-align: center;
   margin-top: 1.5rem;
