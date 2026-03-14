@@ -6,7 +6,7 @@ export const Route = createFileRoute('/forgot-password')({
   component: ForgotPasswordPage,
 })
 
-function ForgotPasswordPage() {
+export function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
@@ -20,7 +20,7 @@ function ForgotPasswordPage() {
     try {
       const { error: resetError } = await authClient.requestPasswordReset({
         email,
-        redirectTo: 'http://localhost:3000/reset-password',
+        redirectTo: window.location.origin + '/reset-password',
       })
 
       if (resetError) {
