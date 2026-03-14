@@ -1,0 +1,33 @@
+packages/web/app/__tests__/routes/sign-in.test.tsx
+  4068b1c0aaa04116 1-204
+packages/web/app/routes/sign-up.tsx
+  4068b1c0aaa04116 4,10,15-16,21-26,38,45,59-60,69,71,73-75,85,87,89-91,101,103,105-107
+packages/web/app/__tests__/routes/sign-up.test.tsx
+  4068b1c0aaa04116 1-260
+packages/web/app/styles/landing.css
+  4068b1c0aaa04116 882-900
+packages/web/app/routes/sign-in.tsx
+  4068b1c0aaa04116 4,10,14-15,20-25,36,43,57-58,67,69,71-73,83,85,87-89
+packages/web/app/lib/validation.ts
+  4068b1c0aaa04116 1-71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "03995079072e768bf0bb89962a71a6a59e8d0934",
+  "prompts": {
+    "4068b1c0aaa04116": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "f8092a8b-74a0-4c65-81ef-5c80afb9158a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 607,
+      "total_deletions": 25,
+      "accepted_lines": 607,
+      "overriden_lines": 0
+    }
+  }
+}
