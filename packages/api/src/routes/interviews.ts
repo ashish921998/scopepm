@@ -162,6 +162,49 @@ app.post('/:id/analyze', async (c) => {
   }
 })
 
+// Update interview (title and transcript only — preserves status, summary, insights)
+app.put('/:id', async (c) => {
+  const user = c.get('user')
+  if (!user) return c.json({ error: 'Unauthorized' }, 401)
+
+  const userId = getUserId(user)
+  const id = parseInteger(c.req.param('id'))
+  if (!id) return c.json({ error: 'Invalid interview ID' }, 400)
+
+  const body = await c.req.json()
+  const title = typeof body.title === 'string' ? body.title.trim() : ''
+  const transcript = typeof body.transcript === 'string' ? body.transcript.trim() : ''
+
+  if (!title || !transcript) {
+    return c.json({ error: 'Title and transcript are required' }, 400)
+  }
+
+  const [found] = await db
+    .select()
+    .from(interview)
+    .where(eq(interview.id, id))
+
+  if (!found) {
+    return c.json({ error: 'Interview not found' }, 404)
+  }
+
+  if (found.userId !== userId) {
+    return c.json({ error: 'Forbidden' }, 403)
+  }
+
+  const [updated] = await db
+    .update(interview)
+    .set({
+      title,
+      transcript,
+      updatedAt: new Date(),
+    })
+    .where(eq(interview.id, id))
+    .returning()
+
+  return c.json({ interview: updated })
+})
+
 // Delete interview
 app.delete('/:id', async (c) => {
   const user = c.get('user')
