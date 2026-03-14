@@ -1,6 +1,12 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { apiFetch } from '../../lib/api'
+import {
+  Skeleton,
+  SkeletonActivityItem,
+  SkeletonProjectCard,
+  SkeletonStatCard,
+} from '../../components/Skeleton'
 
 type DashboardOverview = {
   stats: {
@@ -56,7 +62,59 @@ function DashboardIndex() {
   if (loading) {
     return (
       <div className="container">
-        <p className="loading-text">Loading dashboard...</p>
+        <div className="dashboard-header">
+          <Skeleton height="48px" width="40%" borderRadius="8px" style={{ margin: '0 auto 1rem' }} />
+          <Skeleton height="20px" width="60%" borderRadius="6px" style={{ margin: '0 auto' }} />
+        </div>
+
+        <div className="stats-grid">
+          {[...Array(4)].map((_, i) => (
+            <SkeletonStatCard key={i} />
+          ))}
+        </div>
+
+        <div className="dashboard-section-grid">
+          <div className="dashboard-section-card">
+            <div className="section-header-row">
+              <div>
+                <Skeleton height="28px" width="160px" borderRadius="6px" style={{ marginBottom: '0.5rem' }} />
+                <Skeleton height="16px" width="240px" />
+              </div>
+            </div>
+            <div className="activity-list">
+              {[...Array(3)].map((_, i) => (
+                <SkeletonActivityItem key={i} />
+              ))}
+            </div>
+          </div>
+
+          <div className="dashboard-section-card">
+            <div className="section-header-row">
+              <div>
+                <Skeleton height="28px" width="160px" borderRadius="6px" style={{ marginBottom: '0.5rem' }} />
+                <Skeleton height="16px" width="200px" />
+              </div>
+            </div>
+            <div className="activity-list">
+              {[...Array(3)].map((_, i) => (
+                <SkeletonActivityItem key={i} />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="section-header-row dashboard-projects-header">
+          <div>
+            <Skeleton height="28px" width="120px" borderRadius="6px" style={{ marginBottom: '0.5rem' }} />
+            <Skeleton height="16px" width="220px" />
+          </div>
+        </div>
+
+        <div className="project-grid">
+          {[...Array(3)].map((_, i) => (
+            <SkeletonProjectCard key={i} />
+          ))}
+        </div>
       </div>
     )
   }
@@ -158,7 +216,7 @@ function DashboardIndex() {
           </div>
 
           {overview.recentActivity.length === 0 ? (
-            <p className="loading-text">No recent activity yet.</p>
+            <p style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>No recent activity yet.</p>
           ) : (
             <div className="activity-list">
               {overview.recentActivity.map((item) => (

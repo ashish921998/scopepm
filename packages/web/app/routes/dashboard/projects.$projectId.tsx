@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { apiFetch } from '../../lib/api'
+import { Skeleton, SkeletonActivityItem, SkeletonStatCard } from '../../components/Skeleton'
 
 type ProjectDetail = {
   project: {
@@ -54,7 +55,54 @@ function ProjectDetailPage() {
   if (loading) {
     return (
       <div className="container">
-        <p className="loading-text">Loading project...</p>
+        <div className="page-header">
+          <div>
+            <Skeleton height="40px" width="280px" borderRadius="8px" style={{ marginBottom: '0.75rem' }} />
+            <Skeleton height="18px" width="220px" />
+          </div>
+          <div className="page-header-actions">
+            <Skeleton height="42px" width="128px" borderRadius="8px" />
+            <Skeleton height="42px" width="100px" borderRadius="8px" />
+          </div>
+        </div>
+
+        <div className="stats-grid compact-stats-grid">
+          {[...Array(3)].map((_, i) => (
+            <SkeletonStatCard key={i} />
+          ))}
+        </div>
+
+        <div className="dashboard-section-grid">
+          <div className="dashboard-section-card">
+            <div className="section-header-row">
+              <div>
+                <Skeleton height="26px" width="180px" borderRadius="6px" style={{ marginBottom: '0.5rem' }} />
+                <Skeleton height="15px" width="220px" />
+              </div>
+              <Skeleton height="34px" width="72px" borderRadius="6px" />
+            </div>
+            <div className="activity-list">
+              {[...Array(3)].map((_, i) => (
+                <SkeletonActivityItem key={i} />
+              ))}
+            </div>
+          </div>
+
+          <div className="dashboard-section-card">
+            <div className="section-header-row">
+              <div>
+                <Skeleton height="26px" width="140px" borderRadius="6px" style={{ marginBottom: '0.5rem' }} />
+                <Skeleton height="15px" width="260px" />
+              </div>
+              <Skeleton height="34px" width="72px" borderRadius="6px" />
+            </div>
+            <div className="activity-list">
+              {[...Array(3)].map((_, i) => (
+                <SkeletonActivityItem key={i} />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
@@ -113,7 +161,7 @@ function ProjectDetailPage() {
           </div>
 
           {data.recentInterviews.length === 0 ? (
-            <p className="loading-text">No interviews yet.</p>
+            <p style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>No interviews yet.</p>
           ) : (
             <div className="activity-list">
               {data.recentInterviews.map((item) => (
@@ -139,7 +187,7 @@ function ProjectDetailPage() {
           </div>
 
           {data.recentSpecs.length === 0 ? (
-            <p className="loading-text">No specs yet.</p>
+            <p style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>No specs yet.</p>
           ) : (
             <div className="activity-list">
               {data.recentSpecs.map((item) => (

@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
 import { apiFetch } from '../../lib/api'
+import { SkeletonInterviewCard } from '../../components/Skeleton'
 
 type Interview = {
   id: number
@@ -208,7 +209,11 @@ function InterviewsPage() {
       )}
 
       {loading ? (
-        <p className="loading-text">Loading interviews...</p>
+        <div className="interview-list">
+          {[...Array(3)].map((_, i) => (
+            <SkeletonInterviewCard key={i} />
+          ))}
+        </div>
       ) : projects.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon">📁</div>

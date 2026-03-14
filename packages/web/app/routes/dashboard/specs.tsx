@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
 import { apiFetch } from '../../lib/api'
+import { SkeletonSpecCard } from '../../components/Skeleton'
 
 type FeatureSpec = {
   id: number
@@ -301,7 +302,11 @@ function SpecsPage() {
       )}
 
       {loading ? (
-        <p className="loading-text">Loading specs...</p>
+        <div className="spec-list">
+          {[...Array(3)].map((_, i) => (
+            <SkeletonSpecCard key={i} />
+          ))}
+        </div>
       ) : projects.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon">📁</div>

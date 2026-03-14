@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { apiFetch } from '../../lib/api'
+import { SkeletonProjectCard } from '../../components/Skeleton'
 
 type Project = {
   id: number
@@ -48,7 +49,11 @@ function ProjectsPage() {
       </div>
 
       {loading ? (
-        <p className="loading-text">Loading projects...</p>
+        <div className="project-grid">
+          {[...Array(3)].map((_, i) => (
+            <SkeletonProjectCard key={i} />
+          ))}
+        </div>
       ) : error ? (
         <div className="empty-state">
           <h3>Couldn’t load projects</h3>

@@ -1563,6 +1563,19 @@ section {
   color: var(--text-muted);
 }
 
+/* Skeleton Loading */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+.skeleton {
+  display: block;
+  background: var(--bg-tertiary);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  border-radius: 6px;
+}
+
 @media (max-width: 768px) {
   .page-header {
     flex-direction: column;
