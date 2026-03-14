@@ -35,7 +35,7 @@ export const Route = createFileRoute('/dashboard/interviews')({
   component: InterviewsPage,
 })
 
-function InterviewsPage() {
+export function InterviewsPage() {
   const search = Route.useSearch()
   const initialProjectId = search.projectId
   const [interviews, setInterviews] = useState<Interview[]>([])
@@ -48,6 +48,12 @@ function InterviewsPage() {
   const [analyzing, setAnalyzing] = useState<number | null>(null)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+
+  // New interview form field errors
+  const [projectIdError, setProjectIdError] = useState('')
+  const [titleError, setTitleError] = useState('')
+  const [transcriptError, setTranscriptError] = useState('')
+  const [formError, setFormError] = useState('')
 
   // Edit state
   const [editingId, setEditingId] = useState<number | null>(null)
@@ -90,8 +96,32 @@ function InterviewsPage() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
+
+    setProjectIdError('')
+    setTitleError('')
+    setTranscriptError('')
+    setFormError('')
+
+    let valid = true
+
+    if (!projectId) {
+      setProjectIdError('Please select a project')
+      valid = false
+    }
+
+    if (!title.trim() || title.trim().length < 3) {
+      setTitleError('Title must be at least 3 characters')
+      valid = false
+    }
+
+    if (!transcript.trim() || transcript.trim().length < 50) {
+      setTranscriptError('Transcript must be at least 50 characters')
+      valid = false
+    }
+
+    if (!valid) return
+
     setSaving(true)
-    setError('')
 
     try {
       const data = await apiFetch<{ interview: Interview }>('/api/interviews', {
@@ -107,8 +137,9 @@ function InterviewsPage() {
       setShowForm(false)
       setTitle('')
       setTranscript('')
+      setProjectId(initialProjectId ? String(initialProjectId) : '')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create interview')
+      setFormError(err instanceof Error ? err.message : 'Failed to create interview')
       setSaving(false)
       return
     }
@@ -237,38 +268,44 @@ function InterviewsPage() {
 
       {showForm && (
         <div className="form-card">
-          <form onSubmit={handleSubmit} className="auth-form">
+          <form onSubmit={handleSubmit} className="auth-form" noValidate>
             <div className="form-group">
               <label className="form-label">Project</label>
-              <select value={projectId} onChange={(event) => setProjectId(event.target.value)} className="form-input" required>
+              <select
+                value={projectId}
+                onChange={(event) => { setProjectId(event.target.value); if (projectIdError) setProjectIdError('') }}
+                className={`form-input${projectIdError ? ' form-input--error' : ''}`}
+              >
                 <option value="">Select a project</option>
                 {projects.map((item) => (
                   <option key={item.id} value={item.id}>{item.name}</option>
                 ))}
               </select>
+              {projectIdError && <span className="field-error">{projectIdError}</span>}
             </div>
             <div className="form-group">
               <label className="form-label">Interview title</label>
               <input
                 type="text"
                 value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                className="form-input"
+                onChange={(event) => { setTitle(event.target.value); if (titleError) setTitleError('') }}
+                className={`form-input${titleError ? ' form-input--error' : ''}`}
                 placeholder="Customer interview with Acme"
-                required
               />
+              {titleError && <span className="field-error">{titleError}</span>}
             </div>
             <div className="form-group">
               <label className="form-label">Transcript</label>
               <textarea
                 value={transcript}
-                onChange={(event) => setTranscript(event.target.value)}
-                className="form-textarea"
+                onChange={(event) => { setTranscript(event.target.value); if (transcriptError) setTranscriptError('') }}
+                className={`form-textarea${transcriptError ? ' form-textarea--error' : ''}`}
                 placeholder="Paste the interview transcript here..."
                 rows={10}
-                required
               />
+              {transcriptError && <span className="field-error">{transcriptError}</span>}
             </div>
+            {formError && <div className="auth-error page-alert">{formError}</div>}
             <button type="submit" className="btn-primary" disabled={saving || projects.length === 0}>
               {saving ? 'Creating...' : 'Create Interview'}
             </button>

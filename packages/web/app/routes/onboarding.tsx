@@ -33,7 +33,7 @@ export const Route = createFileRoute('/onboarding')({
   component: OnboardingPage,
 })
 
-function OnboardingPage() {
+export function OnboardingPage() {
   const navigate = useNavigate()
   const { data: session, isPending } = useSession()
   const [step, setStep] = useState(0)
@@ -44,6 +44,12 @@ function OnboardingPage() {
   const [companyName, setCompanyName] = useState('')
   const [teamSize, setTeamSize] = useState('')
   const [goals, setGoals] = useState<string[]>([])
+
+  // Field-specific validation errors per step
+  const [roleError, setRoleError] = useState('')
+  const [companyNameError, setCompanyNameError] = useState('')
+  const [teamSizeError, setTeamSizeError] = useState('')
+  const [goalsError, setGoalsError] = useState('')
 
   useEffect(() => {
     if (isPending) return
@@ -88,26 +94,52 @@ function OnboardingPage() {
     setGoals((current) => current.includes(goal)
       ? current.filter((item) => item !== goal)
       : [...current, goal])
+    setGoalsError('')
   }
 
   const handleContinue = () => {
-    if (!stepComplete[step]) {
-      setError('Please complete this step to continue')
-      return
+    setRoleError('')
+    setCompanyNameError('')
+    setTeamSizeError('')
+    setGoalsError('')
+    setError('')
+
+    if (step === 0) {
+      if (!role) {
+        setRoleError('Please select a role to continue')
+        return
+      }
+    } else if (step === 1) {
+      let valid = true
+      if (!companyName.trim()) {
+        setCompanyNameError('Company name is required')
+        valid = false
+      }
+      if (!teamSize) {
+        setTeamSizeError('Please select a team size')
+        valid = false
+      }
+      if (!valid) return
     }
 
-    setError('')
     setStep((current) => Math.min(current + 1, 2))
   }
 
   const handleSubmit = async () => {
+    setGoalsError('')
+    setError('')
+
+    if (goals.length === 0) {
+      setGoalsError('Please select at least one goal')
+      return
+    }
+
     if (!stepComplete.every(Boolean)) {
       setError('Please complete every onboarding step')
       return
     }
 
     setSubmitting(true)
-    setError('')
 
     try {
       await apiFetch('/api/onboarding', {
@@ -166,12 +198,13 @@ function OnboardingPage() {
                   key={item.value}
                   type="button"
                   className={`choice-card ${role === item.value ? 'is-selected' : ''}`}
-                  onClick={() => setRole(item.value)}
+                  onClick={() => { setRole(item.value); setRoleError('') }}
                 >
                   {item.label}
                 </button>
               ))}
             </div>
+            {roleError && <span className="field-error">{roleError}</span>}
           </div>
         )}
 
@@ -182,11 +215,12 @@ function OnboardingPage() {
               <label htmlFor="companyName" className="form-label">Company name</label>
               <input
                 id="companyName"
-                className="form-input"
+                className={`form-input${companyNameError ? ' form-input--error' : ''}`}
                 value={companyName}
-                onChange={(event) => setCompanyName(event.target.value)}
+                onChange={(event) => { setCompanyName(event.target.value); if (companyNameError) setCompanyNameError('') }}
                 placeholder="Acme, Orbit, Linear..."
               />
+              {companyNameError && <span className="field-error">{companyNameError}</span>}
             </div>
             <div className="form-group">
               <label className="form-label">Team size</label>
@@ -196,12 +230,13 @@ function OnboardingPage() {
                     key={item}
                     type="button"
                     className={`choice-card ${teamSize === item ? 'is-selected' : ''}`}
-                    onClick={() => setTeamSize(item)}
+                    onClick={() => { setTeamSize(item); setTeamSizeError('') }}
                   >
                     {item}
                   </button>
                 ))}
               </div>
+              {teamSizeError && <span className="field-error">{teamSizeError}</span>}
             </div>
           </div>
         )}
@@ -221,6 +256,7 @@ function OnboardingPage() {
                 </button>
               ))}
             </div>
+            {goalsError && <span className="field-error">{goalsError}</span>}
           </div>
         )}
 

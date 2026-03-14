@@ -6,16 +6,24 @@ export const Route = createFileRoute('/dashboard/projects/new')({
   component: NewProjectPage,
 })
 
-function NewProjectPage() {
+export function NewProjectPage() {
   const navigate = useNavigate()
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+  const [nameError, setNameError] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
+    setNameError('')
     setError('')
+
+    if (!name.trim()) {
+      setNameError('Project name is required')
+      return
+    }
+
     setLoading(true)
 
     try {
@@ -44,19 +52,19 @@ function NewProjectPage() {
       </div>
 
       <div className="form-card">
-        <form onSubmit={handleSubmit} className="auth-form">
+        <form onSubmit={handleSubmit} className="auth-form" noValidate>
           {error && <div className="auth-error">{error}</div>}
 
           <div className="form-group">
             <label htmlFor="projectName" className="form-label">Project name</label>
             <input
               id="projectName"
-              className="form-input"
+              className={`form-input${nameError ? ' form-input--error' : ''}`}
               value={name}
-              onChange={(event) => setName(event.target.value)}
+              onChange={(event) => { setName(event.target.value); if (nameError) setNameError('') }}
               placeholder="Voice of customer workflow"
-              required
             />
+            {nameError && <span className="field-error">{nameError}</span>}
           </div>
 
           <div className="form-group">

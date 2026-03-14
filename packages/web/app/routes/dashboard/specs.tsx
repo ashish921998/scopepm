@@ -49,7 +49,7 @@ export const Route = createFileRoute('/dashboard/specs')({
   component: SpecsPage,
 })
 
-function SpecsPage() {
+export function SpecsPage() {
   const search = Route.useSearch()
   const initialProjectId = search.projectId
   const initialInterviewId = search.interviewId
@@ -67,6 +67,12 @@ function SpecsPage() {
   const [saving, setSaving] = useState(false)
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState('')
+
+  // New spec form field errors
+  const [projectIdError, setProjectIdError] = useState('')
+  const [titleError, setTitleError] = useState('')
+  const [descriptionError, setDescriptionError] = useState('')
+  const [formError, setFormError] = useState('')
 
   useEffect(() => {
     setShowForm(Boolean(search.new))
@@ -126,8 +132,32 @@ function SpecsPage() {
 
   const handleCreate = async (event: React.FormEvent) => {
     event.preventDefault()
+
+    setProjectIdError('')
+    setTitleError('')
+    setDescriptionError('')
+    setFormError('')
+
+    let valid = true
+
+    if (!projectId) {
+      setProjectIdError('Please select a project')
+      valid = false
+    }
+
+    if (!title.trim() || title.trim().length < 3) {
+      setTitleError('Title must be at least 3 characters')
+      valid = false
+    }
+
+    if (!description.trim() || description.trim().length < 20) {
+      setDescriptionError('Description must be at least 20 characters')
+      valid = false
+    }
+
+    if (!valid) return
+
     setSaving(true)
-    setError('')
 
     try {
       const data = await apiFetch<{ spec: FeatureSpec }>('/api/specs', {
@@ -153,7 +183,7 @@ function SpecsPage() {
       setInterviewId('')
       setPriority('medium')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create spec')
+      setFormError(err instanceof Error ? err.message : 'Failed to create spec')
       setSaving(false)
       return
     }
@@ -229,15 +259,20 @@ function SpecsPage() {
 
       {showForm && (
         <div className="form-card">
-          <form onSubmit={handleCreate} className="auth-form">
+          <form onSubmit={handleCreate} className="auth-form" noValidate>
             <div className="form-group">
               <label className="form-label">Project</label>
-              <select value={projectId} onChange={(event) => setProjectId(event.target.value)} className="form-input" required>
+              <select
+                value={projectId}
+                onChange={(event) => { setProjectId(event.target.value); if (projectIdError) setProjectIdError('') }}
+                className={`form-input${projectIdError ? ' form-input--error' : ''}`}
+              >
                 <option value="">Select a project</option>
                 {projects.map((item) => (
                   <option key={item.id} value={item.id}>{item.name}</option>
                 ))}
               </select>
+              {projectIdError && <span className="field-error">{projectIdError}</span>}
             </div>
 
             <div className="form-group">
@@ -255,23 +290,23 @@ function SpecsPage() {
               <input
                 type="text"
                 value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                className="form-input"
+                onChange={(event) => { setTitle(event.target.value); if (titleError) setTitleError('') }}
+                className={`form-input${titleError ? ' form-input--error' : ''}`}
                 placeholder="Collaborative interview repository"
-                required
               />
+              {titleError && <span className="field-error">{titleError}</span>}
             </div>
 
             <div className="form-group">
               <label className="form-label">Description</label>
               <textarea
                 value={description}
-                onChange={(event) => setDescription(event.target.value)}
-                className="form-textarea"
+                onChange={(event) => { setDescription(event.target.value); if (descriptionError) setDescriptionError('') }}
+                className={`form-textarea${descriptionError ? ' form-textarea--error' : ''}`}
                 rows={6}
                 placeholder="Describe the feature, the problem it solves, and expected outcome."
-                required
               />
+              {descriptionError && <span className="field-error">{descriptionError}</span>}
             </div>
 
             <div className="form-group">
@@ -294,6 +329,7 @@ function SpecsPage() {
               </select>
             </div>
 
+            {formError && <div className="auth-error page-alert">{formError}</div>}
             <button type="submit" className="btn-primary" disabled={saving || projects.length === 0}>
               {saving ? 'Saving...' : 'Create Spec'}
             </button>

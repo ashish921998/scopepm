@@ -898,6 +898,15 @@ section {
   box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
 }
 
+.form-textarea--error {
+  border-color: rgba(220, 38, 38, 0.5);
+}
+
+.form-textarea--error:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+}
+
 .auth-switch {
   text-align: center;
   margin-top: 1.5rem;
