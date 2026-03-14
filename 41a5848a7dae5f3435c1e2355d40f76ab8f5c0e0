@@ -1,0 +1,23 @@
+.factory/services.yaml
+  cc7a4906574be8fa 7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "41a5848a7dae5f3435c1e2355d40f76ab8f5c0e0",
+  "prompts": {
+    "cc7a4906574be8fa": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "8d555b3e-2948-4f0c-abd1-2fe8dc0952a9",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 0,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
