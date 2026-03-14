@@ -7,6 +7,7 @@ type Interview = {
   id: number
   projectId: number | null
   title: string
+  transcript: string
   summary: string | null
   insights: string | null
   status: string
@@ -47,6 +48,15 @@ function InterviewsPage() {
   const [analyzing, setAnalyzing] = useState<number | null>(null)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+
+  // Edit state
+  const [editingId, setEditingId] = useState<number | null>(null)
+  const [editTitle, setEditTitle] = useState('')
+  const [editTranscript, setEditTranscript] = useState('')
+  const [editTitleError, setEditTitleError] = useState('')
+  const [editTranscriptError, setEditTranscriptError] = useState('')
+  const [editError, setEditError] = useState('')
+  const [editSaving, setEditSaving] = useState(false)
 
   useEffect(() => {
     setShowForm(Boolean(search.new))
@@ -130,6 +140,64 @@ function InterviewsPage() {
       setInterviews((current) => current.filter((item) => item.id !== id))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete interview')
+    }
+  }
+
+  const handleEditStart = (item: Interview) => {
+    setEditingId(item.id)
+    setEditTitle(item.title)
+    setEditTranscript(item.transcript)
+    setEditTitleError('')
+    setEditTranscriptError('')
+    setEditError('')
+  }
+
+  const handleEditCancel = () => {
+    setEditingId(null)
+    setEditTitle('')
+    setEditTranscript('')
+    setEditTitleError('')
+    setEditTranscriptError('')
+    setEditError('')
+  }
+
+  const handleEditSubmit = async (id: number, event: React.FormEvent) => {
+    event.preventDefault()
+
+    let valid = true
+    setEditTitleError('')
+    setEditTranscriptError('')
+    setEditError('')
+
+    if (!editTitle.trim() || editTitle.trim().length < 3) {
+      setEditTitleError('Title must be at least 3 characters')
+      valid = false
+    }
+
+    if (!editTranscript.trim() || editTranscript.trim().length < 50) {
+      setEditTranscriptError('Transcript must be at least 50 characters')
+      valid = false
+    }
+
+    if (!valid) return
+
+    setEditSaving(true)
+
+    try {
+      const data = await apiFetch<{ interview: Interview }>(`/api/interviews/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ title: editTitle.trim(), transcript: editTranscript.trim() }),
+      })
+      setInterviews((current) =>
+        current.map((item) => (item.id === id ? data.interview : item)),
+      )
+      setEditingId(null)
+      setEditTitle('')
+      setEditTranscript('')
+    } catch (err) {
+      setEditError(err instanceof Error ? err.message : 'Failed to update interview')
+    } finally {
+      setEditSaving(false)
     }
   }
 
@@ -229,55 +297,128 @@ function InterviewsPage() {
         </div>
       ) : (
         <div className="interview-list">
-          {interviews.map((interview) => (
-            <div key={interview.id} className="interview-card">
-              <div className="interview-header">
-                <div>
-                  <h3 className="interview-title">{interview.title}</h3>
-                  {interview.projectId && (
-                    <Link
-                      to="/dashboard/projects/$projectId"
-                      params={{ projectId: String(interview.projectId) }}
-                      className="entity-link"
+          {interviews.map((item) =>
+            editingId === item.id ? (
+              <div key={item.id} className="interview-card">
+                <form onSubmit={(e) => handleEditSubmit(item.id, e)} className="auth-form">
+                  <div className="form-group">
+                    <label className="form-label" htmlFor={`edit-title-${item.id}`}>
+                      Interview title
+                    </label>
+                    <input
+                      id={`edit-title-${item.id}`}
+                      type="text"
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      className="form-input"
+                      placeholder="Customer interview with Acme"
+                    />
+                    {editTitleError && (
+                      <span
+                        className="field-error"
+                        style={{ fontSize: '0.8125rem', color: '#ef4444', marginTop: '0.25rem' }}
+                      >
+                        {editTitleError}
+                      </span>
+                    )}
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label" htmlFor={`edit-transcript-${item.id}`}>
+                      Transcript
+                    </label>
+                    <textarea
+                      id={`edit-transcript-${item.id}`}
+                      value={editTranscript}
+                      onChange={(e) => setEditTranscript(e.target.value)}
+                      className="form-textarea"
+                      placeholder="Paste the interview transcript here..."
+                      rows={10}
+                    />
+                    {editTranscriptError && (
+                      <span
+                        className="field-error"
+                        style={{ fontSize: '0.8125rem', color: '#ef4444', marginTop: '0.25rem' }}
+                      >
+                        {editTranscriptError}
+                      </span>
+                    )}
+                  </div>
+                  {editError && <div className="auth-error page-alert">{editError}</div>}
+                  <div style={{ display: 'flex', gap: '0.75rem' }}>
+                    <button
+                      type="submit"
+                      className="btn-primary btn-sm"
+                      disabled={editSaving}
                     >
-                      {projectNameMap.get(interview.projectId) || 'Project'}
+                      {editSaving ? 'Saving...' : 'Save changes'}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-ghost btn-sm"
+                      onClick={handleEditCancel}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            ) : (
+              <div key={item.id} className="interview-card">
+                <div className="interview-header">
+                  <div>
+                    <h3 className="interview-title">{item.title}</h3>
+                    {item.projectId && (
+                      <Link
+                        to="/dashboard/projects/$projectId"
+                        params={{ projectId: String(item.projectId) }}
+                        className="entity-link"
+                      >
+                        {projectNameMap.get(item.projectId) || 'Project'}
+                      </Link>
+                    )}
+                  </div>
+                  <span className={`status-badge status-${item.status}`}>{item.status}</span>
+                </div>
+
+                {item.summary && <p className="interview-summary">{item.summary}</p>}
+
+                <div className="interview-meta">
+                  <span>{new Date(item.createdAt).toLocaleDateString()}</span>
+                </div>
+
+                <div className="interview-actions">
+                  {item.status === 'pending' && (
+                    <button
+                      onClick={() => handleAnalyze(item.id)}
+                      className="btn-primary btn-sm"
+                      disabled={analyzing === item.id}
+                    >
+                      {analyzing === item.id ? 'Analyzing...' : 'Analyze with AI'}
+                    </button>
+                  )}
+                  {item.status === 'analyzed' && item.projectId && (
+                    <Link
+                      to="/dashboard/specs"
+                      search={{ interviewId: item.id, projectId: item.projectId, new: true }}
+                      className="btn-secondary btn-sm"
+                    >
+                      Generate Spec
                     </Link>
                   )}
-                </div>
-                <span className={`status-badge status-${interview.status}`}>{interview.status}</span>
-              </div>
-
-              {interview.summary && <p className="interview-summary">{interview.summary}</p>}
-
-              <div className="interview-meta">
-                <span>{new Date(interview.createdAt).toLocaleDateString()}</span>
-              </div>
-
-              <div className="interview-actions">
-                {interview.status === 'pending' && (
                   <button
-                    onClick={() => handleAnalyze(interview.id)}
-                    className="btn-primary btn-sm"
-                    disabled={analyzing === interview.id}
-                  >
-                    {analyzing === interview.id ? 'Analyzing...' : 'Analyze with AI'}
-                  </button>
-                )}
-                {interview.status === 'analyzed' && interview.projectId && (
-                  <Link
-                    to="/dashboard/specs"
-                    search={{ interviewId: interview.id, projectId: interview.projectId, new: true }}
+                    onClick={() => handleEditStart(item)}
                     className="btn-secondary btn-sm"
+                    aria-label={`Edit ${item.title}`}
                   >
-                    Generate Spec
-                  </Link>
-                )}
-                <button onClick={() => handleDelete(interview.id)} className="btn-ghost btn-sm">
-                  Delete
-                </button>
+                    Edit
+                  </button>
+                  <button onClick={() => handleDelete(item.id)} className="btn-ghost btn-sm">
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            ),
+          )}
         </div>
       )}
     </div>
