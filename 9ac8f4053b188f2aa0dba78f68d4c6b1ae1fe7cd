@@ -1,0 +1,55 @@
+.factory/validation/cleanup-infrastructure/scrutiny/synthesis.json
+  032c319e26f57001 3-4,23-26,28,30-32,35-37,40-45,98-101,104
+.factory/validation/cleanup-infrastructure/scrutiny/synthesis.round1.json
+  032c319e26f57001 1-96
+.factory/validation/cleanup-infrastructure/scrutiny/reviews/fix-lockfile-sync.json
+  43404295cd797ee5 1-15
+.factory/validation/cleanup-infrastructure/scrutiny/reviews/fix-vite-version-mismatch__addresses-test-infrastructure-setup.json
+  618b3cdfcc174baa 1-28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "9ac8f4053b188f2aa0dba78f68d4c6b1ae1fe7cd",
+  "prompts": {
+    "032c319e26f57001": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "73e998af-9335-4b23-a591-9b0c4e0b811b",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 122,
+      "total_deletions": 17,
+      "accepted_lines": 122,
+      "overriden_lines": 0
+    },
+    "43404295cd797ee5": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "b247895a-5ad9-4e41-ab4c-a68c7b2e79f9",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 15,
+      "total_deletions": 0,
+      "accepted_lines": 15,
+      "overriden_lines": 0
+    },
+    "618b3cdfcc174baa": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "f6faa5b4-5ceb-4b1c-b388-48cfed4e3eaa",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 28,
+      "total_deletions": 0,
+      "accepted_lines": 28,
+      "overriden_lines": 0
+    }
+  }
+}
