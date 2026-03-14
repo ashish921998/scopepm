@@ -1,0 +1,100 @@
+.factory/validation/feature-fixes/scrutiny/reviews/reset-password-page.json
+  f0db9bf070b5ac76 1-39
+.factory/validation/feature-fixes/scrutiny/reviews/form-validation-auth.json
+  fc4762174de1f5c0 1-26
+.factory/validation/feature-fixes/scrutiny/reviews/loading-skeletons.json
+  358a91b2e670ce8d 1-39
+.factory/library/architecture.md
+  4a50a10db413c6ee 41
+.factory/validation/feature-fixes/scrutiny/reviews/fix-forgot-password-url.json
+  2a58a7be501d909b 1-28
+.factory/validation/feature-fixes/scrutiny/reviews/interview-edit-ui.json
+  de09e0f107155509 1-34
+.factory/validation/feature-fixes/scrutiny/synthesis.json
+  4a50a10db413c6ee 1-136
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "000f30d526976db22e64ce7b72ddbe3ba555890f",
+  "prompts": {
+    "2a58a7be501d909b": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "862d4a7f-45d4-4b91-8d5b-d8b86c63b242",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 28,
+      "total_deletions": 0,
+      "accepted_lines": 28,
+      "overriden_lines": 0
+    },
+    "358a91b2e670ce8d": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "046f1293-e57c-4abe-826e-e75de2a231d8",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 39,
+      "total_deletions": 0,
+      "accepted_lines": 39,
+      "overriden_lines": 0
+    },
+    "4a50a10db413c6ee": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "6d34f264-1ba6-4ff0-af1e-7be9d3ce3832",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 137,
+      "total_deletions": 0,
+      "accepted_lines": 137,
+      "overriden_lines": 0
+    },
+    "de09e0f107155509": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "006c1886-9196-4abd-bda1-f4a4bc44ef1d",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 34,
+      "total_deletions": 0,
+      "accepted_lines": 34,
+      "overriden_lines": 0
+    },
+    "f0db9bf070b5ac76": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "861400c8-1257-4949-afae-d522609f6e61",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 39,
+      "total_deletions": 0,
+      "accepted_lines": 39,
+      "overriden_lines": 0
+    },
+    "fc4762174de1f5c0": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "7e6119b5-d0df-49b1-9bb8-8754e1279713",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 26,
+      "total_deletions": 0,
+      "accepted_lines": 26,
+      "overriden_lines": 0
+    }
+  }
+}
