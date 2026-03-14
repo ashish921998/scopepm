@@ -1,0 +1,39 @@
+packages/web/app/routes/dashboard/projects.new.tsx
+  11888085e03605b3 9,13,19,21-26,55,62,64,67
+packages/web/app/routes/dashboard/specs.tsx
+  11888085e03605b3 52,71-76,135-159,186,262,267-268,275,293-294,297,304-305,309,332
+packages/web/app/styles/landing.css
+  11888085e03605b3 901-909
+packages/web/app/routes/onboarding.tsx
+  11888085e03605b3 36,48-52,97,101-122,129-136,201,207,218,220,223,233,239,259
+packages/web/app/routes/dashboard/interviews.tsx
+  11888085e03605b3 38,52-56,99-123,140,142,271,276-277,284,291-292,295,301-302,306,308
+packages/web/app/__tests__/routes/onboarding.test.tsx
+  11888085e03605b3 1-286
+packages/web/app/__tests__/routes/new-project.test.tsx
+  11888085e03605b3 1-159
+packages/web/app/__tests__/routes/new-interview-form.test.tsx
+  11888085e03605b3 1-232
+packages/web/app/__tests__/routes/new-spec-form.test.tsx
+  11888085e03605b3 1-250
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "11a482e4778acc2c4d7589dcc87224d5f1a803ab",
+  "prompts": {
+    "11888085e03605b3": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "51edaed1-ee0b-49a7-99fa-ac7f03ea8423",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 1109,
+      "total_deletions": 56,
+      "accepted_lines": 1085,
+      "overriden_lines": 0
+    }
+  }
+}
