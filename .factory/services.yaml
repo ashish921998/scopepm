@@ -4,6 +4,7 @@ commands:
   test:web: cd /Users/ashishhuddar/scopepm/packages/web && bun run test
   test: cd /Users/ashishhuddar/scopepm/packages/api && bun run test && cd /Users/ashishhuddar/scopepm/packages/web && bun run test
   build: cd /Users/ashishhuddar/scopepm && bun run build
+  # lint: NOT CONFIGURED - project has no ESLint setup. Skip lint validation.
 
 services:
   api:
