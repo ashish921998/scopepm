@@ -1,0 +1,23 @@
+packages/web/app/routes/__root.tsx
+  b0ecb1b2130646fa 1,7,10-95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "46c1d4498649270a4420b238ddcfa6b6a0e4b19f",
+  "prompts": {
+    "b0ecb1b2130646fa": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "f99eb27a-11b0-4aba-abb0-8767ef8853c2",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 89,
+      "total_deletions": 1,
+      "accepted_lines": 89,
+      "overriden_lines": 0
+    }
+  }
+}
