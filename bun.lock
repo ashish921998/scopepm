@@ -14,7 +14,6 @@
       "name": "api",
       "dependencies": {
         "@anthropic-ai/sdk": "^0.78.0",
-        "@planetscale/database": "^1.19.0",
         "better-auth": "^1.5.5",
         "drizzle-orm": "^0.45.1",
         "hono": "^4.6.0",
