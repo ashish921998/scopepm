@@ -1,0 +1,34 @@
+{
+  "featureId": "interview-edit-ui",
+  "reviewedAt": "2026-03-14T22:48:19Z",
+  "commitId": "644c05a",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "The feature adds the expected edit affordance, inline form, validation, and PUT wiring, but there is a user-facing race in the cancel flow during in-flight saves, and the added tests do not exercise the real dashboard route implementation. Because cancel handling is part of the requested behavior, the current implementation is not robust enough to pass review.",
+    "issues": [
+      {
+        "file": "packages/web/app/routes/dashboard/interviews.tsx",
+        "line": 186,
+        "severity": "blocking",
+        "description": "`handleEditCancel()` always clears the local edit state, but it does not coordinate with `editSaving`. The save path sets `editSaving` at lines 215-231 and later unconditionally calls `setEditingId(null)` after the PUT resolves, while the Cancel button at lines 392-395 stays enabled during that request. If a user clicks Cancel while a save is in flight, the request still completes, and starting a new edit before the first response returns can cause that later `setEditingId(null)` to close the new form unexpectedly. Disable cancel while saving or ignore stale completions / abort the request so cancel handling is reliable." 
+      },
+      {
+        "file": "packages/web/app/__tests__/routes/interview-edit.test.tsx",
+        "line": 31,
+        "severity": "non_blocking",
+        "description": "The new tests define an inline `InterviewEditComponent` that mirrors the production logic and then render that local component in every case (for example at lines 31-60 and 216-217) instead of importing and exercising `packages/web/app/routes/dashboard/interviews.tsx`. That means the suite can pass even when the real route diverges, so it would not catch the cancel/save race above or other integration issues in the actual page component." 
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The `web-worker` skill requires manual `agent-browser` verification of the affected interactions, but this feature handoff recorded only source inspection as its `interactiveChecks` while still marking `followedProcedure` as true. Shared guidance should either make the bootstrap path for protected dashboard flows more explicit or require workers to log a deviation when browser verification is skipped.",
+      "evidence": ".factory/skills/web-worker/SKILL.md:41-45 requires manual browser verification; the handoff records only `Verified implementation code by reviewing final interviews.tsx` at /Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/handoffs/2026-03-14T22-26-32-664Z__interview-edit-ui__3888816b-aafd-4b46-b47b-b7bacc89a467.json:26-29 and still sets `followedProcedure: true` at lines 117-119. The shared testing notes already say test users can be created via sign-up at /Users/ashishhuddar/scopepm/.factory/library/user-testing.md:43-48."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Reviewed the mission metadata, transcript skeleton, worker handoff, commit 644c05a diff, and the current web route/test files for `interview-edit-ui`. Result: fail. The main functional problem is a cancel/save race in `packages/web/app/routes/dashboard/interviews.tsx`; additionally, the new test file mirrors the feature in a local test-only component instead of covering the real route implementation. Wrote this review to /Users/ashishhuddar/scopepm/.factory/validation/feature-fixes/scrutiny/reviews/interview-edit-ui.json."
+}

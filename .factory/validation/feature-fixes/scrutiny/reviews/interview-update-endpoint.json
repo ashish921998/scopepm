@@ -1,0 +1,22 @@
+{
+  "featureId": "interview-update-endpoint",
+  "reviewedAt": "2026-03-14T22:47:40Z",
+  "commitId": "cef734b",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "The PUT /api/interviews/:id implementation follows the intended auth, ownership, ID parsing, and field-whitelist flow for normal object payloads, but its request-body validation is incomplete. The handler assumes c.req.json() returns an object, so a non-object JSON payload can bypass the intended 400 validation path and crash the route instead.",
+    "issues": [
+      {
+        "file": "packages/api/src/routes/interviews.ts",
+        "line": 174,
+        "severity": "blocking",
+        "description": "The handler reads `body.title` and `body.transcript` immediately after `await c.req.json()`. If the client sends valid JSON `null`, `body` is null and those property reads throw before the 400 validation runs, producing a 500 instead of the required validation error for missing fields. Add a body-shape guard (and ideally safe JSON parse handling) before accessing properties."
+      }
+    ]
+  },
+  "sharedStateObservations": [],
+  "addressesFailureFrom": null,
+  "summary": "Reviewed the feature metadata, handoff, transcript skeleton, commit cef734b diff, and current API route/test files. Result: fail, because the new PUT handler can crash on a non-object JSON payload instead of returning the required 400 validation response; no shared-state documentation gaps stood out during this review."
+}

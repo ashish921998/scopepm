@@ -1,0 +1,26 @@
+{
+  "featureId": "form-validation-auth",
+  "reviewedAt": "2026-03-14T22:48:15Z",
+  "commitId": "03995079072e768bf0bb89962a71a6a59e8d0934",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Reviewed commit `0399507` and found the implementation aligned with the feature contract: both auth forms now use shared client-side validation helpers, render styled `.field-error` elements instead of relying on browser validation UI, preserve loading/disabled submit states, and surface server-side errors inline. The added route tests cover the new validation, loading, and server-error paths, and I did not find a blocking or non-blocking code defect in the reviewed diff.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The reviewed session was marked as having followed the `web-worker` procedure, but the transcript shows implementation work happened before the new tests were created and no manual browser verification was recorded. Either the skill procedure is stricter than current practice, or adherence reporting is being marked too loosely.",
+      "evidence": ".factory/skills/web-worker/SKILL.md:24-25 says to write tests first and line 41 requires manual verification with agent-browser. In worker-transcripts.jsonl:18, the session creates `packages/web/app/lib/validation.ts` before it creates `packages/web/app/__tests__/routes/sign-in.test.tsx`, and `agent-browser` does not appear in the reviewed session. The handoff JSON for this session contains only `verification.commandsRun` and still sets `\"followedProcedure\": true` at lines 132-133."
+    },
+    {
+      "area": "conventions",
+      "observation": "The mission metadata maps `VAL-CROSS-002` to `form-validation-auth`, but the reviewed commit only changes auth-form validation paths and related tests. The auth-gate redirect logic itself lives in `packages/web/app/routes/dashboard.tsx`, so the feature-to-assertion mapping is broader than the actual implementation and may confuse later review or synthesis work.",
+      "evidence": "features.json:621-624 lists `VAL-CROSS-002` under `form-validation-auth`. `git show --stat 0399507` shows changes only in `packages/web/app/routes/sign-in.tsx`, `packages/web/app/routes/sign-up.tsx`, `packages/web/app/lib/validation.ts`, `packages/web/app/styles/landing.css`, and the two auth route test files; it does not touch `packages/web/app/routes/dashboard.tsx`, where the redirect to `/sign-in` is implemented."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Reviewed `form-validation-auth` at commit `0399507`. The feature passes code review with no code defects found; I recorded shared-state observations about skill-adherence reporting and the feature-to-validation-contract mapping."
+}

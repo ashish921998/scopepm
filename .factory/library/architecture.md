@@ -38,6 +38,7 @@ scopepm/
 ## Web Patterns
 
 - TanStack Router with file-based routing
+- `packages/web/app/routeTree.gen.ts` is a committed generated artifact; adding, removing, or renaming route files requires regenerating or updating it before typecheck/build will pass
 - Auth: Better Auth React client with useSession hook
 - Dashboard layout has auth guard + onboarding guard
 - Data fetching: useEffect/useState/apiFetch (no react-query)

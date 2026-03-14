@@ -1,0 +1,136 @@
+{
+  "milestone": "feature-fixes",
+  "round": 1,
+  "status": "fail",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "cd /Users/ashishhuddar/scopepm/packages/api && bun run test && cd /Users/ashishhuddar/scopepm/packages/web && bun run test",
+      "exitCode": 0
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "cd /Users/ashishhuddar/scopepm && ./node_modules/.bin/tsc -p packages/api/tsconfig.json --noEmit && ./node_modules/.bin/tsc -p packages/web/tsconfig.json --noEmit",
+      "exitCode": 0
+    },
+    "lint": {
+      "passed": true,
+      "command": "Not configured in .factory/services.yaml (project has no ESLint setup; lint validation skipped)",
+      "exitCode": 0
+    }
+  },
+  "reviewsSummary": {
+    "total": 8,
+    "passed": 4,
+    "failed": 4,
+    "failedFeatures": [
+      "mobile-hamburger-nav",
+      "interview-update-endpoint",
+      "interview-edit-ui",
+      "form-validation-dashboard"
+    ]
+  },
+  "blockingIssues": [
+    {
+      "featureId": "mobile-hamburger-nav",
+      "severity": "blocking",
+      "description": "Opening the mobile menu and then crossing to desktop width leaves `document.body.style.overflow` stuck at `hidden` because the landing and dashboard layouts never reset `menuOpen` on breakpoint changes."
+    },
+    {
+      "featureId": "interview-update-endpoint",
+      "severity": "blocking",
+      "description": "`PUT /api/interviews/:id` reads `body.title` and `body.transcript` before guarding that `await c.req.json()` returned an object, so a valid JSON `null` payload throws and returns 500 instead of the required 400 validation response."
+    },
+    {
+      "featureId": "interview-edit-ui",
+      "severity": "blocking",
+      "description": "The interview edit Cancel button stays active during an in-flight save, so a stale PUT completion can later clear a newer edit session and close the wrong form."
+    },
+    {
+      "featureId": "form-validation-dashboard",
+      "severity": "blocking",
+      "description": "Onboarding step buttons still call `setStep(index)` directly, letting users click ahead without satisfying earlier required fields, so step validation does not truly gate progression."
+    }
+  ],
+  "nonBlockingIssues": [
+    {
+      "featureId": "reset-password-page",
+      "severity": "non_blocking",
+      "description": "The invalid-token UI renders `resetError.message` directly, so unfriendly backend wording could leak to users instead of stable friendly copy."
+    },
+    {
+      "featureId": "reset-password-page",
+      "severity": "non_blocking",
+      "description": "`packages/web/app/__tests__/routes/reset-password.test.tsx` renders an inline replica instead of the real route, so route wiring and `window.location.search` handling are not covered."
+    },
+    {
+      "featureId": "fix-forgot-password-url",
+      "severity": "non_blocking",
+      "description": "`packages/web/app/__tests__/routes/forgot-password.test.tsx` mutates `window.location` without truly restoring the original object, which can leak fake origins into later tests."
+    },
+    {
+      "featureId": "mobile-hamburger-nav",
+      "severity": "non_blocking",
+      "description": "`packages/web/app/__tests__/routes/hamburger-nav.test.tsx` validates copied inline nav components instead of the production route implementations, so responsive regressions can slip through."
+    },
+    {
+      "featureId": "loading-skeletons",
+      "severity": "non_blocking",
+      "description": "The dashboard home loading skeleton does not closely approximate the quick-actions layout, which increases layout jump when content loads."
+    },
+    {
+      "featureId": "loading-skeletons",
+      "severity": "non_blocking",
+      "description": "`packages/web/app/__tests__/routes/loading-skeletons.test.tsx` exercises helper components in isolation rather than the real route loading branches."
+    },
+    {
+      "featureId": "interview-edit-ui",
+      "severity": "non_blocking",
+      "description": "`packages/web/app/__tests__/routes/interview-edit.test.tsx` mirrors the route in a local test-only component instead of covering `dashboard/interviews.tsx` itself."
+    }
+  ],
+  "appliedUpdates": [
+    {
+      "target": "library",
+      "description": "Updated .factory/library/architecture.md to record that TanStack Router route additions also require the committed `packages/web/app/routeTree.gen.ts` artifact to be regenerated or updated before typecheck/build passes.",
+      "sourceFeature": "reset-password-page"
+    }
+  ],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "web-worker skill",
+      "suggestion": "Clarify when tests-first and manual `agent-browser` verification are mandatory, and require workers to record a deviation instead of reporting `followedProcedure: true` when those steps are skipped.",
+      "evidence": "Reviews for reset-password-page, fix-forgot-password-url, mobile-hamburger-nav, loading-skeletons, interview-edit-ui, form-validation-auth, and form-validation-dashboard all found code changes landed before tests and/or no browser verification despite handoffs still claiming procedure compliance.",
+      "isSystemic": true
+    },
+    {
+      "target": "web-worker and web-test-worker skills",
+      "suggestion": "Add explicit guidance that route/UI tests should import and exercise real production components or routes instead of copied inline replicas/helper-only harnesses unless a documented constraint requires otherwise.",
+      "evidence": "Reviews for reset-password-page, mobile-hamburger-nav, loading-skeletons, and interview-edit-ui each found new tests that passed against local replica components or helper-only renders while missing regressions in the real route implementations.",
+      "isSystemic": true
+    },
+    {
+      "target": "validation-contract.md",
+      "suggestion": "Narrow the loading-skeleton validation guidance so it checks real loading placeholders instead of requiring `grep -r 'loading-text'` to return zero matches for every dashboard route.",
+      "evidence": "The loading-skeletons review showed the worker had to rewrite unrelated empty-state text styling just to satisfy the broad `loading-text` grep requirement, even though the shared CSS class is also used as a generic centered-text style.",
+      "isSystemic": false
+    },
+    {
+      "target": "features.json / mission metadata",
+      "suggestion": "Keep `fulfills` mappings aligned with the routes and behaviors each feature actually changes; for this milestone `VAL-CROSS-002` was attached to form-validation-auth even though the auth-gate redirect logic lives in `packages/web/app/routes/dashboard.tsx`.",
+      "evidence": "The form-validation-auth review found commit `0399507` changed auth-form validation files and tests only, while the guarded dashboard redirect behavior referenced by `VAL-CROSS-002` is implemented elsewhere.",
+      "isSystemic": false
+    }
+  ],
+  "rejectedObservations": [
+    {
+      "observation": "The interview-edit-ui review suggested dashboard browser verification may need clearer bootstrap guidance for protected routes.",
+      "reason": "already-documented in .factory/library/user-testing.md, which states that test users can be created via the sign-up flow before validating authenticated dashboard pages."
+    },
+    {
+      "observation": "Repeated per-feature notes that `web-worker` procedure adherence was reported too loosely.",
+      "reason": "duplicate of the single systemic web-worker skill recommendation already captured above."
+    }
+  ],
+  "previousRound": null
+}

@@ -1,0 +1,28 @@
+{
+  "featureId": "form-validation-dashboard",
+  "reviewedAt": "2026-03-14T22:48:47Z",
+  "commitId": "11a482e4778acc2c4d7589dcc87224d5f1a803ab",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "The project, interview, and spec creation forms now have the expected inline field errors, loading-state buttons, and inline server-error banners, but the onboarding flow still has a validation bypass. Because the numbered step buttons jump straight to later steps without reusing the new validation logic, the implementation does not fully satisfy the requirement that each onboarding step prevent proceeding without the required input.",
+    "issues": [
+      {
+        "file": "packages/web/app/routes/onboarding.tsx",
+        "line": 182,
+        "severity": "blocking",
+        "description": "The numbered onboarding step buttons call `setStep(index)` directly, so users can click ahead to the team/goals steps without satisfying the required fields that `handleContinue` validates at lines 100-125. That means the flow still allows proceeding past step 1/2 without the required role/company/team inputs, which violates VAL-FORM-003 and the feature description. If the user reaches the final step this way, `handleSubmit` falls back to the generic banner at lines 137-138 instead of showing the promised step-specific inline errors. Forward step navigation should be gated by the same validation rules, or future steps should stay disabled until prior steps are complete."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The reviewed session was marked as having followed the `web-worker` procedure, but the recorded workflow did not actually match that procedure: tests were added only after many source-file edits, and the only manual verification captured was an unrelated sign-in-page check rather than the onboarding/dashboard forms changed by this feature. Skill-adherence reporting is currently too permissive, or the skill needs explicit exceptions for when TDD/manual verification may be skipped.",
+      "evidence": ".factory/skills/web-worker/SKILL.md lines 24-27 require writing tests first, and lines 41-44 require manual verification on the affected pages. The transcript skeleton for session `51edaed1-ee0b-49a7-99fa-ac7f03ea8423` shows a long sequence of `Edit` calls before the first `Create` calls for new tests, and the handoff's only interactive check is the sign-in page at `.../handoffs/2026-03-14T22-44-10-479Z__form-validation-dashboard__51edaed1-ee0b-49a7-99fa-ac7f03ea8423.json:28-29`, while `followedProcedure` is still recorded as true at lines 200-202."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Reviewed the feature metadata, handoff, transcript skeleton, commit `11a482e`, and the current onboarding/project/interview/spec form code and tests. Result: fail, because onboarding step navigation still bypasses the new required-field validation; I also recorded one skill-adherence/shared-state observation."
+}

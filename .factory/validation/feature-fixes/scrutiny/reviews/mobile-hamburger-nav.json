@@ -1,0 +1,34 @@
+{
+  "featureId": "mobile-hamburger-nav",
+  "reviewedAt": "2026-03-14T22:48:28.673922+00:00",
+  "commitId": "cf29bb3",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "The feature adds the requested mobile menus on the landing page and dashboard, but it leaves body scroll locked if the menu is opened on mobile and the viewport later crosses to desktop width. The added tests are also weak because they exercise copied test-only replicas instead of the real route components.",
+    "issues": [
+      {
+        "file": "packages/web/app/routes/index.tsx",
+        "line": 18,
+        "severity": "blocking",
+        "description": "`document.body.style.overflow` is tied only to `menuOpen`, with no breakpoint/resize reset. If the landing menu is opened below 768px and the viewport is then widened, `landing.css` hides `.hamburger-btn`/`.mobile-menu` at desktop widths (`packages/web/app/styles/landing.css:672-709`) but `menuOpen` stays true and body scrolling remains locked. The same regression exists in the dashboard layout (`packages/web/app/routes/dashboard.tsx:52`)."
+      },
+      {
+        "file": "packages/web/app/__tests__/routes/hamburger-nav.test.tsx",
+        "line": 6,
+        "severity": "non_blocking",
+        "description": "The new test file validates local 'inline replicas' (`LandingNav`/`DashboardNav`) instead of importing the real route implementations. Because the assertions run against copied markup/state (`packages/web/app/__tests__/routes/hamburger-nav.test.tsx:10-141`), the suite can pass even when production code diverges or misses edge cases such as the resize-induced scroll-lock bug above."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "`web-worker` says to write tests first and manually verify all affected responsive pages, but the worker transcript shows code edits before the new test file was created and the handoff's interactive checks only cover `/`, not `/dashboard`, even though `skillFeedback.followedProcedure` is `true`.",
+      "evidence": "Skill: `/Users/ashishhuddar/scopepm/.factory/skills/web-worker/SKILL.md:24-45`. Transcript skeleton: `/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/worker-transcripts.jsonl:14` shows `Edit` calls for `index.tsx`/`dashboard.tsx`/`landing.css` before `Create` for `hamburger-nav.test.tsx`. Handoff interactive checks in `/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/handoffs/2026-03-14T22-11-39-238Z__mobile-hamburger-nav__f59b4673-8ec6-4ac0-a5c9-a93e931372d0.json:28-40` mention only `http://localhost:3000/`."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Review failed: the mobile menu implementation leaves scroll locking stuck after a mobile-to-desktop resize/orientation change, and the added test suite does not exercise the real route components. Report written for scrutiny synthesis."
+}

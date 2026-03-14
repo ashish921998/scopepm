@@ -1,0 +1,39 @@
+{
+  "featureId": "loading-skeletons",
+  "reviewedAt": "2026-03-14T22:47:17Z",
+  "commitId": "b6be5ce",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "The feature successfully replaces the plain dashboard loading text with reusable animated skeletons across the targeted routes, and the interviews/specs pages keep their headers visible while data is loading. I found two non-blocking gaps: the dashboard home skeleton does not closely match the eventual quick-actions layout, and the added tests only exercise the helper components rather than the actual route loading branches.",
+    "issues": [
+      {
+        "file": "packages/web/app/routes/dashboard/index.tsx",
+        "line": 84,
+        "severity": "non_blocking",
+        "description": "The loading state renders `SkeletonActivityItem` rows in both dashboard section cards, but the loaded page's left-hand section is a `quick-actions-grid` of large action cards. This still meets the 'no plain loading text' requirement, but it does not approximate the final dashboard layout particularly well and will cause a more noticeable layout jump when the real quick actions appear."
+      },
+      {
+        "file": "packages/web/app/__tests__/routes/loading-skeletons.test.tsx",
+        "line": 100,
+        "severity": "non_blocking",
+        "description": "The new 'dashboard loading states' tests render skeleton helper components in isolation instead of mounting the actual route components, so they do not verify the real loading branches for `/dashboard`, `/dashboard/projects/$projectId`, `/dashboard/interviews`, or `/dashboard/specs`. Route-wiring regressions such as missing headers or accidentally reintroducing loading text in a page branch would not be caught by this test file."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The web-worker skill's documented procedure does not match what this worker session actually did, but the handoff still marked `skillFeedback.followedProcedure` as true. The skill says to write tests first and to do manual agent-browser verification, while the transcript shows implementation edits before the test file was created and no agent-browser usage at all.",
+      "evidence": "`/Users/ashishhuddar/scopepm/.factory/skills/web-worker/SKILL.md:24` says 'Write tests first (TDD)' and `:41-45` require manual verification with agent-browser. The transcript skeleton for worker session `873daa06-c19c-40d7-9595-30a929666f04` shows `Skeleton.tsx` and route edits occurring before `packages/web/app/__tests__/routes/loading-skeletons.test.tsx` was created, and it contains no agent-browser tool invocation. The handoff file `/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/handoffs/2026-03-14T22-18-01-683Z__loading-skeletons__873daa06-c19c-40d7-9595-30a929666f04.json:105` still records `followedProcedure: true`."
+    },
+    {
+      "area": "knowledge",
+      "observation": "The mission guidance around removing `loading-text` is broader than the actual feature requirement and pushed unrelated UI churn. The worker had to replace empty-state text styling, not just loading placeholders, because the validation guidance treated any `loading-text` usage as a failure even though the shared CSS class is also a generic centered text style.",
+      "evidence": "The validation contract for `loading-skeletons` requires `grep -r 'loading-text' packages/web/app/routes/ returns nothing`. The transcript shows follow-up edits made only after that grep failed. In the final code, unrelated empty-state paragraphs were rewritten inline at `packages/web/app/routes/dashboard/index.tsx:219` and `packages/web/app/routes/dashboard/projects.$projectId.tsx:164` and `:190`, while the shared style itself still exists at `packages/web/app/styles/landing.css:1588`."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Reviewed the feature metadata, validation contract, AGENTS guidance, worker handoff, transcript skeleton, commit b6be5ce diff, and the resulting web route/component/test files. Result: pass with two non-blocking findings — the dashboard home skeleton could better match the eventual quick-actions layout, and the added tests do not mount the real route loading branches; I also noted skill/procedure and validation-guidance shared-state gaps."
+}
