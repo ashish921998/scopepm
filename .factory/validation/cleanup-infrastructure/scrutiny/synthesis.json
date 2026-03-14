@@ -1,0 +1,96 @@
+{
+  "milestone": "cleanup-infrastructure",
+  "round": 1,
+  "status": "fail",
+  "validatorsRun": {
+    "test": {
+      "passed": true,
+      "command": "cd /Users/ashishhuddar/scopepm && bun run test",
+      "exitCode": 0
+    },
+    "typecheck": {
+      "passed": true,
+      "command": "cd /Users/ashishhuddar/scopepm && ./node_modules/.bin/tsc -p packages/api/tsconfig.json --noEmit && ./node_modules/.bin/tsc -p packages/web/tsconfig.json --noEmit",
+      "exitCode": 0
+    },
+    "lint": {
+      "passed": true,
+      "command": "Not configured in .factory/services.yaml (project has no ESLint setup; lint validation skipped)",
+      "exitCode": 0
+    }
+  },
+  "reviewsSummary": {
+    "total": 6,
+    "passed": 4,
+    "failed": 2,
+    "failedFeatures": [
+      "test-infrastructure-setup",
+      "fix-vite-version-mismatch"
+    ]
+  },
+  "blockingIssues": [
+    {
+      "featureId": "test-infrastructure-setup",
+      "severity": "blocking",
+      "description": "The original test-infrastructure commit paired packages/web vite ^6.0.0 with vitest ^4.1.0, which later caused TS2769 typecheck failures in the web Vite/Vitest config. The feature was not actually complete when first merged because required typecheck validation was skipped."
+    },
+    {
+      "featureId": "fix-vite-version-mismatch",
+      "severity": "blocking",
+      "description": "The follow-up Vite alignment left bun.lock out of sync with packages/web/package.json: the manifest declares vite ^7.0.0 while bun.lock still records the web workspace vite spec as ^7.3.1. The dependency update workflow was not fully carried through to the committed lockfile."
+    }
+  ],
+  "appliedUpdates": [
+    {
+      "target": "services.yaml",
+      "description": "Added typecheck:api, typecheck:web, and typecheck commands so shared validation state now includes the TypeScript checks scrutiny actually relies on.",
+      "sourceFeature": "test-infrastructure-setup"
+    },
+    {
+      "target": "library",
+      "description": "Updated .factory/library/environment.md to record that packages/web now uses Vite 7 with Vitest 4, and that the earlier Vite 6 + Vitest 4 pairing caused web config type errors on this macOS environment.",
+      "sourceFeature": "fix-vite-version-mismatch"
+    }
+  ],
+  "suggestedGuidanceUpdates": [
+    {
+      "target": "cleanup-worker skill",
+      "suggestion": "Clarify whether post-cleanup startup verification is mandatory for metadata-only cleanup tasks, or require workers to record a deviation when they skip that step.",
+      "evidence": "The cleanup-dead-code-and-deps review found the worker skipped the skill's startup verification step but still reported followedProcedure: true.",
+      "isSystemic": false
+    },
+    {
+      "target": "api-worker skill",
+      "suggestion": "Allow trivial env/refactor-only API changes to rely on existing automated coverage instead of requiring new tests-first work every time.",
+      "evidence": "The fix-env-consistency-anthropic review showed a two-line consistency change that reasonably reused existing tests, while the skill still mandates TDD for all API changes.",
+      "isSystemic": true
+    },
+    {
+      "target": "web-worker and fullstack-worker skills",
+      "suggestion": "Document how workers should validate frontend/infrastructure tasks when test infrastructure is not yet available, and make explicit that typecheck must still run before claiming procedure compliance.",
+      "evidence": "The root-error-boundary review needed to defer automated tests until infrastructure existed, and the test-infrastructure-setup review found the worker skipped typecheck while still reporting procedure compliance.",
+      "isSystemic": true
+    },
+    {
+      "target": "AGENTS.md / mission guidance",
+      "suggestion": "Update mission guidance to reflect the current tooling reality: packages/web now uses Vite 7 with Vitest 4, and the API env-var convention should clarify when process.env is required versus when c.env/types may still exist.",
+      "evidence": "Multiple reviews flagged stale Vite 6 guidance, and the env-consistency review noted AGENTS says 'use process.env consistently' while the codebase still has c.env.ENVIRONMENT and Hono binding types.",
+      "isSystemic": true
+    }
+  ],
+  "rejectedObservations": [
+    {
+      "observation": "Add the macOS Vitest workaround directly to the api-worker skill.",
+      "reason": "already-documented in mission AGENTS.md and effectively handled by the current packages/api test script (`bun run test` invokes Vitest through Node)."
+    },
+    {
+      "observation": "Add a shared-state note that AGENTS still says the web package uses Vite 6.x.",
+      "reason": "duplicate of the guidance/library updates already captured from the Vite mismatch reviews."
+    },
+    {
+      "observation": "Treat the root-error-boundary -> VAL-CROSS-006 feature mapping mismatch as a services/library update.",
+      "reason": "belongs to orchestrator-owned mission metadata rather than factual runtime shared state."
+    }
+  ],
+  "previousRound": null
+}

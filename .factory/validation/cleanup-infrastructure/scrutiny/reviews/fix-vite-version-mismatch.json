@@ -1,0 +1,28 @@
+{
+  "featureId": "fix-vite-version-mismatch",
+  "reviewedAt": "2026-03-14T21:25:21Z",
+  "commitId": "ac88d7a",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "The feature updates packages/web/package.json to vite ^7.0.0 and the commit removes the old web-specific vite lock entries, but the final lockfile is left out of sync with the package manifest after the worker edited package.json back from ^7.3.1 to ^7.0.0 without rerunning bun install. That means the implementation does not fully satisfy the requested dependency-update workflow.",
+    "issues": [
+      {
+        "file": "bun.lock",
+        "line": 50,
+        "severity": "blocking",
+        "description": "The committed lockfile still records the web workspace's vite spec as `^7.3.1`, while `packages/web/package.json:29` declares `^7.0.0`. The transcript shows the worker ran `bun update vite`, then manually changed package.json back to `^7.0.0` and committed without rerunning `bun install`, so the lockfile is not synchronized with the final manifest and the requested install/update step was not fully completed."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "knowledge",
+      "observation": "Mission shared state is stale after this feature: AGENTS.md still says the web package uses vite 6.x without issues, but the reviewed change upgrades packages/web to vite ^7.0.0.",
+      "evidence": "/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/AGENTS.md:59 says \"The web package uses vite 6.x without issues\"; /Users/ashishhuddar/scopepm/packages/web/package.json:29 now declares \"vite\": \"^7.0.0\"."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Review failed. The code change fixes the package manifest, but the committed bun.lock still reflects `^7.3.1` for the web workspace instead of the final `^7.0.0` manifest, so the dependency update was not carried through cleanly to the lockfile."
+}

@@ -1,0 +1,38 @@
+{
+  "featureId": "test-infrastructure-setup",
+  "reviewedAt": "2026-03-14T21:27:11.797750Z",
+  "commitId": "aa544a1",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "The feature added the requested smoke-test scaffolding (root/package test scripts, Vitest configs, an API health smoke test, and a web Hero smoke test), but the reviewed commit shipped the web package with an incompatible Vite/Vitest version combination. That mismatch later broke `packages/web` type-checking and required a follow-up fix before the milestone could pass scrutiny.",
+    "issues": [
+      {
+        "file": "packages/web/package.json",
+        "line": 29,
+        "severity": "blocking",
+        "description": "In commit `aa544a1`, the web package pairs `vite: ^6.0.0` (line 29) with `vitest: ^4.1.0` (line 30). That created incompatible Vite/plugin types for `packages/web/vite.config.ts` and `packages/web/vitest.config.ts`, and the later scrutiny-validator handoff recorded `tsc -p packages/web/tsconfig.json --noEmit` failing with `TS2769` until a follow-up fix aligned the web package to Vite 7. Because the mission requires TypeScript strict mode to pass, this feature was not actually complete."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The `fullstack-worker` skill says infrastructure work should verify both test suites and 'No TypeScript errors (if typecheck available)', but this worker's transcript/handoff only recorded the two package test runs and still marked `skillFeedback.followedProcedure` true. That gap let the Vite type mismatch escape until scrutiny validation.",
+      "evidence": "`.factory/skills/fullstack-worker/SKILL.md:33-35` requires checking for TypeScript errors; `/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/handoffs/2026-03-14T21-13-28-430Z__test-infrastructure-setup__9827d2d4-9722-4572-9dfc-013f216389cc.json` lists only `cd packages/api && bun run test` and `cd packages/web && bun run test`; `/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/handoffs/2026-03-14T21-15-57-620Z__scrutiny-validator-cleanup-infrastructure__8086108f-b878-4649-a83a-93be536b7b23.json` records the missed `TS2769` typecheck failure."
+    },
+    {
+      "area": "services",
+      "observation": "The shared services file documents install/test/build commands but no typecheck command for either package, even though milestone validation depends on `tsc` checks. Adding explicit typecheck commands would make the required verification path clearer for workers.",
+      "evidence": "`.factory/services.yaml:3-5` defines only `test:api`, `test:web`, and `test`; the scrutiny-validator handoff had to invoke `tsc -p packages/api/tsconfig.json --noEmit` and `tsc -p packages/web/tsconfig.json --noEmit` directly."
+    },
+    {
+      "area": "knowledge",
+      "observation": "Mission shared state is stale about the web Vite requirement. `AGENTS.md` says the web package can stay on Vite 6 without issues, but the reviewed feature plus later validator results showed web typechecking fails with package-local `vite@6.4.1` alongside Vitest 4, and the current repo now pins the web package to Vite 7.",
+      "evidence": "`/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/AGENTS.md:59` says 'The web package uses vite 6.x without issues'; the scrutiny-validator handoff reports `TS2769` from root `vite@7.3.1` vs package-local `vite@6.4.1`; current `packages/web/package.json:29-30` shows `vite: ^7.0.0` with `vitest: ^4.1.0`."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Reviewed commit `aa544a1` for `test-infrastructure-setup`. The smoke-test scaffolding was added, but the web dependency versions were incompatible and caused a blocking `packages/web` typecheck failure, so the feature review fails."
+}

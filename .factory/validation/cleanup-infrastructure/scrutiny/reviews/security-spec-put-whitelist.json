@@ -1,0 +1,21 @@
+{
+  "featureId": "security-spec-put-whitelist",
+  "reviewedAt": "2026-03-14T21:25:24Z",
+  "commitId": "d189ec6",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Commit d189ec6 satisfies the feature description and VAL-CLEAN-003. The PUT /api/specs/:id handler now uses an explicit whitelist for title, description, priority, status, acceptanceCriteria, and projectId in packages/api/src/routes/specs.ts:231-239 with no raw `...body` spread, so protected fields cannot be written. The added API tests in packages/api/src/__tests__/specs.test.ts:84-192 cover protected-field rejection plus normal update/auth/ownership/not-found/invalid-id behavior. I found no blocking or non-blocking implementation issues in the reviewed scope.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The `api-worker` skill still tells workers to run API tests with `cd packages/api && bun run test`, but it does not mention the repo's macOS-specific Vitest workaround already documented in mission guidance. For features like this one that need API tests, the skill should explicitly mention that the package script may need to invoke Vitest through Node / Vite 7 on this machine.",
+      "evidence": "`/Users/ashishhuddar/scopepm/.factory/skills/api-worker/SKILL.md:20-33` only documents `cd packages/api && bun run test`, while `/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/AGENTS.md:59` documents the vite 6.x esbuild crash and the `node ../../node_modules/.bin/vitest run` workaround. The worker handoff also calls this out in `/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/handoffs/2026-03-14T21-05-42-250Z__security-spec-put-whitelist__cf5ad429-256a-48bf-996f-fcdab2333453.json:71-72`."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Pass. The reviewed commit removes the unsafe spread from PUT /api/specs/:id, limits updates to the requested whitelist, and adds focused regression tests for protected fields plus core error cases."
+}

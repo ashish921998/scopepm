@@ -3,6 +3,9 @@ commands:
   test:api: cd /Users/ashishhuddar/scopepm/packages/api && bun run test
   test:web: cd /Users/ashishhuddar/scopepm/packages/web && bun run test
   test: cd /Users/ashishhuddar/scopepm/packages/api && bun run test && cd /Users/ashishhuddar/scopepm/packages/web && bun run test
+  typecheck:api: cd /Users/ashishhuddar/scopepm && ./node_modules/.bin/tsc -p packages/api/tsconfig.json --noEmit
+  typecheck:web: cd /Users/ashishhuddar/scopepm && ./node_modules/.bin/tsc -p packages/web/tsconfig.json --noEmit
+  typecheck: cd /Users/ashishhuddar/scopepm && ./node_modules/.bin/tsc -p packages/api/tsconfig.json --noEmit && ./node_modules/.bin/tsc -p packages/web/tsconfig.json --noEmit
   build: cd /Users/ashishhuddar/scopepm && bun run build
   # lint: NOT CONFIGURED - project has no ESLint setup. Skip lint validation.
 

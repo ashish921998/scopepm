@@ -1,0 +1,26 @@
+{
+  "featureId": "fix-env-consistency-anthropic",
+  "reviewedAt": "2026-03-14T21:24:54.522721Z",
+  "commitId": "654d763",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Commit 654d763 fully implements the requested env-consistency change: the only runtime ANTHROPIC_API_KEY reads in packages/api/src/routes/interviews.ts:131 and packages/api/src/routes/specs.ts:159 now use process.env.ANTHROPIC_API_KEY, and no c.env.ANTHROPIC_API_KEY usages remain under packages/api/src. This satisfies the feature description and VAL-CLEAN-005.",
+    "issues": []
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The `api-worker` skill currently mandates 'Write tests first (TDD)' for all API changes, but this feature was a two-line env-access refactor and the worker reasonably relied on existing tests instead of adding new ones. The skill should explicitly allow trivial consistency/refactor changes to use existing coverage when no new behavior is introduced.",
+      "evidence": "Transcript skeleton for workerSessionId 8d68078d-6fc5-4787-b827-1e36f41ae6fe shows no test file creation: it ran `cd /Users/ashishhuddar/scopepm/packages/api && bun run test` before and after the edits, then edited only packages/api/src/routes/interviews.ts and packages/api/src/routes/specs.ts. Meanwhile `/Users/ashishhuddar/scopepm/.factory/skills/api-worker/SKILL.md` step 3 says 'Write tests first (TDD)'."
+    },
+    {
+      "area": "conventions",
+      "observation": "Mission guidance says API environment variables should use `process.env` instead of `c.env`, but the codebase still contains `c.env.ENVIRONMENT` access and an `ANTHROPIC_API_KEY` Hono binding type. The convention/documentation should clarify whether `process.env` is the required runtime access pattern while Hono bindings remain for other envs/typing, or document the exception.",
+      "evidence": "`/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/AGENTS.md:31` says 'Environment variables: Use `process.env.VAR_NAME` consistently (not c.env)'; current code still has `packages/api/src/index.ts:59` using `c.env.ENVIRONMENT`, and `packages/api/src/lib/hono.ts:7` declares `ANTHROPIC_API_KEY: string` in `AppBindings`."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Pass. The feature change is narrowly scoped and correct: both targeted routes now read `process.env.ANTHROPIC_API_KEY`, the commit diff matches the feature description, and no blocking or non-blocking code issues were found in the implementation."
+}

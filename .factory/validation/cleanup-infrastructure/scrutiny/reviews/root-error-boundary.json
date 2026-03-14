@@ -1,0 +1,38 @@
+{
+  "featureId": "root-error-boundary",
+  "reviewedAt": "2026-03-14T21:26:00Z",
+  "commitId": "46c1d44",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Commit 46c1d44 adds the requested root `errorComponent` in `packages/web/app/routes/__root.tsx`, with a styled full-page fallback, a reset action, and a home link, so it satisfies the feature description and `VAL-CLEAN-006`. One non-blocking issue remains: the fallback prints raw exception text directly to end users instead of normalizing it to consistently friendly copy.",
+    "issues": [
+      {
+        "file": "packages/web/app/routes/__root.tsx",
+        "line": 49,
+        "severity": "non_blocking",
+        "description": "`RootErrorComponent` renders `error.message` directly. Unhandled render/runtime exceptions can therefore surface technical strings to users, which undercuts the 'user-friendly fallback UI' goal. Prefer a stable friendly message (optionally logging the raw error separately) rather than showing arbitrary exception text verbatim."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The `web-worker` skill assumes every frontend feature can follow tests-first plus manual `agent-browser` verification, but this feature was scheduled before `test-infrastructure-setup` and the worker validated only with source inspection/TypeScript. The skill should document when those steps can be deferred to later milestone validators or to infrastructure-dependent follow-up work.",
+      "evidence": "`/Users/ashishhuddar/scopepm/.factory/skills/web-worker/SKILL.md` steps 3, 5, and 6 require TDD + `bun run test` + `agent-browser`. The transcript skeleton for workerSessionId `f99eb27a-11b0-4aba-abb0-8767ef8853c2` shows `bun run test` failed because no `test` script existed, then the worker proceeded with a direct edit and `npx tsc --noEmit`; the handoff marks `skillFeedback.followedProcedure: false` for skipping TDD because test infrastructure was not yet installed."
+    },
+    {
+      "area": "services",
+      "observation": "The mission's shared command registry does not expose a web typecheck command even though workers use TypeScript checks as part of validation, so validators and workers fall back to ad-hoc `npx tsc --noEmit` commands.",
+      "evidence": "`/Users/ashishhuddar/scopepm/.factory/services.yaml` defines `install`, `test:api`, `test:web`, `test`, and `build`, but no `typecheck` command. The root-error-boundary transcript skeleton includes `cd /Users/ashishhuddar/scopepm/packages/web && npx tsc --noEmit 2>&1` as the verification step."
+    },
+    {
+      "area": "conventions",
+      "observation": "`features.json` currently maps `root-error-boundary` to `VAL-CROSS-006`, but that contract requires dashboard navigation to remain usable from an error state, which is not what the root fallback renders. The validation linkage should be clarified so reviewers do not assume the root boundary alone satisfies the dashboard-error requirement.",
+      "evidence": "`/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/features.json` lists `fulfills: [\"VAL-CLEAN-006\", \"VAL-CROSS-006\"]` for `root-error-boundary`. The reviewed code in `packages/web/app/routes/__root.tsx:12-90` renders only the full-screen fallback with `Try again` and `Go home`, while the actual in-page dashboard error handling lives in route components such as `packages/web/app/routes/dashboard/projects.$projectId.tsx:53-61`."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Pass with one non-blocking issue. The feature correctly adds a root TanStack Router error boundary with recovery actions and design-system styling, but the fallback currently exposes raw exception messages to users. I also noted shared-state gaps around the `web-worker` procedure, missing shared typecheck commands, and the feature-to-validation mapping for `VAL-CROSS-006`."
+}

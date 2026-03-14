@@ -21,6 +21,10 @@ Environment variables, external dependencies, and setup notes.
 - Node compatibility via Bun
 - Deploys to Cloudflare Workers (API) and Cloudflare Pages (Web)
 
+## Tooling Compatibility
+
+- `packages/web` now uses `vite` 7.x with `vitest` 4.x. The earlier `vite` 6.x + `vitest` 4.x combination caused `TS2769` type errors in the web Vite/Vitest config on this macOS setup.
+
 ## Database
 
 - Remote PlanetScale PostgreSQL (not local)
