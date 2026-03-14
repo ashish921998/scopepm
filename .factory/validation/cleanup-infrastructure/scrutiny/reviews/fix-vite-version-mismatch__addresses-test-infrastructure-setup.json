@@ -1,0 +1,28 @@
+{
+  "featureId": "fix-vite-version-mismatch",
+  "reviewedAt": "2026-03-14T21:36:58.778412Z",
+  "commitId": "ac88d7a",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "Commit ac88d7a does address the original blocking issue from `test-infrastructure-setup`: it moves `packages/web/package.json` from `vite ^6.0.0` in aa544a1 to `vite ^7.0.0`, which aligns the web package with Vitest 4 and matches the worker's successful rerun of `cd packages/web && npx tsc --noEmit`. However, the fix commit still leaves `bun.lock` out of sync with the final manifest, so the feature itself is not fully complete.",
+    "issues": [
+      {
+        "file": "bun.lock",
+        "line": 50,
+        "severity": "blocking",
+        "description": "The committed lockfile still records the web workspace's vite spec as `^7.3.1`, while `packages/web/package.json:29` declares `^7.0.0`. The transcript shows the worker ran `bun update vite`, then manually changed `packages/web/package.json` back to `^7.0.0` and committed without rerunning `bun install`, so the original TS2769 Vite/Vitest/typecheck mismatch is resolved but the dependency update workflow was not carried through cleanly to the committed lockfile."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "knowledge",
+      "observation": "Mission guidance is still stale about the web Vite requirement. `AGENTS.md` says the web package uses Vite 6.x without issues, but this fix and the shared environment library both establish that the web package needs Vite 7.x with Vitest 4 on this macOS setup.",
+      "evidence": "/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/AGENTS.md:59 says 'The web package uses vite 6.x without issues'; /Users/ashishhuddar/scopepm/.factory/library/environment.md:26 records that `packages/web` now uses `vite` 7.x with `vitest` 4.x because the earlier Vite 6 + Vitest 4 combination caused `TS2769` type errors."
+    }
+  ],
+  "addressesFailureFrom": "test-infrastructure-setup",
+  "summary": "The fix feature resolves the original `test-infrastructure-setup` blocker by aligning the web package to Vite 7 and clearing the TS2769 web typecheck mismatch, but review still fails because commit ac88d7a leaves `bun.lock` out of sync with the final `packages/web/package.json` manifest."
+}

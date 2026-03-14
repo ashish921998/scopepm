@@ -1,7 +1,7 @@
 {
   "milestone": "cleanup-infrastructure",
-  "round": 2,
-  "status": "pass",
+  "round": 1,
+  "status": "fail",
   "validatorsRun": {
     "test": {
       "passed": true,
@@ -20,29 +20,24 @@
     }
   },
   "reviewsSummary": {
-    "total": 7,
-    "passed": 7,
-    "failed": 0,
-    "failedFeatures": []
+    "total": 6,
+    "passed": 4,
+    "failed": 2,
+    "failedFeatures": [
+      "test-infrastructure-setup",
+      "fix-vite-version-mismatch"
+    ]
   },
-  "resolvedFailures": [
+  "blockingIssues": [
     {
-      "originalFeature": "test-infrastructure-setup",
-      "fixedBy": "fix-vite-version-mismatch",
-      "evidence": ".factory/validation/cleanup-infrastructure/scrutiny/reviews/fix-vite-version-mismatch__addresses-test-infrastructure-setup.json"
+      "featureId": "test-infrastructure-setup",
+      "severity": "blocking",
+      "description": "The original test-infrastructure commit paired packages/web vite ^6.0.0 with vitest ^4.1.0, which later caused TS2769 typecheck failures in the web Vite/Vitest config. The feature was not actually complete when first merged because required typecheck validation was skipped."
     },
     {
-      "originalFeature": "fix-vite-version-mismatch",
-      "fixedBy": "fix-lockfile-sync",
-      "evidence": ".factory/validation/cleanup-infrastructure/scrutiny/reviews/fix-lockfile-sync.json"
-    }
-  ],
-  "blockingIssues": [],
-  "nonBlockingIssues": [
-    {
-      "featureId": "root-error-boundary",
-      "severity": "non_blocking",
-      "description": "`packages/web/app/routes/__root.tsx` still renders `error.message` directly in the fallback UI. This exposes raw exception text to users, but it is acceptable for now and does not block milestone completion."
+      "featureId": "fix-vite-version-mismatch",
+      "severity": "blocking",
+      "description": "The follow-up Vite alignment left bun.lock out of sync with packages/web/package.json: the manifest declares vite ^7.0.0 while bun.lock still records the web workspace vite spec as ^7.3.1. The dependency update workflow was not fully carried through to the committed lockfile."
     }
   ],
   "appliedUpdates": [
@@ -95,11 +90,7 @@
     {
       "observation": "Treat the root-error-boundary -> VAL-CROSS-006 feature mapping mismatch as a services/library update.",
       "reason": "belongs to orchestrator-owned mission metadata rather than factual runtime shared state."
-    },
-    {
-      "observation": "Apply a new shared-state update for the rerun review note that AGENTS still mentions Vite 6.x.",
-      "reason": "duplicate of the round-1 guidance recommendation plus the existing .factory/library/environment.md update documenting the Vite 7 requirement."
     }
   ],
-  "previousRound": ".factory/validation/cleanup-infrastructure/scrutiny/synthesis.round1.json"
+  "previousRound": null
 }
