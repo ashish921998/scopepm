@@ -1,0 +1,27 @@
+packages/api/package.json
+  5b8d7634e6f594a4 7-8
+packages/api/src/routes/specs.ts
+  5b8d7634e6f594a4 232-236,238
+packages/api/src/__tests__/specs.test.ts
+  5b8d7634e6f594a4 1-194
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "d189ec627ee7b2e7772f2f3326b4a935371e5290",
+  "prompts": {
+    "5b8d7634e6f594a4": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "cf5ad429-256a-48bf-996f-fcdab2333453",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 224,
+      "total_deletions": 6,
+      "accepted_lines": 220,
+      "overriden_lines": 0
+    }
+  }
+}
