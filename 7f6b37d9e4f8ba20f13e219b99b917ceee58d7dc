@@ -1,0 +1,31 @@
+packages/web/app/routes/onboarding.tsx
+  d5d3ce9dc4e0f31c 100-113,196
+packages/web/app/routes/index.tsx
+  d5d3ce9dc4e0f31c 31-45
+packages/api/src/routes/interviews.ts
+  d5d3ce9dc4e0f31c 175-177
+packages/web/app/routes/dashboard.tsx
+  d5d3ce9dc4e0f31c 65-79
+packages/web/app/routes/dashboard/interviews.tsx
+  d5d3ce9dc4e0f31c 396
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "7f6b37d9e4f8ba20f13e219b99b917ceee58d7dc",
+  "prompts": {
+    "d5d3ce9dc4e0f31c": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "04d289af-55aa-4820-8539-772c9ad079de",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 49,
+      "total_deletions": 1,
+      "accepted_lines": 49,
+      "overriden_lines": 0
+    }
+  }
+}
