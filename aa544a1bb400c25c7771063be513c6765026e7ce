@@ -1,0 +1,33 @@
+packages/api/vitest.config.ts
+  01968845c305ce11 1-8
+packages/api/src/__tests__/health.test.ts
+  01968845c305ce11 1-16
+packages/web/vitest.config.ts
+  01968845c305ce11 1-11
+package.json
+  01968845c305ce11 11-12
+packages/web/app/__tests__/hero.test.tsx
+  01968845c305ce11 1-23
+packages/web/package.json
+  01968845c305ce11 8-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "aa544a1bb400c25c7771063be513c6765026e7ce",
+  "prompts": {
+    "01968845c305ce11": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "9827d2d4-9722-4572-9dfc-013f216389cc",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 63,
+      "total_deletions": 2,
+      "accepted_lines": 63,
+      "overriden_lines": 0
+    }
+  }
+}
