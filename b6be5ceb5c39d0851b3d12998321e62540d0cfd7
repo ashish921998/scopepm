@@ -1,0 +1,37 @@
+packages/web/app/__tests__/routes/loading-skeletons.test.tsx
+  99202f0ac2c55e19 1-182
+packages/web/app/routes/dashboard/projects.index.tsx
+  99202f0ac2c55e19 4,52-56
+packages/web/app/components/Skeleton.tsx
+  99202f0ac2c55e19 1-122
+packages/web/app/routes/dashboard/specs.tsx
+  99202f0ac2c55e19 4,305-309
+packages/web/app/routes/dashboard/interviews.tsx
+  99202f0ac2c55e19 4,212-216
+packages/web/app/routes/dashboard/projects.$projectId.tsx
+  99202f0ac2c55e19 4,58-105,164,190
+packages/web/app/styles/landing.css
+  99202f0ac2c55e19 1566-1578
+packages/web/app/routes/dashboard/index.tsx
+  99202f0ac2c55e19 4-9,65-117,219
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "b6be5ceb5c39d0851b3d12998321e62540d0cfd7",
+  "prompts": {
+    "99202f0ac2c55e19": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "873daa06-c19c-40d7-9595-30a929666f04",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 478,
+      "total_deletions": 40,
+      "accepted_lines": 446,
+      "overriden_lines": 0
+    }
+  }
+}
