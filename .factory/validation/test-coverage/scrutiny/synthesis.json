@@ -1,7 +1,7 @@
 {
   "milestone": "test-coverage",
-  "round": 1,
-  "status": "fail",
+  "round": 2,
+  "status": "pass",
   "validatorsRun": {
     "test": {
       "passed": true,
@@ -20,87 +20,14 @@
     }
   },
   "reviewsSummary": {
-    "total": 6,
-    "passed": 4,
-    "failed": 2,
-    "failedFeatures": [
-      "api-tests-specs-auth-health",
-      "web-tests-components-routes"
-    ]
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "failedFeatures": []
   },
-  "blockingIssues": [
-    {
-      "featureId": "api-tests-specs-auth-health",
-      "severity": "blocking",
-      "description": "`packages/api/src/__tests__/auth-middleware.test.ts` checks `/api/me` by mounting a copied stand-in handler instead of exercising the real endpoint in `packages/api/src/index.ts`, so the required unauthorized `/api/me` coverage can pass even if the actual app route regresses."
-    },
-    {
-      "featureId": "web-tests-components-routes",
-      "severity": "blocking",
-      "description": "`packages/web/app/__tests__/routes/dashboard.test.tsx` still contains a silent-pass path (`expect(mockNavigate).toBeDefined()` and return) that lets the dashboard auth-guard test succeed without rendering the route component or asserting the redirect/loading behavior, so the requested dashboard-route coverage is not reliable."
-    }
-  ],
-  "nonBlockingIssues": [
-    {
-      "featureId": "api-tests-waitlist-onboarding",
-      "severity": "non_blocking",
-      "description": "`packages/api/src/__tests__/waitlist.test.ts` replaces the exported `waitlist` schema with a plain object, so the suite would still pass if the route queried the wrong table or column."
-    },
-    {
-      "featureId": "api-tests-projects",
-      "severity": "non_blocking",
-      "description": "The PUT success case in `packages/api/src/__tests__/projects.test.ts` posts both `name` and `description` but only asserts the updated `name`, leaving the returned `description` unverified."
-    },
-    {
-      "featureId": "fix-dashboard-test-import",
-      "severity": "non_blocking",
-      "description": "The updated dashboard auth-guard test still has a fallback branch that can pass without rendering `DashboardLayout`, which weakens the value of the fixed test even though the import/typecheck problem is resolved."
-    }
-  ],
-  "appliedUpdates": [
-    {
-      "target": "library",
-      "description": "Updated `.factory/library/architecture.md` to document that `/api/me` lives in `packages/api/src/index.ts`, so tests for that endpoint should exercise the real app entry rather than a copied handler.",
-      "sourceFeature": "api-tests-specs-auth-health"
-    },
-    {
-      "target": "library",
-      "description": "Updated `.factory/library/architecture.md` to note that TanStack route modules export a named `Route` binding and route-focused tests should import `{ Route }` instead of assuming a default export.",
-      "sourceFeature": "fix-dashboard-test-import"
-    }
-  ],
-  "suggestedGuidanceUpdates": [
-    {
-      "target": "api-test-worker skill",
-      "suggestion": "Document realistic Drizzle mocking patterns for API route tests, including how to mock schema/table exports and how to model mixed chained selects (for example a reusable `makeFromSequence` helper) without depending on undefined column references.",
-      "evidence": "The waitlist/onboarding review found `packages/api/src/__tests__/waitlist.test.ts` fell back to a `{}` table mock because the skill only says to mock the database layer, and the projects review introduced `makeFromSequence(...)` in `packages/api/src/__tests__/projects.test.ts` to cover mixed `where()` / `where().orderBy()` chains without any prior guidance.",
-      "isSystemic": true
-    },
-    {
-      "target": "api-test-worker skill",
-      "suggestion": "Clarify how to test app-level endpoints that live in `packages/api/src/index.ts` (such as `/api/me`) so workers exercise the real app entry instead of copying handlers into test files.",
-      "evidence": "The `api-tests-specs-auth-health` review found `packages/api/src/__tests__/auth-middleware.test.ts` duplicated a simplified `/api/me` route instead of hitting the real handler in `packages/api/src/index.ts:71-90`.",
-      "isSystemic": true
-    },
-    {
-      "target": "web-test-worker skill",
-      "suggestion": "Require `typecheck:web` alongside `bun run test` before finalizing web-test features so type-invalid imports and route-module assumptions are caught during the feature, not by follow-up cleanup work.",
-      "evidence": "The `web-tests-components-routes` review found the original dashboard suite shipped a type-invalid `../../routes/dashboard?t=1` import that only surfaced later; `.factory/services.yaml` already defines `typecheck:web`, but the skill only requires test runs.",
-      "isSystemic": true
-    },
-    {
-      "target": "web-test-worker skill",
-      "suggestion": "Route tests should assert real route behavior and avoid fallback branches that pass without rendering the route component or checking navigation side effects.",
-      "evidence": "The `web-tests-components-routes` review found `packages/web/app/__tests__/routes/dashboard.test.tsx` could pass via a silent `expect(mockNavigate).toBeDefined()` branch, and the `fix-dashboard-test-import` review confirmed that fallback remains after the import fix.",
-      "isSystemic": true
-    },
-    {
-      "target": "AGENTS.md / testing conventions",
-      "suggestion": "Clarify the preferred placement for web component tests under `packages/web/app/__tests__` to avoid duplicate suites like the existing root-level `hero.test.tsx` and the later `components/Hero.test.tsx` copy.",
-      "evidence": "The `web-tests-components-routes` review found the repo already had `packages/web/app/__tests__/hero.test.tsx`, but the feature added `packages/web/app/__tests__/components/Hero.test.tsx` with effectively the same assertions because no placement convention is documented.",
-      "isSystemic": false
-    }
-  ],
+  "blockingIssues": [],
+  "appliedUpdates": [],
+  "suggestedGuidanceUpdates": [],
   "rejectedObservations": [],
-  "previousRound": null
+  "previousRound": ".factory/validation/test-coverage/scrutiny/synthesis.round1.json"
 }
