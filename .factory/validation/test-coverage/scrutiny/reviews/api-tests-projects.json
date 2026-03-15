@@ -1,0 +1,28 @@
+{
+  "featureId": "api-tests-projects",
+  "reviewedAt": "2026-03-15T06:11:37.763342Z",
+  "commitId": "af23db5",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Reviewed the feature metadata, handoff, transcript skeleton, commit diff, current project route, and the new test suite. The implementation stays in scope, keeps the database mocked, and covers every required project endpoint with success-path plus 400/401/404 assertions. I found one minor coverage gap in the PUT success case: it sends an updated description but only asserts the updated name.",
+    "issues": [
+      {
+        "file": "packages/api/src/__tests__/projects.test.ts",
+        "line": 510,
+        "severity": "non_blocking",
+        "description": "The PUT success case posts both `name` and `description`, but it only asserts `body.project.name`. If the handler stopped persisting or returning the updated description, this test would still pass, so the requested 'update name/description \u2192 200' behavior is only partially asserted."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The `api-test-worker` skill still documents only the generic mock/test flow, but this feature needed an extra `makeFromSequence` helper to model sequential Drizzle selects with mixed chain shapes (`where()` vs `where().orderBy()`). That reusable pattern is worth documenting so future API-test workers do not have to rediscover it.",
+      "evidence": "`.factory/skills/api-test-worker/SKILL.md:25-38` covers reading existing tests, designing the suite, and running tests but does not mention mixed Drizzle chain mocking; `packages/api/src/__tests__/projects.test.ts:147-153` introduces `makeFromSequence(...)`; the worker also called this out in the handoff suggestion at `/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/handoffs/2026-03-15T05-47-32-217Z__api-tests-projects__deaec263-610c-49c5-a800-a36e9e470ece.json:153-154`."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Pass. The feature adds a fully mocked 28-case API suite for the project routes and matches the requested endpoint/error coverage. I noted one non-blocking assertion gap in the PUT success case and one skill-documentation observation about the reusable mixed-chain mocking pattern."
+}

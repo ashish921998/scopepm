@@ -1,0 +1,28 @@
+{
+  "featureId": "api-tests-specs-auth-health",
+  "reviewedAt": "2026-03-15T06:10:20.493443+00:00",
+  "commitId": "2146f43",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "The new specs and health tests broadly match the requested scenarios, but the required unauthenticated GET /api/me coverage is not testing the real endpoint. auth-middleware.test duplicates a simplified /api/me handler instead of exercising packages/api/src/index.ts, so this feature does not fully satisfy the auth-middleware requirement.",
+    "issues": [
+      {
+        "file": "packages/api/src/__tests__/auth-middleware.test.ts",
+        "line": 80,
+        "severity": "blocking",
+        "description": "The GET /api/me test defines an inline stand-in route ('Replicate the /api/me route from index.ts') instead of exercising the real endpoint in packages/api/src/index.ts. Because the test never hits the actual handler at index.ts:71-90, it can still pass if the real /api/me route regresses, so the feature does not fully cover the required unauthorized /api/me behavior."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The api-test-worker skill assumes features target standalone route modules, but this feature included /api/me, which lives in packages/api/src/index.ts. Without guidance for app-level endpoints, the worker copied the route logic into the test instead of exercising the real endpoint.",
+      "evidence": ".factory/skills/api-test-worker/SKILL.md says 'The route handlers already exist'; packages/api/src/__tests__/auth-middleware.test.ts:80-87 duplicates /api/me; the real handler is in packages/api/src/index.ts:71-90."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Fail. The feature adds substantial specs/auth/health coverage, but the required unauthenticated GET /api/me assertion is implemented against a copied test-only route rather than the real app endpoint, leaving a coverage hole."
+}

@@ -1,0 +1,28 @@
+{
+  "featureId": "fix-dashboard-test-import",
+  "reviewedAt": "2026-03-15T06:10:43Z",
+  "commitId": "027dc91",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Reviewed the feature entry, worker handoff, transcript skeleton, commit diff, dashboard route, and the updated dashboard test. The implementation stays in scope and fixes the TypeScript incompatibility exactly as requested by replacing the query-string import with a normal route import, using `vi.resetModules()` for cache busting, and switching to the route module's named `Route` export.",
+    "issues": [
+      {
+        "file": "packages/web/app/__tests__/routes/dashboard.test.tsx",
+        "line": 43,
+        "severity": "non_blocking",
+        "description": "The touched auth-guard test still has a silent-pass branch: if `Route.component` cannot be resolved, it falls back to `expect(mockNavigate).toBeDefined()` and returns. That means the test can succeed without rendering `DashboardLayout` or asserting the redirect behavior, which weakens coverage even though the import/typecheck fix itself is correct."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "knowledge",
+      "observation": "The repo's TanStack route modules use a named `Route` export, and dynamic route-module tests need to access that export instead of assuming a default export. That convention is visible in source/generated files but is not called out in AGENTS.md or the library notes, so the worker had to discover it during the fix.",
+      "evidence": "The transcript skeleton for workerSessionId `f9617be6-aaa7-41a9-8539-14c50d453851` shows the worker made the import-path fix first, then read `packages/web/app/routes/dashboard.tsx` before changing the destructuring to `{ Route }`. The convention is visible at `packages/web/app/routes/dashboard.tsx:10` and `packages/web/app/routeTree.gen.ts:17`."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Pass. The feature correctly resolves the web-package typecheck failure by removing the `?t=1` import suffix and using `vi.resetModules()` with the route module's named `Route` export. I found one non-blocking test-quality issue: the updated auth-guard test still contains a fallback that can let it pass without exercising the component if route-component resolution breaks."
+}

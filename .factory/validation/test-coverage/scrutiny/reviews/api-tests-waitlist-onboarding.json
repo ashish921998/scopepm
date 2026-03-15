@@ -1,0 +1,28 @@
+{
+  "featureId": "api-tests-waitlist-onboarding",
+  "reviewedAt": "2026-03-15T06:11:14.036405+00:00",
+  "commitId": "48f5852",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "pass",
+  "codeReview": {
+    "summary": "Reviewed the feature entry, worker handoff, transcript skeleton, api-test-worker skill, commit diff, and the waitlist/onboarding route and test files. The implementation stays within scope, uses mocked database access plus Hono request helpers instead of the remote database, and covers the required waitlist and onboarding success/auth/validation cases; the only issue I found is a non-blocking fidelity weakness in the waitlist table mock.",
+    "issues": [
+      {
+        "file": "packages/api/src/__tests__/waitlist.test.ts",
+        "line": 20,
+        "severity": "non_blocking",
+        "description": "The test replaces the exported `waitlist` schema with a plain object (`waitlist: {}`) and relies on `eq(waitlist.email, email)` tolerating an undefined column reference. Because the db mocks also ignore the table/column arguments, these tests would still pass if the route accidentally queried the wrong table or column, so the waitlist coverage is a bit less representative than the other API route suites."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "The api-test-worker guidance says to mock the database layer, but it does not explain how to handle Drizzle schema/table exports in route tests. The worker had to inspect drizzle-orm internals before settling on a `{}` table mock that depends on `eq()` accepting undefined columns.",
+      "evidence": ".factory/skills/api-test-worker/SKILL.md only says 'Mock the database layer'; the transcript skeleton includes several reads/greps into node_modules/drizzle-orm before the tests were written; packages/api/src/__tests__/waitlist.test.ts:25-27 documents the resulting `waitlist: {}` assumption."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Pass. The feature adds the requested waitlist and onboarding API tests with mocked db/auth flows and good scenario coverage, but the waitlist suite uses a schema-less table mock that makes those tests slightly less faithful than ideal."
+}

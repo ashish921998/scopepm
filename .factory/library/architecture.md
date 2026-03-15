@@ -31,6 +31,7 @@ scopepm/
 ## API Patterns
 
 - Route files export Hono routers mounted in index.ts
+- `/api/me` is defined directly in `packages/api/src/index.ts` rather than a dedicated route module, so tests for that endpoint need to exercise the app entry instead of a copied stand-in handler
 - Session middleware runs globally, attaches user/session to context
 - Protected routes check `c.get('user')` for null
 - Ownership checks compare userId from record to authenticated user
@@ -38,6 +39,7 @@ scopepm/
 ## Web Patterns
 
 - TanStack Router with file-based routing
+- TanStack route modules export a named `Route` binding; route-focused tests should import `{ Route }` from the route module instead of assuming a default export
 - `packages/web/app/routeTree.gen.ts` is a committed generated artifact; adding, removing, or renaming route files requires regenerating or updating it before typecheck/build will pass
 - Auth: Better Auth React client with useSession hook
 - Dashboard layout has auth guard + onboarding guard

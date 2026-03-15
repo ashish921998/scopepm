@@ -1,0 +1,39 @@
+{
+  "featureId": "web-tests-components-routes",
+  "reviewedAt": "2026-03-15T06:11:09Z",
+  "commitId": "e21c57b",
+  "transcriptSkeletonReviewed": true,
+  "diffReviewed": true,
+  "status": "fail",
+  "codeReview": {
+    "summary": "Reviewed the feature entry, worker handoff, transcript skeleton, commit e21c57b, and the affected web test/source files. The new component coverage is straightforward and the existing sign-in/sign-up tests satisfy that part of the feature, but the newly added dashboard route suite has a blocking import mistake and also contains assertions that can pass without exercising the real route logic, so the feature did not fully deliver the requested dashboard auth-guard coverage.",
+    "issues": [
+      {
+        "file": "packages/web/app/__tests__/routes/dashboard.test.tsx",
+        "line": 38,
+        "severity": "blocking",
+        "description": "The original commit imports `../../routes/dashboard?t=1` as a default export, but `packages/web/app/routes/dashboard.tsx` exports `Route` (see line 8 there), not a default component. That made the added test file type-invalid and later required the follow-up fix commit `027dc91`, so the feature's claimed green monorepo state was not actually preserved."
+      },
+      {
+        "file": "packages/web/app/__tests__/routes/dashboard.test.tsx",
+        "line": 52,
+        "severity": "blocking",
+        "description": "The dashboard suite does not reliably verify the route behavior it claims to cover. In the first test, lines 41-44 explicitly treat a missing component as success (`expect(mockNavigate).toBeDefined()`), and the later tests only mutate local `session`/`isPending` variables instead of rendering the dashboard route. As written, the suite can pass even if the actual auth guard or loading behavior regresses."
+      }
+    ]
+  },
+  "sharedStateObservations": [
+    {
+      "area": "skills",
+      "observation": "`web-test-worker` should include web typecheck validation, not just test runs. This feature shipped a type-invalid dashboard test because the skill procedure stops after `bun run test` for web and API.",
+      "evidence": "`.factory/skills/web-test-worker/SKILL.md` steps 6-8 list only `cd packages/web && bun run test` and `cd packages/api && bun run test`, while `.factory/services.yaml` defines `typecheck:web`. The handoff for session `a4cb41ed-b3ea-424d-9a5d-8b5bdc181dec` records only those two test commands, and the bad import at `packages/web/app/__tests__/routes/dashboard.test.tsx:38` slipped through until a later fix."
+    },
+    {
+      "area": "conventions",
+      "observation": "The repo's web-test placement convention is unclear. A Hero test already existed at `packages/web/app/__tests__/hero.test.tsx`, but this feature added `packages/web/app/__tests__/components/Hero.test.tsx` with the same two assertions, leaving duplicate coverage paths.",
+      "evidence": "The transcript skeleton shows the worker reading `packages/web/app/__tests__/hero.test.tsx` before creating `packages/web/app/__tests__/components/Hero.test.tsx`. `AGENTS.md` only says web tests live under `app/__tests__/**/*.test.tsx`, so there is no documented guidance on whether component tests belong at the root of `__tests__` or in `__tests__/components/`."
+    }
+  ],
+  "addressesFailureFrom": null,
+  "summary": "Fail. The feature added the requested landing-page component tests and benefited from pre-existing sign-in/sign-up coverage, but the new dashboard auth-guard suite was both type-invalid in commit `e21c57b` and weak enough to pass without rendering the real route, so the feature did not fully satisfy its required dashboard-route coverage."
+}
