@@ -1,0 +1,23 @@
+packages/web/app/__tests__/routes/dashboard.test.tsx
+  136d3c6fafa68e09 38-41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "027dc91e9105d0c7e193f8bb79e2b1efb698df94",
+  "prompts": {
+    "136d3c6fafa68e09": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "f9617be6-aaa7-41a9-8539-14c50d453851",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 5,
+      "total_deletions": 3,
+      "accepted_lines": 4,
+      "overriden_lines": 0
+    }
+  }
+}
