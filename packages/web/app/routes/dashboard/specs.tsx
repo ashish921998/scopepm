@@ -15,6 +15,9 @@ type FeatureSpec = {
   interviewId: number | null
 }
 
+// Status options for specs
+const SPEC_STATUSES = ['draft', 'in_review', 'approved', 'in_progress', 'completed'] as const
+
 type Project = {
   id: number
   name: string
@@ -73,6 +76,16 @@ export function SpecsPage() {
   const [titleError, setTitleError] = useState('')
   const [descriptionError, setDescriptionError] = useState('')
   const [formError, setFormError] = useState('')
+
+  // Edit spec state
+  const [editingId, setEditingId] = useState<number | null>(null)
+  const [editTitle, setEditTitle] = useState('')
+  const [editDescription, setEditDescription] = useState('')
+  const [editAcceptanceCriteria, setEditAcceptanceCriteria] = useState('')
+  const [editPriority, setEditPriority] = useState('medium')
+  const [editStatus, setEditStatus] = useState('draft')
+  const [editSaving, setEditSaving] = useState(false)
+  const [editError, setEditError] = useState('')
 
   useEffect(() => {
     setShowForm(Boolean(search.new))
@@ -200,6 +213,90 @@ export function SpecsPage() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete spec')
     }
+  }
+
+  const handleEditStart = (spec: FeatureSpec) => {
+    setEditingId(spec.id)
+    setEditTitle(spec.title)
+    setEditDescription(spec.description)
+    setEditAcceptanceCriteria(parseAcceptanceCriteria(spec.acceptanceCriteria).join('\n'))
+    setEditPriority(spec.priority)
+    setEditStatus(spec.status)
+    setEditError('')
+  }
+
+  const handleEditCancel = () => {
+    setEditingId(null)
+    setEditTitle('')
+    setEditDescription('')
+    setEditAcceptanceCriteria('')
+    setEditPriority('medium')
+    setEditStatus('draft')
+    setEditError('')
+  }
+
+  const handleEditSubmit = async (id: number, event: React.FormEvent) => {
+    event.preventDefault()
+    setEditError('')
+
+    if (!editTitle.trim() || editTitle.trim().length < 3) {
+      setEditError('Title must be at least 3 characters')
+      return
+    }
+
+    if (!editDescription.trim() || editDescription.trim().length < 20) {
+      setEditError('Description must be at least 20 characters')
+      return
+    }
+
+    setEditSaving(true)
+
+    try {
+      const data = await apiFetch<{ spec: FeatureSpec }>(`/api/specs/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          title: editTitle.trim(),
+          description: editDescription.trim(),
+          acceptanceCriteria: editAcceptanceCriteria
+            .split('\n')
+            .map((item) => item.trim())
+            .filter(Boolean),
+          priority: editPriority,
+          status: editStatus,
+        }),
+      })
+      setSpecs((current) => current.map((item) => (item.id === id ? data.spec : item)))
+      setEditingId(null)
+    } catch (err) {
+      setEditError(err instanceof Error ? err.message : 'Failed to update spec')
+    } finally {
+      setEditSaving(false)
+    }
+  }
+
+  const handleExportMarkdown = (spec: FeatureSpec) => {
+    const criteria = parseAcceptanceCriteria(spec.acceptanceCriteria)
+    const markdown = `# ${spec.title}
+
+**Priority:** ${spec.priority}
+**Status:** ${spec.status}
+**Created:** ${new Date(spec.createdAt).toLocaleDateString()}
+
+## Description
+
+${spec.description}
+
+${criteria.length > 0 ? `## Acceptance Criteria
+
+${criteria.map((c) => `- [ ] ${c}`).join('\n')}` : ''}
+`
+    const blob = new Blob([markdown], { type: 'text/markdown' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${spec.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.md`
+    a.click()
+    URL.revokeObjectURL(url)
   }
 
   const parseAcceptanceCriteria = (criteria: string | null): string[] => {
@@ -358,57 +455,118 @@ export function SpecsPage() {
         </div>
       ) : (
         <div className="spec-list">
-          {specs.map((spec) => (
-            <div key={spec.id} className="spec-card">
-              <div className="spec-header">
-                <div>
-                  <h3 className="spec-title">{spec.title}</h3>
-                  {spec.projectId && (
-                    <Link
-                      to="/dashboard/projects/$projectId"
-                      params={{ projectId: String(spec.projectId) }}
-                      className="entity-link"
-                    >
-                      {projectNameMap.get(spec.projectId) || 'Project'}
-                    </Link>
-                  )}
-                </div>
-                <div className="spec-badges">
-                  <span className={`priority-badge priority-${spec.priority}`}>{spec.priority}</span>
-                  <span className={`status-badge status-${spec.status}`}>{spec.status}</span>
-                </div>
+          {specs.map((spec) =>
+            editingId === spec.id ? (
+              <div key={spec.id} className="spec-card">
+                <form onSubmit={(e) => handleEditSubmit(spec.id, e)} className="auth-form">
+                  <div className="form-group">
+                    <label className="form-label">Title</label>
+                    <input
+                      type="text"
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      className="form-input"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Description</label>
+                    <textarea
+                      value={editDescription}
+                      onChange={(e) => setEditDescription(e.target.value)}
+                      className="form-textarea"
+                      rows={6}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Acceptance criteria</label>
+                    <textarea
+                      value={editAcceptanceCriteria}
+                      onChange={(e) => setEditAcceptanceCriteria(e.target.value)}
+                      className="form-textarea"
+                      rows={5}
+                      placeholder="One criterion per line"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Priority</label>
+                    <select value={editPriority} onChange={(e) => setEditPriority(e.target.value)} className="form-input">
+                      <option value="high">High</option>
+                      <option value="medium">Medium</option>
+                      <option value="low">Low</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Status</label>
+                    <select value={editStatus} onChange={(e) => setEditStatus(e.target.value)} className="form-input">
+                      {SPEC_STATUSES.map((s) => (
+                        <option key={s} value={s}>{s.replace(/_/g, ' ')}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {editError && <div className="auth-error page-alert">{editError}</div>}
+                  <div style={{ display: 'flex', gap: '0.75rem' }}>
+                    <button type="submit" className="btn-primary btn-sm" disabled={editSaving}>
+                      {editSaving ? 'Saving...' : 'Save changes'}
+                    </button>
+                    <button type="button" className="btn-ghost btn-sm" onClick={handleEditCancel} disabled={editSaving}>
+                      Cancel
+                    </button>
+                  </div>
+                </form>
               </div>
-
-              <p className="spec-description">{spec.description}</p>
-
-              {parseAcceptanceCriteria(spec.acceptanceCriteria).length > 0 && (
-                <div className="spec-criteria">
-                  <h4>Acceptance Criteria</h4>
-                  <ul>
-                    {parseAcceptanceCriteria(spec.acceptanceCriteria).map((criterion, index) => (
-                      <li key={index}>{criterion}</li>
-                    ))}
-                  </ul>
+            ) : (
+              <div key={spec.id} className="spec-card">
+                <div className="spec-header">
+                  <div>
+                    <h3 className="spec-title">{spec.title}</h3>
+                    {spec.projectId && (
+                      <Link
+                        to="/dashboard/projects/$projectId"
+                        params={{ projectId: String(spec.projectId) }}
+                        className="entity-link"
+                      >
+                        {projectNameMap.get(spec.projectId) || 'Project'}
+                      </Link>
+                    )}
+                  </div>
+                  <div className="spec-badges">
+                    <span className={`priority-badge priority-${spec.priority}`}>{spec.priority}</span>
+                    <span className={`status-badge status-${spec.status}`}>{spec.status.replace(/_/g, ' ')}</span>
+                  </div>
                 </div>
-              )}
 
-              <div className="spec-meta">
-                <span>{new Date(spec.createdAt).toLocaleDateString()}</span>
-                {spec.interviewId && <span>Linked interview #{spec.interviewId}</span>}
-              </div>
+                <p className="spec-description">{spec.description}</p>
 
-              <div className="spec-actions">
-                {spec.projectId && (
-                  <Link to="/dashboard/interviews" search={{ projectId: spec.projectId }} className="btn-ghost btn-sm">
-                    View project interviews
-                  </Link>
+                {parseAcceptanceCriteria(spec.acceptanceCriteria).length > 0 && (
+                  <div className="spec-criteria">
+                    <h4>Acceptance Criteria</h4>
+                    <ul>
+                      {parseAcceptanceCriteria(spec.acceptanceCriteria).map((criterion, index) => (
+                        <li key={index}>{criterion}</li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
-                <button onClick={() => handleDelete(spec.id)} className="btn-ghost btn-sm">
-                  Delete
-                </button>
+
+                <div className="spec-meta">
+                  <span>{new Date(spec.createdAt).toLocaleDateString()}</span>
+                  {spec.interviewId && <span>Linked interview #{spec.interviewId}</span>}
+                </div>
+
+                <div className="spec-actions">
+                  <button onClick={() => handleEditStart(spec)} className="btn-secondary btn-sm">
+                    Edit
+                  </button>
+                  <button onClick={() => handleExportMarkdown(spec)} className="btn-ghost btn-sm">
+                    Export MD
+                  </button>
+                  <button onClick={() => handleDelete(spec.id)} className="btn-ghost btn-sm">
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            ),
+          )}
         </div>
       )}
     </div>

@@ -8,6 +8,7 @@ type ProjectDetail = {
     id: number
     name: string
     description: string | null
+    status?: string
     interviewCount: number
     specCount: number
     pendingInterviewCount: number
@@ -37,6 +38,14 @@ function ProjectDetailPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
+  // Edit state
+  const [isEditing, setIsEditing] = useState(false)
+  const [editName, setEditName] = useState('')
+  const [editDescription, setEditDescription] = useState('')
+  const [editStatus, setEditStatus] = useState('active')
+  const [editSaving, setEditSaving] = useState(false)
+  const [editError, setEditError] = useState('')
+
   useEffect(() => {
     const loadProject = async () => {
       try {
@@ -51,6 +60,63 @@ function ProjectDetailPage() {
 
     void loadProject()
   }, [projectId])
+
+  const handleEditStart = () => {
+    if (data) {
+      setEditName(data.project.name)
+      setEditDescription(data.project.description || '')
+      setEditStatus(data.project.status || 'active')
+      setIsEditing(true)
+      setEditError('')
+    }
+  }
+
+  const handleEditCancel = () => {
+    setIsEditing(false)
+    setEditName('')
+    setEditDescription('')
+    setEditStatus('active')
+    setEditError('')
+  }
+
+  const handleEditSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
+    if (!editName.trim()) {
+      setEditError('Project name is required')
+      return
+    }
+
+    setEditSaving(true)
+    setEditError('')
+
+    try {
+      const result = await apiFetch<{ project: ProjectDetail['project'] }>(`/api/projects/${projectId}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          name: editName.trim(),
+          description: editDescription.trim() || null,
+          status: editStatus,
+        }),
+      })
+      setData((prev) => prev ? { ...prev, project: result.project } : null)
+      setIsEditing(false)
+    } catch (err) {
+      setEditError(err instanceof Error ? err.message : 'Failed to update project')
+    } finally {
+      setEditSaving(false)
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!confirm('Are you sure you want to delete this project? All interviews and specs will be deleted.')) return
+
+    try {
+      await apiFetch(`/api/projects/${projectId}`, { method: 'DELETE' })
+      window.location.href = '/dashboard/projects'
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete project')
+    }
+  }
 
   if (loading) {
     return (
@@ -111,8 +177,66 @@ function ProjectDetailPage() {
     return (
       <div className="container">
         <div className="empty-state">
-          <h3>Couldn’t load this project</h3>
+          <h3>Could not load this project</h3>
           <p>{error || 'Project not found'}</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (isEditing) {
+    return (
+      <div className="container narrow-container">
+        <div className="page-header">
+          <div>
+            <h1 className="page-title">Edit project</h1>
+            <p className="page-subtitle">Update project details and settings.</p>
+          </div>
+        </div>
+
+        <div className="form-card">
+          <form onSubmit={handleEditSubmit} className="auth-form" noValidate>
+            <div className="form-group">
+              <label className="form-label">Project name</label>
+              <input
+                className="form-input"
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                placeholder="Project name"
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Description</label>
+              <textarea
+                className="form-textarea"
+                value={editDescription}
+                onChange={(e) => setEditDescription(e.target.value)}
+                placeholder="What product area, initiative, or customer workflow does this cover?"
+                rows={5}
+              />
+            </div>
+            <div className="form-group">
+              <label className="form-label">Status</label>
+              <select
+                className="form-input"
+                value={editStatus}
+                onChange={(e) => setEditStatus(e.target.value)}
+              >
+                <option value="active">Active</option>
+                <option value="archived">Archived</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+            {editError && <div className="auth-error">{editError}</div>}
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <button type="submit" className="btn-primary" disabled={editSaving}>
+                {editSaving ? 'Saving...' : 'Save changes'}
+              </button>
+              <button type="button" className="btn-secondary" onClick={handleEditCancel} disabled={editSaving}>
+                Cancel
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     )
@@ -126,6 +250,12 @@ function ProjectDetailPage() {
           <p className="page-subtitle">{data.project.description || 'No description yet.'}</p>
         </div>
         <div className="page-header-actions">
+          <button onClick={handleEditStart} className="btn-secondary">
+            Edit
+          </button>
+          <button onClick={handleDelete} className="btn-ghost">
+            Delete
+          </button>
           <Link to="/dashboard/interviews" search={{ projectId: data.project.id, new: true }} className="btn-secondary">
             New Interview
           </Link>
