@@ -62,6 +62,7 @@ Cleanup-infrastructure runtime note:
 - Isolation boundary: do not edit application code or mission files outside the assigned flow report and evidence directory.
 - Allowed actions: read files, run grep/read-only repo checks, run `bun run test` for package-level validation, run local `curl` health checks against `localhost:3000` and `localhost:3001`.
 - Avoid interfering with browser validators: do not stop shared dev servers and do not mutate shared application data.
+- Repo-shell note (2026-03-15): the full web Vitest suite can emit a non-fatal jsdom warning, `Not implemented: navigation to another Document`, during hamburger-nav coverage; treat it as friction only when the suite still exits 0 with all tests passing.
 - Evidence should be saved as command output snippets or short text notes in the assigned evidence directory.
 
 ## Flow Validator Guidance: browser

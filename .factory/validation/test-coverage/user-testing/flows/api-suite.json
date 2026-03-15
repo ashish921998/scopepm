@@ -1,0 +1,177 @@
+{
+  "groupId": "api-suite",
+  "testedAt": "2026-03-15T12:46:49.345924+00:00",
+  "isolation": {
+    "surface": "repo-shell",
+    "repoRoot": "/Users/ashishhuddar/scopepm",
+    "missionDir": "/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9",
+    "apiBaseUrl": "http://localhost:3001",
+    "evidenceDir": "/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/evidence/test-coverage/api-suite",
+    "assignedAssertions": [
+      "VAL-TEST-005",
+      "VAL-TEST-006",
+      "VAL-TEST-007",
+      "VAL-TEST-008",
+      "VAL-TEST-009"
+    ]
+  },
+  "toolsUsed": [
+    "Read",
+    "LS",
+    "Glob",
+    "python3",
+    "node",
+    "bun",
+    "vitest"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-TEST-005",
+      "title": "API interview CRUD tests",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Inspect packages/api/src/__tests__/interviews.test.ts",
+          "expected": "Coverage for interview list, create, detail, update, and delete flows with success/error cases",
+          "observed": "Found interview CRUD coverage across GET list (6 tests), POST create (6 tests), GET detail (5 tests), PUT update (10 tests), and DELETE (5 tests), plus separate AI error handling tests."
+        },
+        {
+          "action": "Run the focused Vitest file for interviews with verbose output",
+          "expected": "The interview route test file passes and proves the CRUD tests execute cleanly",
+          "observed": "Vitest reported 1 test file passed and 34 tests passed for src/__tests__/interviews.test.ts, including the interview CRUD groups."
+        }
+      ],
+      "commands": [
+        "node ../../node_modules/.bin/vitest run src/__tests__/interviews.test.ts --reporter verbose"
+      ],
+      "evidence": {
+        "files": [
+          "test-coverage/api-suite/interviews-focused.txt"
+        ],
+        "sourceInspected": [
+          "packages/api/src/__tests__/interviews.test.ts"
+        ],
+        "summary": "Focused Vitest output shows the interview route suite passing, covering list/create/detail/update/delete behavior and related error cases."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-TEST-006",
+      "title": "API spec CRUD tests",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Inspect packages/api/src/__tests__/specs.test.ts",
+          "expected": "Coverage for spec list, create, detail, update, and delete flows with success/error cases",
+          "observed": "Found spec CRUD coverage across GET list (6 tests), POST create (6 tests), GET detail (5 tests), PUT update (6 tests), and DELETE (5 tests), plus separate AI generate error handling tests."
+        },
+        {
+          "action": "Run the focused Vitest file for specs with verbose output",
+          "expected": "The spec route test file passes and proves the CRUD tests execute cleanly",
+          "observed": "Vitest reported 1 test file passed and 31 tests passed for src/__tests__/specs.test.ts, including the spec CRUD groups."
+        }
+      ],
+      "commands": [
+        "node ../../node_modules/.bin/vitest run src/__tests__/specs.test.ts --reporter verbose"
+      ],
+      "evidence": {
+        "files": [
+          "test-coverage/api-suite/specs-focused.txt"
+        ],
+        "sourceInspected": [
+          "packages/api/src/__tests__/specs.test.ts"
+        ],
+        "summary": "Focused Vitest output shows the spec route suite passing, covering list/create/detail/update/delete behavior and related error cases."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-TEST-007",
+      "title": "API auth middleware tests",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Inspect packages/api/src/__tests__/auth-middleware.test.ts",
+          "expected": "At least 3 protected endpoints are explicitly tested to return 401 without authentication",
+          "observed": "Found unauthenticated 401 coverage for GET /api/projects, GET /api/interviews, GET /api/specs, GET /api/me, plus POST /api/projects, POST /api/interviews, and POST /api/specs."
+        },
+        {
+          "action": "Run the focused auth middleware Vitest file with verbose output",
+          "expected": "The protected-endpoint auth checks pass",
+          "observed": "Vitest reported 1 test file passed and 7 tests passed for src/__tests__/auth-middleware.test.ts, including 4 GET protected endpoints returning 401."
+        }
+      ],
+      "commands": [
+        "node ../../node_modules/.bin/vitest run src/__tests__/auth-middleware.test.ts --reporter verbose"
+      ],
+      "evidence": {
+        "files": [
+          "test-coverage/api-suite/auth-middleware-focused.txt"
+        ],
+        "sourceInspected": [
+          "packages/api/src/__tests__/auth-middleware.test.ts"
+        ],
+        "summary": "Focused Vitest output shows seven passing unauthenticated auth-middleware tests, including the four GET endpoints named in the contract."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-TEST-008",
+      "title": "API AI error handling tests",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Inspect packages/api/src/__tests__/interviews.test.ts and packages/api/src/__tests__/specs.test.ts",
+          "expected": "Tests exist for POST /api/interviews/:id/analyze and POST /api/specs/generate returning 500 when ANTHROPIC_API_KEY is missing",
+          "observed": "Found explicit missing-key tests in both files; each deletes process.env.ANTHROPIC_API_KEY before the request and asserts a 500 error response."
+        },
+        {
+          "action": "Run the focused interviews and specs Vitest files with verbose output",
+          "expected": "The missing-key AI error tests pass without making real Anthropic calls",
+          "observed": "Verbose output shows POST /api/interviews/:id/analyze -> 500 when ANTHROPIC_API_KEY is missing and POST /api/specs/generate -> 500 when ANTHROPIC_API_KEY is missing both passed."
+        }
+      ],
+      "commands": [
+        "node ../../node_modules/.bin/vitest run src/__tests__/interviews.test.ts --reporter verbose",
+        "node ../../node_modules/.bin/vitest run src/__tests__/specs.test.ts --reporter verbose"
+      ],
+      "evidence": {
+        "files": [
+          "test-coverage/api-suite/interviews-focused.txt",
+          "test-coverage/api-suite/specs-focused.txt"
+        ],
+        "sourceInspected": [
+          "packages/api/src/__tests__/interviews.test.ts",
+          "packages/api/src/__tests__/specs.test.ts"
+        ],
+        "summary": "Both focused suites passed their missing-ANTHROPIC_API_KEY assertions for analyze and generate endpoints."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-TEST-009",
+      "title": "API test suite count",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run the full API suite from packages/api using the package test script",
+          "expected": "The suite completes with at least 30 total tests and 0 failures",
+          "observed": "bun run test completed successfully with 7 test files passed, 125 tests passed, and 0 failures."
+        }
+      ],
+      "commands": [
+        "bun run test"
+      ],
+      "evidence": {
+        "files": [
+          "test-coverage/api-suite/full-api-suite.txt"
+        ],
+        "summary": "Full API suite output shows 125 passing tests across 7 files with no failures."
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 5 assertions through the repo-shell surface: 5 passed, 0 failed, 0 blocked. The full API suite passed with 125 tests and 0 failures."
+}

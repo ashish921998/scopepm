@@ -1,0 +1,37 @@
+{
+  "milestone": "test-coverage",
+  "round": 1,
+  "status": "pass",
+  "assertionsSummary": {
+    "total": 14,
+    "passed": 14,
+    "failed": 0,
+    "blocked": 0
+  },
+  "passedAssertions": [
+    "VAL-API-001",
+    "VAL-API-002",
+    "VAL-TEST-002",
+    "VAL-TEST-003",
+    "VAL-TEST-004",
+    "VAL-TEST-005",
+    "VAL-TEST-006",
+    "VAL-TEST-007",
+    "VAL-TEST-008",
+    "VAL-TEST-009",
+    "VAL-TEST-010",
+    "VAL-TEST-011",
+    "VAL-TEST-012",
+    "VAL-TEST-013"
+  ],
+  "failedAssertions": [],
+  "blockedAssertions": [],
+  "appliedUpdates": [
+    {
+      "target": "user-testing.md",
+      "description": "Documented that the full web Vitest suite may emit a non-fatal jsdom navigation warning during hamburger-nav coverage even when the suite exits 0 with all tests passing.",
+      "source": "flow-report"
+    }
+  ],
+  "previousRound": null
+}

@@ -1,0 +1,173 @@
+{
+  "groupId": "api-foundation",
+  "testedAt": "2026-03-15T12:44:02.265715+00:00",
+  "isolation": {
+    "surface": "repo-shell",
+    "repoRoot": "/Users/ashishhuddar/scopepm",
+    "missionDir": "/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9",
+    "apiBaseUrl": "http://localhost:3001",
+    "evidenceDir": "/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/evidence/test-coverage/api-foundation",
+    "assignedAssertions": [
+      "VAL-API-001",
+      "VAL-API-002",
+      "VAL-TEST-002",
+      "VAL-TEST-003",
+      "VAL-TEST-004"
+    ]
+  },
+  "toolsUsed": [
+    "Read",
+    "LS",
+    "Glob",
+    "curl",
+    "node",
+    "vitest"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-API-001",
+      "title": "Health check endpoint",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run curl against GET / on the live local API",
+          "expected": "HTTP 200 with JSON containing status 'ok' and service 'scopepm-api'",
+          "observed": "HTTP 200 with {\"status\":\"ok\",\"service\":\"scopepm-api\",\"environment\":\"development\"}"
+        }
+      ],
+      "commands": [
+        "curl -sS -i http://localhost:3001/"
+      ],
+      "evidence": {
+        "files": [
+          "test-coverage/api-foundation/VAL-API-001-root-curl.txt"
+        ],
+        "network": "GET / -> 200",
+        "responseBody": {
+          "status": "ok",
+          "service": "scopepm-api",
+          "environment": "development"
+        }
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-API-002",
+      "title": "404 handler",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run curl against GET /nonexistent on the live local API",
+          "expected": "HTTP 404 with JSON {\"error\":\"Not found\"}",
+          "observed": "HTTP 404 with {\"error\":\"Not found\"}"
+        }
+      ],
+      "commands": [
+        "curl -sS -i http://localhost:3001/nonexistent"
+      ],
+      "evidence": {
+        "files": [
+          "test-coverage/api-foundation/VAL-API-002-nonexistent-curl.txt"
+        ],
+        "network": "GET /nonexistent -> 404",
+        "responseBody": {
+          "error": "Not found"
+        }
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-TEST-002",
+      "title": "API waitlist route tests",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Inspect packages/api/src/__tests__/waitlist.test.ts",
+          "expected": "Coverage for POST /api/waitlist success, invalid input, duplicate email, and GET /api/waitlist/count",
+          "observed": "Found tests for 201 valid email, 400 invalid/missing/empty email, 200 duplicate email, no-insert on duplicate, and numeric count responses."
+        },
+        {
+          "action": "Run the focused waitlist Vitest file with verbose output",
+          "expected": "The targeted waitlist tests pass",
+          "observed": "Vitest reported 1 test file passed and 10 tests passed for packages/api/src/__tests__/waitlist.test.ts."
+        }
+      ],
+      "commands": [
+        "/usr/bin/env node /Users/ashishhuddar/scopepm/node_modules/vitest/vitest.mjs run /Users/ashishhuddar/scopepm/packages/api/src/__tests__/waitlist.test.ts --reporter=verbose"
+      ],
+      "evidence": {
+        "files": [
+          "test-coverage/api-foundation/VAL-TEST-002-waitlist-vitest.txt"
+        ],
+        "sourceInspected": [
+          "packages/api/src/__tests__/waitlist.test.ts"
+        ],
+        "summary": "Verbose output shows POST /api/waitlist and GET /api/waitlist/count tests all passing."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-TEST-003",
+      "title": "API onboarding route tests",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Inspect packages/api/src/__tests__/onboarding.test.ts",
+          "expected": "Coverage for GET /api/onboarding/status and POST /api/onboarding valid/missing-field scenarios",
+          "observed": "Found tests for authenticated and unauthenticated GET /status plus valid POST, missing role/company/team/goals, empty goals, empty role, and unauthenticated POST."
+        },
+        {
+          "action": "Run the focused onboarding Vitest file with verbose output",
+          "expected": "The targeted onboarding tests pass",
+          "observed": "Vitest reported 1 test file passed and 13 tests passed for packages/api/src/__tests__/onboarding.test.ts."
+        }
+      ],
+      "commands": [
+        "/usr/bin/env node /Users/ashishhuddar/scopepm/node_modules/vitest/vitest.mjs run /Users/ashishhuddar/scopepm/packages/api/src/__tests__/onboarding.test.ts --reporter=verbose"
+      ],
+      "evidence": {
+        "files": [
+          "test-coverage/api-foundation/VAL-TEST-003-onboarding-vitest.txt"
+        ],
+        "sourceInspected": [
+          "packages/api/src/__tests__/onboarding.test.ts"
+        ],
+        "summary": "Verbose output shows GET /api/onboarding/status and POST /api/onboarding assertions all passing."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-TEST-004",
+      "title": "API project CRUD tests",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Inspect packages/api/src/__tests__/projects.test.ts",
+          "expected": "Coverage for project list, overview, create, detail, stats, update, and delete with success/error cases",
+          "observed": "Found tests covering GET list, GET overview, POST create, GET detail, GET stats, PUT update, DELETE, plus 400/401/404 paths across those handlers."
+        },
+        {
+          "action": "Run the focused projects Vitest file with verbose output",
+          "expected": ">=7 passing project CRUD tests proving the suite runs cleanly",
+          "observed": "Vitest reported 1 test file passed and 28 tests passed for packages/api/src/__tests__/projects.test.ts."
+        }
+      ],
+      "commands": [
+        "/usr/bin/env node /Users/ashishhuddar/scopepm/node_modules/vitest/vitest.mjs run /Users/ashishhuddar/scopepm/packages/api/src/__tests__/projects.test.ts --reporter=verbose"
+      ],
+      "evidence": {
+        "files": [
+          "test-coverage/api-foundation/VAL-TEST-004-projects-vitest.txt"
+        ],
+        "sourceInspected": [
+          "packages/api/src/__tests__/projects.test.ts"
+        ],
+        "summary": "Verbose output shows 28 passing project route tests spanning list/overview/create/detail/stats/update/delete flows."
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 5 assertions through repo-shell and curl: 5 passed, 0 failed, 0 blocked. Live API health and 404 responses matched expectations, and focused waitlist/onboarding/projects Vitest suites all passed."
+}

@@ -1,0 +1,160 @@
+{
+  "groupId": "web-suite",
+  "testedAt": "2026-03-15T12:50:15.180097+00:00",
+  "isolation": {
+    "surface": "repo-shell",
+    "repoRoot": "/Users/ashishhuddar/scopepm",
+    "missionDir": "/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9",
+    "evidenceDir": "/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/evidence/test-coverage/web-suite",
+    "assignedAssertions": [
+      "VAL-TEST-010",
+      "VAL-TEST-011",
+      "VAL-TEST-012",
+      "VAL-TEST-013"
+    ]
+  },
+  "toolsUsed": [
+    "Read",
+    "LS",
+    "Glob",
+    "Grep",
+    "python3",
+    "node",
+    "bun",
+    "vitest"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-TEST-010",
+      "title": "Web component render tests",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Inspect the component test files under packages/web/app/__tests__/components",
+          "expected": "Tests exist for Hero, Features, HowItWorks, Problem, CTA, and Footer render behavior",
+          "observed": "Found Hero coverage in app/__tests__/components/Hero.test.tsx, Features coverage in app/__tests__/components/Features.test.tsx, and HowItWorks/Problem/CTA/Footer coverage in app/__tests__/components/LandingComponents.test.tsx."
+        },
+        {
+          "action": "Run a focused Vitest command for the component test files with verbose output",
+          "expected": "The named component render tests pass cleanly",
+          "observed": "Vitest reported 3 test files passed and 14 tests passed, covering Hero, Features, HowItWorks, Problem, CTA, and Footer."
+        }
+      ],
+      "commands": [
+        "cd /Users/ashishhuddar/scopepm/packages/web && /usr/bin/env node /Users/ashishhuddar/scopepm/node_modules/vitest/vitest.mjs run app/__tests__/components/Hero.test.tsx app/__tests__/components/Features.test.tsx app/__tests__/components/LandingComponents.test.tsx --reporter=verbose"
+      ],
+      "evidence": {
+        "files": [
+          "test-coverage/web-suite/web-components-focused.txt"
+        ],
+        "sourceInspected": [
+          "packages/web/app/__tests__/components/Hero.test.tsx",
+          "packages/web/app/__tests__/components/Features.test.tsx",
+          "packages/web/app/__tests__/components/LandingComponents.test.tsx"
+        ],
+        "summary": "Focused component output shows all required landing-page component tests passing."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-TEST-011",
+      "title": "Web auth and dashboard tests",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Inspect the sign-in, sign-up, and dashboard route tests under packages/web/app/__tests__/routes",
+          "expected": "Tests exist for sign-in render, sign-up render, and dashboard auth-guard behavior",
+          "observed": "Found sign-in form render coverage in routes/sign-in.test.tsx, sign-up form render coverage in routes/sign-up.test.tsx, and dashboard auth-guard checks in routes/dashboard.test.tsx for redirect and loading behavior."
+        },
+        {
+          "action": "Run a focused Vitest command for the auth/dashboard route tests with verbose output",
+          "expected": "The auth and dashboard route tests pass cleanly",
+          "observed": "Vitest reported 3 test files passed and 24 tests passed, including sign-in render, sign-up render, and dashboard auth-guard assertions."
+        }
+      ],
+      "commands": [
+        "cd /Users/ashishhuddar/scopepm/packages/web && /usr/bin/env node /Users/ashishhuddar/scopepm/node_modules/vitest/vitest.mjs run app/__tests__/routes/sign-in.test.tsx app/__tests__/routes/sign-up.test.tsx app/__tests__/routes/dashboard.test.tsx --reporter=verbose"
+      ],
+      "evidence": {
+        "files": [
+          "test-coverage/web-suite/web-auth-dashboard-focused.txt"
+        ],
+        "sourceInspected": [
+          "packages/web/app/__tests__/routes/sign-in.test.tsx",
+          "packages/web/app/__tests__/routes/sign-up.test.tsx",
+          "packages/web/app/__tests__/routes/dashboard.test.tsx"
+        ],
+        "summary": "Focused route output shows the sign-in, sign-up, and dashboard auth-guard tests all passing."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-TEST-012",
+      "title": "Web test suite count",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run the full web package test script from packages/web",
+          "expected": "The full web suite passes with at least 10 tests and 0 failures",
+          "observed": "bun run test completed successfully with 16 test files passed, 139 tests passed, and 0 failures."
+        }
+      ],
+      "commands": [
+        "cd /Users/ashishhuddar/scopepm/packages/web && bun run test"
+      ],
+      "evidence": {
+        "files": [
+          "test-coverage/web-suite/full-web-suite.txt"
+        ],
+        "summary": "Full web suite output shows 139 passing tests across 16 files with no failures."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-TEST-013",
+      "title": "Full monorepo test pass",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Run the root monorepo test script from the repository root",
+          "expected": "Tests pass across both packages with at least 40 combined tests and 0 failures",
+          "observed": "bun run test completed successfully for both packages: API reported 125 passing tests and web reported 139 passing tests, for 264 combined passing tests and 0 failures overall."
+        }
+      ],
+      "commands": [
+        "cd /Users/ashishhuddar/scopepm && bun run test"
+      ],
+      "evidence": {
+        "files": [
+          "test-coverage/web-suite/full-monorepo-suite.txt"
+        ],
+        "summary": "Root test output shows the API suite passing 125 tests and the web suite passing 139 tests, for 264 combined passing tests with no failures."
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [
+    {
+      "description": "The shared guidance file /Users/ashishhuddar/.factory/library/user-testing.md was not present, so the repo-shell validation had to rely on mission AGENTS.md and the parent task instructions.",
+      "resolved": true,
+      "resolution": "Continued using the mission-specific guidance and assignment details, which were sufficient for the repo-shell workflow.",
+      "affectedAssertions": [
+        "VAL-TEST-010",
+        "VAL-TEST-011",
+        "VAL-TEST-012",
+        "VAL-TEST-013"
+      ]
+    },
+    {
+      "description": "The full web suite emitted a non-fatal jsdom warning, 'Not implemented: navigation to another Document', during hamburger-nav testing.",
+      "resolved": true,
+      "resolution": "Confirmed the warning did not fail Vitest; the full web suite and root monorepo suite still completed with 0 failures.",
+      "affectedAssertions": [
+        "VAL-TEST-012",
+        "VAL-TEST-013"
+      ]
+    }
+  ],
+  "blockers": [],
+  "summary": "Tested 4 assertions through the repo-shell surface: 4 passed, 0 failed, 0 blocked. The full web suite passed with 139 tests and 0 failures, and the root monorepo test command passed with 264 combined tests and 0 failures."
+}
