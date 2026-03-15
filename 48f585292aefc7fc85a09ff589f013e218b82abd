@@ -1,0 +1,25 @@
+packages/api/src/__tests__/waitlist.test.ts
+  086522f3faa3c901 1-188
+packages/api/src/__tests__/onboarding.test.ts
+  086522f3faa3c901 1-278
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "48f585292aefc7fc85a09ff589f013e218b82abd",
+  "prompts": {
+    "086522f3faa3c901": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "be66fdc0-4f11-475d-be89-7792bf05e9ea",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 466,
+      "total_deletions": 0,
+      "accepted_lines": 466,
+      "overriden_lines": 0
+    }
+  }
+}
