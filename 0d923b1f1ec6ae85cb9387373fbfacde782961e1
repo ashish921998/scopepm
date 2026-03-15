@@ -1,0 +1,75 @@
+packages/api/src/routes/projects.ts
+  b70690d88f94c5ea 5,10,36,63,125,152,157,188,193,220,225,255,260
+packages/api/src/index.ts
+  b70690d88f94c5ea 4,36,38,43,45-49,66-70,75
+  2d2d51a08c5f9a75 5,39-42,89
+packages/api/src/routes/onboarding.ts
+  b70690d88f94c5ea 24,46
+packages/api/src/routes/dev.ts
+  b70690d88f94c5ea 17
+packages/api/src/routes/waitlist.ts
+  2d2d51a08c5f9a75 3,5,7,19,55,58
+packages/api/src/__tests__/waitlist.test.ts
+  b70690d88f94c5ea 20,26-37,66,79,91,103,115,128,143,165,176,186
+packages/api/src/__tests__/interviews.test.ts
+  b70690d88f94c5ea 43,90,102
+packages/api/src/__tests__/onboarding.test.ts
+  b70690d88f94c5ea 31,63,75
+packages/api/src/routes/specs.ts
+  b70690d88f94c5ea 15,50,76,132,197,256
+packages/api/wrangler.toml
+  b70690d88f94c5ea 8
+  2d2d51a08c5f9a75 9-12
+packages/api/src/db/index.ts
+  2d2d51a08c5f9a75 1,5,14-15
+  b70690d88f94c5ea 7-13
+packages/api/src/auth.ts
+  b70690d88f94c5ea 3,6-11,13-14,52-53
+  2d2d51a08c5f9a75 12,21-22,35-37,39-41,49-50
+packages/api/src/lib/hono.ts
+  b70690d88f94c5ea 2,16
+  2d2d51a08c5f9a75 10
+packages/api/src/__tests__/projects.test.ts
+  b70690d88f94c5ea 44,113,125
+packages/api/src/__tests__/auth-middleware.test.ts
+  b70690d88f94c5ea 6,8,13,16-23,27,32,51
+.gitignore
+  b70690d88f94c5ea 8
+packages/api/src/__tests__/specs.test.ts
+  b70690d88f94c5ea 43,105,117
+packages/api/src/routes/interviews.ts
+  b70690d88f94c5ea 15,50,76,115,173,220
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "0d923b1f1ec6ae85cb9387373fbfacde782961e1",
+  "prompts": {
+    "2d2d51a08c5f9a75": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "a64e7d7b-1b36-4ca2-b919-312fb1576ce0",
+        "model": "glm-5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 89,
+      "total_deletions": 57,
+      "accepted_lines": 35,
+      "overriden_lines": 0
+    },
+    "b70690d88f94c5ea": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "25821b48-7d44-4e99-95b4-b7a22024595b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 145,
+      "total_deletions": 126,
+      "accepted_lines": 115,
+      "overriden_lines": 0
+    }
+  }
+}
