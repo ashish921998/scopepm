@@ -46,6 +46,8 @@ Cleanup-infrastructure runtime note:
 - Sign up at /sign-up, sign in at /sign-in
 - Session cookie-based (credentials: 'include')
 - Test users can be created via sign-up flow
+- Password-reset rerun note (2026-03-15): `POST /api/auth/request-password-reset` now returns `200` and the API logs `Password reset URL: ...` for registered accounts. During local validation, opening that logged Better Auth URL directly returned an Internal Server Error page, but using the real logged token on `http://localhost:3000/reset-password?token=<token>` completed the in-app reset flow successfully.
+- Dev setup helper for analyzed-interview validation: authenticated `POST /api/dev/seed-analyzed-interview` marks the current user's most recent interview as `analyzed` and seeds summary/insights for VAL-DATA-007 setup.
 
 ## Known Gaps
 

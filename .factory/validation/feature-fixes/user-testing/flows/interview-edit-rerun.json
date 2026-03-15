@@ -1,0 +1,87 @@
+{
+  "groupId": "interview-edit-rerun",
+  "testedAt": "2026-03-15T05:27:06.984611+00:00",
+  "isolation": {
+    "webApp": "http://localhost:3000",
+    "api": "http://localhost:3001",
+    "browserSession": "val-data-007-rerun",
+    "userEmail": "utv-data-rerun-20260315@example.com",
+    "password": "Scopepm!234",
+    "project": {
+      "id": 10,
+      "name": "VAL DATA 007 Rerun Project 20260315"
+    },
+    "interview": {
+      "id": 4,
+      "initialTitle": "Analyzed interview rerun baseline",
+      "finalTitle": "Analyzed interview rerun title final"
+    }
+  },
+  "toolsUsed": [
+    "agent-browser"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-DATA-007",
+      "title": "Interview edit preserves analysis status",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Create or sign in to the dedicated account, complete onboarding, and create the minimum project/interview data",
+          "expected": "An isolated account session exists with one fresh project and one interview ready for setup",
+          "observed": "Sign-in failed because the account did not exist yet, so the flow used the provided credentials to sign up, completed onboarding, created project 10 ('VAL DATA 007 Rerun Project 20260315'), and created interview 4 titled 'Analyzed interview rerun baseline'."
+        },
+        {
+          "action": "Call POST /api/dev/seed-analyzed-interview for the dedicated account",
+          "expected": "The most recent interview becomes analyzed and gains summary/insights data",
+          "observed": "The seeded response returned 200 and interview 4 changed to status 'analyzed' with summary 'Test summary for validation purposes' and insights '[{\"type\":\"pain_point\",\"text\":\"Test insight\"}]'."
+        },
+        {
+          "action": "Verify the analyzed interview before editing",
+          "expected": "The UI shows analyzed status and summary, and the API confirms analyzed status plus preserved insights data",
+          "observed": "The interviews page showed the analyzed badge, visible summary text, and Generate Spec action; GET /api/interviews/4 returned 200 with status 'analyzed', the seeded summary, and the seeded insights payload."
+        },
+        {
+          "action": "Edit only the interview title through the real web UI and save",
+          "expected": "The UI sends a PUT for the interview while keeping the transcript intact",
+          "observed": "The edit form was pre-populated, only the title was changed to 'Analyzed interview rerun title final', and a real PUT /api/interviews/4 request returned 200 with the unchanged transcript and updated title."
+        },
+        {
+          "action": "Verify the interview after the title-only save completes",
+          "expected": "Status remains analyzed and summary/insights remain preserved",
+          "observed": "After save, the UI still showed status 'analyzed', the summary text remained visible, Generate Spec was still available, and GET /api/interviews/4 returned 200 with status 'analyzed', summary 'Test summary for validation purposes', and the same insights payload '[{\"type\":\"pain_point\",\"text\":\"Test insight\"}]'."
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/interview-edit-rerun/VAL-DATA-007-sign-up-page.png",
+          "feature-fixes/interview-edit-rerun/VAL-DATA-007-project-create-form.png",
+          "feature-fixes/interview-edit-rerun/VAL-DATA-007-interview-create-form.png",
+          "feature-fixes/interview-edit-rerun/VAL-DATA-007-analyzed-clean-before-edit.png",
+          "feature-fixes/interview-edit-rerun/VAL-DATA-007-edit-form.png",
+          "feature-fixes/interview-edit-rerun/VAL-DATA-007-final-after-edit.png"
+        ],
+        "apiResponses": [
+          "feature-fixes/interview-edit-rerun/VAL-DATA-007-pre-edit-api.json",
+          "feature-fixes/interview-edit-rerun/VAL-DATA-007-ui-fetch-log.json",
+          "feature-fixes/interview-edit-rerun/VAL-DATA-007-post-edit-api.json"
+        ],
+        "consoleErrors": "none (only Vite debug logs and a React DevTools informational message were present)",
+        "network": "POST /api/dev/seed-analyzed-interview -> 200; PUT /api/interviews/4 -> 200 with body {\"title\":\"Analyzed interview rerun title final\",\"transcript\":\"The customer said onboarding feels confusing, summaries are useful, and insight export needs clearer controls for their product team.\"}; GET /api/interviews/4 -> 200 with status 'analyzed', preserved summary, and preserved insights."
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [
+    {
+      "description": "agent-browser's network request list did not capture the app's fetch traffic for this session.",
+      "resolved": true,
+      "resolution": "Used a temporary in-session window.fetch wrapper to log the real PUT /api/interviews/4 request and response, then restored the original fetch implementation.",
+      "affectedAssertions": [
+        "VAL-DATA-007"
+      ]
+    }
+  ],
+  "blockers": [],
+  "summary": "Tested 1 assertion: VAL-DATA-007 passed. Editing the title of seeded analyzed interview 4 preserved status 'analyzed' plus the existing summary and insights data."
+}

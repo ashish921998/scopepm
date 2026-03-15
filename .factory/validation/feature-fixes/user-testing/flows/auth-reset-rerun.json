@@ -1,0 +1,101 @@
+{
+  "groupId": "auth-reset-rerun",
+  "testedAt": "2026-03-15T05:17:44.045861+00:00",
+  "isolation": {
+    "missionDir": "/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9",
+    "webApp": "http://localhost:3000",
+    "api": "http://localhost:3001",
+    "browserSession": "auth-reset-rerun",
+    "registeredEmail": "utv-auth-rerun-20260315@example.com",
+    "unregisteredEmail": "utv-auth-rerun-missing-20260315@example.com"
+  },
+  "toolsUsed": [
+    "agent-browser",
+    "shell"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-CROSS-004",
+      "title": "Password reset flow",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Open /sign-in and click 'Forgot password?'",
+          "expected": "Forgot Password page opens from sign-in",
+          "observed": "The sign-in page linked correctly to /forgot-password and rendered the email field plus Send Reset Link CTA"
+        },
+        {
+          "action": "Submit the registered email utv-auth-rerun-20260315@example.com",
+          "expected": "Show the 'Check your email' success state",
+          "observed": "The UI showed 'Check your email' with 'If an account exists for utv-auth-rerun-20260315@example.com, we've sent a password reset link.' and the API log recorded POST /api/auth/request-password-reset -> 200 plus a Password reset URL"
+        },
+        {
+          "action": "Submit the unregistered email utv-auth-rerun-missing-20260315@example.com",
+          "expected": "Show the same success copy without leaking account existence",
+          "observed": "The UI showed the same success-state pattern and copy for the unregistered address, while the API log still returned POST /api/auth/request-password-reset -> 200 and only logged 'User not found' server-side"
+        },
+        {
+          "action": "Click 'Back to sign in' from the success state",
+          "expected": "Return to /sign-in",
+          "observed": "The Back to sign in link returned the browser to http://localhost:3000/sign-in"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/auth-reset-rerun/VAL-CROSS-004-sign-in-after-setup.png",
+          "feature-fixes/auth-reset-rerun/VAL-CROSS-004-forgot-password-registered-run.png",
+          "feature-fixes/auth-reset-rerun/VAL-CROSS-004-registered-success-state.png",
+          "feature-fixes/auth-reset-rerun/VAL-CROSS-004-missing-email-success-state.png",
+          "feature-fixes/auth-reset-rerun/VAL-CROSS-004-back-to-sign-in.png"
+        ],
+        "consoleErrors": "none",
+        "network": "API log showed POST /api/auth/request-password-reset -> 200 for utv-auth-rerun-20260315@example.com with Password reset URL: https://scopepm-api.ashish-hudar.workers.dev/api/auth/reset-password/8l1zlcd2ms6OOGUm2TREFv79?callbackURL=http%3A%2F%2Flocalhost%3A3000%2Freset-password ; API log also showed POST /api/auth/request-password-reset -> 200 for utv-auth-rerun-missing-20260315@example.com despite a server-side 'User not found' log entry."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-AUTH-005",
+      "title": "Successful password reset shows success state",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Inspect the API log after the registered forgot-password submission",
+          "expected": "Obtain a real reset link/token for the isolated account",
+          "observed": "Captured the latest Password reset URL ending in token 8l1zlcd2ms6OOGUm2TREFv79 from the API server log"
+        },
+        {
+          "action": "Open the reset flow with that real token on the app UI and submit Scopepm!567 twice",
+          "expected": "Reset succeeds through the real UI and the app shows a success state or redirects to /sign-in",
+          "observed": "The /reset-password?token=8l1zlcd2ms6OOGUm2TREFv79 form accepted the new password, POST /api/auth/reset-password returned 200 in the API log, and the UI showed 'Password updated' with a 'Sign in with your new password' link"
+        },
+        {
+          "action": "Follow the success-state sign-in link",
+          "expected": "Return to the sign-in page",
+          "observed": "The success CTA navigated to http://localhost:3000/sign-in"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/auth-reset-rerun/VAL-AUTH-005-reset-form-local-route.png",
+          "feature-fixes/auth-reset-rerun/VAL-AUTH-005-success-state.png",
+          "feature-fixes/auth-reset-rerun/VAL-AUTH-005-sign-in-link-target.png"
+        ],
+        "consoleErrors": "none",
+        "network": "API log showed Password reset URL: https://scopepm-api.ashish-hudar.workers.dev/api/auth/reset-password/8l1zlcd2ms6OOGUm2TREFv79?callbackURL=http%3A%2F%2Flocalhost%3A3000%2Freset-password and POST /api/auth/reset-password -> 200 in 4s."
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [
+    {
+      "description": "Opening the logged Better Auth reset URL directly in the browser session returned an 'Internal Server Error' document instead of landing on the in-app reset form.",
+      "resolved": true,
+      "resolution": "Used the real token from that logged URL on http://localhost:3000/reset-password?token=<token> to complete the UI reset flow and verify the success state.",
+      "affectedAssertions": [
+        "VAL-AUTH-005"
+      ]
+    }
+  ],
+  "blockers": [],
+  "summary": "Retested 2 assertions: both passed. Forgot-password now shows the expected success state for registered and unregistered emails, and the real reset-token flow reaches the password-updated success state with a sign-in link."
+}
