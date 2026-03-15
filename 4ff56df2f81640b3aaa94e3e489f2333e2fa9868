@@ -1,0 +1,23 @@
+.factory/library/user-testing.md
+  4bc9a71a1efade01 65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "4ff56df2f81640b3aaa94e3e489f2333e2fa9868",
+  "prompts": {
+    "4bc9a71a1efade01": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "768489e5-4247-4b7b-b7ce-85c8ae5686fd",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 0,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
