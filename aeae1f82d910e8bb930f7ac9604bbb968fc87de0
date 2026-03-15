@@ -1,0 +1,43 @@
+packages/web/app/routes/dashboard/specs.tsx
+  125210db67724241 18-20,80-89,218-301,459,461-504,506-515,517-526,528-535,538,540-548,551-553,556-563,565-566,568
+  65349d2c6b6abc5b 458,460,505,527,536,539,549,564,569
+packages/web/app/routes/dashboard/projects.$projectId.tsx
+  65349d2c6b6abc5b 240-244
+  125210db67724241 11,41-48,64-119,180,187-239,253-258
+packages/web/app/routes/dashboard/interviews.tsx
+  65349d2c6b6abc5b 596
+  125210db67724241 6-14,31-83,113,300-369,381-391,393-394,569-572,597-601
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "aeae1f82d910e8bb930f7ac9604bbb968fc87de0",
+  "prompts": {
+    "125210db67724241": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "5b2ec824-f075-4223-bbdb-84fe7691d13a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 474,
+      "overriden_lines": 0
+    },
+    "65349d2c6b6abc5b": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019cf346-c6fc-7f00-9150-46f612d8f4a5",
+        "model": "unknown"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 301,
+      "overriden_lines": 0
+    }
+  }
+}
