@@ -10,6 +10,7 @@ import interviewRoutes from './routes/interviews'
 import specRoutes from './routes/specs'
 import onboardingRoutes from './routes/onboarding'
 import projectRoutes from './routes/projects'
+import devRoutes from './routes/dev'
 import { getUserId } from './lib/utils'
 import { AppEnv } from './lib/hono'
 
@@ -64,6 +65,7 @@ app.route('/api/interviews', interviewRoutes)
 app.route('/api/specs', specRoutes)
 app.route('/api/onboarding', onboardingRoutes)
 app.route('/api/projects', projectRoutes)
+app.route('/api/dev', devRoutes)
 
 // Protected route - get current user
 app.get('/api/me', async (c) => {
