@@ -1,0 +1,27 @@
+packages/api/src/auth.ts
+  3e51b743c093475b 27-29
+packages/api/src/index.ts
+  3e51b743c093475b 13,68
+packages/api/src/routes/dev.ts
+  3e51b743c093475b 1-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "a9457fdc462ff6c23792496f39e65583786c2c16",
+  "prompts": {
+    "3e51b743c093475b": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "a0288c71-46da-4b3e-b92a-e52dee65f2dd",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 50,
+      "total_deletions": 0,
+      "accepted_lines": 50,
+      "overriden_lines": 0
+    }
+  }
+}
