@@ -1,0 +1,25 @@
+.firecrawl/cloudflare-build-config.md
+  b1e7a562a0305964 1-316
+.firecrawl/cloudflare-pages-docs.json
+  b1e7a562a0305964 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "964e07a58d5c667be50acc4e23d5f74d0e80ef38",
+  "prompts": {
+    "b1e7a562a0305964": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019cf36f-6e31-7593-87b0-2e700bc7980f",
+        "model": "unknown"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 317,
+      "total_deletions": 0,
+      "accepted_lines": 317,
+      "overriden_lines": 0
+    }
+  }
+}
