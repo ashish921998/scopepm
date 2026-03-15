@@ -1,0 +1,182 @@
+{
+  "groupId": "loading-states",
+  "testedAt": "2026-03-15T04:23:07Z",
+  "isolation": {
+    "missionDir": "/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9",
+    "webApp": "http://localhost:3000",
+    "api": "http://localhost:3001",
+    "browserSession": "ff-loading-states",
+    "testUser": "ff-loading-user-20260315+loadingstates@example.com",
+    "password": "Scopepm!234",
+    "projectId": 8,
+    "projectName": "Loading States Project 20260315"
+  },
+  "toolsUsed": [
+    "agent-browser"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-DASH-001",
+      "title": "Dashboard home loading skeleton",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Sign up with isolated account and complete onboarding to reach dashboard pages",
+          "expected": "Authenticated dashboard navigation becomes available",
+          "observed": "Created isolated user, completed onboarding, and created a dedicated project for downstream route coverage"
+        },
+        {
+          "action": "From /dashboard/projects, delay the real GET /api/projects/overview response by 10000ms inside the browser session and navigate to /dashboard",
+          "expected": "Dashboard home renders skeleton placeholders while the overview request is still in flight",
+          "observed": "Dashboard showed 61 `.skeleton` elements during the delayed request"
+        },
+        {
+          "action": "Inspect page text during loading",
+          "expected": "No plain 'Loading dashboard...' copy appears",
+          "observed": "`/Loading dashboard/i` check was false; screenshot shows only skeleton placeholders"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/loading-states/VAL-DASH-001-dashboard-loading.png"
+        ],
+        "consoleErrors": "none",
+        "network": "GET /api/projects/overview -> 200 (captured twice by the app during navigation), each delayed 10000ms in-browser to expose the real loading state; no mocked response body"
+      },
+      "issues": null,
+      "notes": "Loading was captured by wrapping `window.fetch` in the isolated browser session to pause resolution of matching GET requests while still allowing the real backend response to complete."
+    },
+    {
+      "id": "VAL-DASH-002",
+      "title": "Projects list loading skeleton",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Delay the real GET /api/projects response by 10000ms and navigate to /dashboard/projects",
+          "expected": "Projects page renders project-card skeletons while data is loading",
+          "observed": "Projects page rendered 21 `.skeleton` elements across skeleton cards"
+        },
+        {
+          "action": "Inspect page text during loading",
+          "expected": "No plain 'Loading projects...' copy appears",
+          "observed": "`/Loading projects/i` check was false while the skeleton grid was visible"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/loading-states/VAL-DASH-002-projects-loading.png"
+        ],
+        "consoleErrors": "none",
+        "network": "GET /api/projects -> 200 (captured twice by the app during navigation), delayed 10000ms in-browser to observe the real loading branch"
+      },
+      "issues": null,
+      "notes": "Header and New Project action remained visible above the loading skeleton cards."
+    },
+    {
+      "id": "VAL-DASH-003",
+      "title": "Project detail loading skeleton",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Create a dedicated project and open its detail route /dashboard/projects/8",
+          "expected": "A real project detail route is available for loading-state validation",
+          "observed": "Created project 'Loading States Project 20260315' (id 8) and opened its detail page"
+        },
+        {
+          "action": "Delay the real GET /api/projects/8 response by 10000ms and navigate to the project detail page",
+          "expected": "Project detail page renders skeleton placeholders while the request is in flight",
+          "observed": "Project detail page rendered 40 `.skeleton` elements for title, action area, stats, and list sections"
+        },
+        {
+          "action": "Inspect page text during loading",
+          "expected": "No plain 'Loading project...' copy appears",
+          "observed": "`/Loading project/i` check was false during the loading screenshot"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/loading-states/VAL-DASH-003-project-detail-loading.png"
+        ],
+        "consoleErrors": "none",
+        "network": "GET /api/projects/8 -> 200 (captured twice by the app during navigation), delayed 10000ms in-browser to expose the real loading UI"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASH-004",
+      "title": "Interviews page loading skeleton",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Delay the real GET /api/projects and GET /api/interviews responses by 10000ms and navigate to /dashboard/interviews",
+          "expected": "Interviews page renders loading skeleton cards while requests are in flight",
+          "observed": "Interviews page rendered 24 `.skeleton` elements"
+        },
+        {
+          "action": "Inspect header/action visibility during loading",
+          "expected": "The Interviews header and primary action remain visible while skeletons load below",
+          "observed": "Page title 'Interviews' and the 'New Interview' button were visible above the skeleton cards"
+        },
+        {
+          "action": "Inspect page text during loading",
+          "expected": "No plain 'Loading interviews...' copy appears",
+          "observed": "`/Loading interviews/i` check was false during the loading screenshot"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/loading-states/VAL-DASH-004-interviews-loading.png"
+        ],
+        "consoleErrors": "none",
+        "network": "GET /api/projects -> 200 and GET /api/interviews -> 200 (each observed twice during navigation), all delayed 10000ms in-browser to capture the real loading branch"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DASH-005",
+      "title": "Specs page loading skeleton",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Delay the real GET /api/projects, GET /api/specs, and GET /api/interviews responses by 10000ms and navigate to /dashboard/specs",
+          "expected": "Specs page renders loading skeleton cards while requests are in flight",
+          "observed": "Specs page rendered 30 `.skeleton` elements"
+        },
+        {
+          "action": "Inspect header/action visibility during loading",
+          "expected": "The Feature Specs header and actions remain visible while skeletons load below",
+          "observed": "Page title 'Feature Specs' and the 'New Spec' action were visible above the skeleton cards"
+        },
+        {
+          "action": "Inspect page text during loading",
+          "expected": "No plain 'Loading specs...' copy appears",
+          "observed": "`/Loading specs/i` check was false during the loading screenshot"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/loading-states/VAL-DASH-005-specs-loading.png"
+        ],
+        "consoleErrors": "none",
+        "network": "GET /api/projects -> 200, GET /api/specs -> 200, and GET /api/interviews -> 200 (each observed twice during navigation), all delayed 10000ms in-browser to capture the real loading branch"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [
+    {
+      "description": "`agent-browser network requests` did not record the app's fetch traffic in this session, so request evidence was captured via an isolated in-browser fetch delay/logger that preserved the real backend responses while exposing the loading branches.",
+      "resolved": true,
+      "resolution": "Used a temporary `window.fetch` wrapper in the dedicated browser session to delay matching GET requests and record path/status/timing for the report.",
+      "affectedAssertions": [
+        "VAL-DASH-001",
+        "VAL-DASH-002",
+        "VAL-DASH-003",
+        "VAL-DASH-004",
+        "VAL-DASH-005"
+      ]
+    }
+  ],
+  "blockers": [],
+  "summary": "Tested 5 loading-state assertions through the real browser UI. All 5 passed: dashboard home, projects list, project detail, interviews, and specs all rendered skeleton placeholders instead of plain loading copy while live requests were delayed in-flight; interviews/specs also kept their headers and primary actions visible."
+}

@@ -1,0 +1,240 @@
+{
+  "groupId": "auth-reset",
+  "testedAt": "2026-03-15T04:12:10.569066+00:00",
+  "isolation": {
+    "missionDir": "/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9",
+    "webApp": "http://localhost:3000",
+    "api": "http://localhost:3001",
+    "browserSession": "auth-reset-validator",
+    "registeredEmail": "ff-auth-reset-20260315+resetflow@example.com",
+    "unregisteredEmail": "ff-auth-reset-missing-20260315+resetflow@example.com"
+  },
+  "toolsUsed": [
+    "agent-browser",
+    "python3"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-AUTH-001",
+      "title": "Reset-password page renders",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Navigate to /reset-password?token=some-token",
+          "expected": "Reset form renders with new password, confirm password, and submit button",
+          "observed": "Rendered 'Set new password' page with both password fields and a Reset Password button; no blank/404 state"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/auth-reset/VAL-AUTH-001-reset-form.png"
+        ],
+        "consoleErrors": "none",
+        "network": "No submission attempted for this render check."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-AUTH-002",
+      "title": "Reset-password validates matching passwords",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Enter Password123! and Password123? then submit",
+          "expected": "Inline 'Passwords do not match' error and no reset request",
+          "observed": "Inline 'Passwords do not match' error rendered; agent-browser network log remained empty after submit"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/auth-reset/VAL-AUTH-002-password-mismatch.png"
+        ],
+        "consoleErrors": "none",
+        "network": "agent-browser network requests after clearing log: []"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-AUTH-003",
+      "title": "Reset-password enforces minimum password length",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Enter short1 in both password fields and submit",
+          "expected": "Inline minimum-length validation error and no reset request",
+          "observed": "Inline 'Password must be at least 8 characters' error rendered; agent-browser network log remained empty after submit"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/auth-reset/VAL-AUTH-003-short-password.png"
+        ],
+        "consoleErrors": "none",
+        "network": "agent-browser network requests after clearing log: []"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-AUTH-004",
+      "title": "Reset-password submits token and new password to API",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Enter matching Password123! values on /reset-password?token=trace-token and submit",
+          "expected": "POST reset request sends token + new password and submit button shows loading",
+          "observed": "Button changed to 'Resetting...' and browser trace captured POST /api/auth/reset-password with body containing masked newPassword plus token=trace-token"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/auth-reset/VAL-AUTH-004-loading-state.png"
+        ],
+        "consoleErrors": "none",
+        "network": "feature-fixes/auth-reset/reset-trace.zip -> POST http://localhost:3000/api/auth/reset-password, request body {\"newPassword\":\"***********!\",\"token\":\"trace-token\"}"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-AUTH-005",
+      "title": "Successful password reset shows success state",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Create a dedicated account and request a real password reset link",
+          "expected": "Obtain a valid reset token so the successful reset state can be exercised",
+          "observed": "POST /api/auth/request-password-reset returned 400 RESET_PASSWORD_DISABLED, so no valid token could be obtained"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/auth-reset/VAL-CROSS-004-registered-result.png"
+        ],
+        "consoleErrors": "none",
+        "network": "feature-fixes/auth-reset/forgot-password-registered-trace.zip -> POST /api/auth/request-password-reset returned 400 {\"message\":\"Reset password isn't enabled\",\"code\":\"RESET_PASSWORD_DISABLED\"}"
+      },
+      "issues": "Blocked because the real forgot-password endpoint is disabled in this environment, so a valid reset token was unattainable and the success path could not be exercised."
+    },
+    {
+      "id": "VAL-AUTH-006",
+      "title": "Reset-password handles invalid/expired token",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Submit matching Password123! values on /reset-password?token=trace-token",
+          "expected": "Friendly invalid/expired token error with link to /forgot-password",
+          "observed": "UI showed 'Invalid token' plus 'Request a new link' pointing to /forgot-password; no crash/raw object rendered"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/auth-reset/VAL-AUTH-006-invalid-token.png"
+        ],
+        "consoleErrors": "none",
+        "network": "feature-fixes/auth-reset/reset-trace.zip -> POST /api/auth/reset-password returned 400 {\"message\":\"Invalid token\",\"code\":\"INVALID_TOKEN\"}"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-AUTH-007",
+      "title": "Reset-password without token parameter",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Navigate to /reset-password with no token query",
+          "expected": "Helpful fallback state or redirect to forgot-password",
+          "observed": "Rendered 'Invalid reset link' fallback with explanatory copy plus a 'Request new link' CTA to /forgot-password"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/auth-reset/VAL-AUTH-007-missing-token.png"
+        ],
+        "consoleErrors": "none",
+        "network": "No submission attempted for this fallback-state check."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-AUTH-008",
+      "title": "Forgot-password uses dynamic origin for redirect URL",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Submit forgot-password with the registered test email from http://localhost:3000/forgot-password",
+          "expected": "Request body uses current origin + /reset-password for redirectTo",
+          "observed": "Browser trace captured request body with redirectTo set to http://localhost:3000/reset-password"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/auth-reset/VAL-CROSS-004-forgot-password-form.png"
+        ],
+        "consoleErrors": "none",
+        "network": "feature-fixes/auth-reset/forgot-password-registered-trace.zip -> request body {\"email\":\"ff-auth-reset-20260315+resetflow@example.com\",\"redirectTo\":\"http://localhost:3000/reset-password\"}"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CROSS-004",
+      "title": "Password reset flow",
+      "status": "fail",
+      "steps": [
+        {
+          "action": "Open /sign-in and click 'Forgot password?'",
+          "expected": "Forgot Password page opens",
+          "observed": "Forgot-password page opened correctly from sign-in"
+        },
+        {
+          "action": "Submit the registered test email",
+          "expected": "Success state 'Check your email' with back-to-sign-in link",
+          "observed": "Form stayed on /forgot-password and showed inline error 'Reset password isn't enabled'"
+        },
+        {
+          "action": "Submit the unregistered test email",
+          "expected": "Same success copy as registered email with no account-existence leak",
+          "observed": "Received the same 400 RESET_PASSWORD_DISABLED error body and the same inline error UI, so no info leak was observed but the required success state/copy never appeared"
+        },
+        {
+          "action": "Use the visible sign-in link on the page",
+          "expected": "Return to sign-in",
+          "observed": "Bottom 'Sign in' link returned to /sign-in, but the success state's 'Back to sign in' step was unavailable because success never rendered"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/auth-reset/VAL-CROSS-004-sign-in-before-forgot.png",
+          "feature-fixes/auth-reset/VAL-CROSS-004-forgot-password-form.png",
+          "feature-fixes/auth-reset/VAL-CROSS-004-registered-result.png",
+          "feature-fixes/auth-reset/VAL-CROSS-004-unregistered-result.png",
+          "feature-fixes/auth-reset/VAL-CROSS-004-return-to-sign-in.png"
+        ],
+        "consoleErrors": "none",
+        "network": "feature-fixes/auth-reset/forgot-password-registered-trace.zip and forgot-password-unregistered-trace.zip both show POST /api/auth/request-password-reset -> 400 {\"message\":\"Reset password isn't enabled\",\"code\":\"RESET_PASSWORD_DISABLED\"}"
+      },
+      "issues": "Fail: the flow never reaches the required 'Check your email' success state for either registered or unregistered addresses because the backend returns RESET_PASSWORD_DISABLED."
+    }
+  ],
+  "frictions": [
+    {
+      "description": "agent-browser's request list captured URLs/methods but not POST bodies, so I used agent-browser trace archives plus local python extraction to read request/response payloads for reset-password and forgot-password requests.",
+      "resolved": true,
+      "resolution": "Saved trace ZIPs in the evidence directory and extracted the referenced request/response JSON blobs to confirm token/newPassword and redirectTo payloads.",
+      "affectedAssertions": [
+        "VAL-AUTH-004",
+        "VAL-AUTH-006",
+        "VAL-AUTH-008",
+        "VAL-CROSS-004"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "description": "The real forgot-password endpoint is disabled in this environment: POST /api/auth/request-password-reset returned 400 RESET_PASSWORD_DISABLED for both registered and unregistered emails, preventing retrieval of a valid reset token.",
+      "affectedAssertions": [
+        "VAL-AUTH-005"
+      ],
+      "quickFixAttempted": "Retried the flow with both a freshly created registered account and an unregistered email after reloading /forgot-password; both received the same 400 response."
+    }
+  ],
+  "summary": "Tested 9 assertions: 7 passed, 1 failed (VAL-CROSS-004: forgot-password never reaches the required success state), and 1 was blocked (VAL-AUTH-005: no valid reset token could be obtained because request-password-reset is disabled)."
+}

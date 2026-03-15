@@ -1,0 +1,191 @@
+{
+  "groupId": "mobile-nav",
+  "testedAt": "2026-03-15T04:09:56.879563Z",
+  "isolation": {
+    "webApp": "http://localhost:3000",
+    "api": "http://localhost:3001",
+    "browserSession": "mobile-nav-20260315",
+    "viewports": {
+      "mobile": "375x812",
+      "desktop": "1280x900"
+    },
+    "userEmail": "ff-nav-user-20260315+mobile-nav@example.com",
+    "password": "[provided in task]"
+  },
+  "toolsUsed": [
+    "agent-browser"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-NAV-001",
+      "title": "Hamburger menu visible at mobile breakpoint on landing page",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Open / at 375px viewport",
+          "expected": "Hamburger toggle is visible and desktop nav links are hidden",
+          "observed": "Visible toggle button with aria-label 'Toggle menu'; interactive snapshot showed no inline How it works/Features/Sign In/Sign Up links before opening the menu"
+        },
+        {
+          "action": "Open the mobile menu",
+          "expected": "Menu reveals How it works, Features, Sign In, and Sign Up",
+          "observed": "Opened menu listed How it works, Features, Sign In, and Sign Up"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/mobile-nav/VAL-NAV-001-landing-mobile-closed.png",
+          "feature-fixes/mobile-nav/VAL-NAV-001-landing-mobile-menu-open.png"
+        ],
+        "consoleErrors": "none",
+        "network": "GET / document observed for landing page; no additional auth or dashboard requests were needed for this check"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-NAV-002",
+      "title": "Hamburger menu on dashboard at mobile breakpoint",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Sign up a dedicated user, complete onboarding, and open /dashboard at 375px viewport",
+          "expected": "Authenticated dashboard shows a hamburger toggle",
+          "observed": "Dashboard rendered with a visible Toggle menu button"
+        },
+        {
+          "action": "Open the dashboard mobile menu",
+          "expected": "Menu shows Dashboard, Projects, Interviews, Specs, user info, and Sign Out",
+          "observed": "Opened menu showed Dashboard, Projects, Interviews, Specs, Sign Out, and visible user text 'Mobile Nav Validator' in the page body"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/mobile-nav/VAL-NAV-002-dashboard-mobile-closed.png",
+          "feature-fixes/mobile-nav/VAL-NAV-002-dashboard-mobile-menu-open.png"
+        ],
+        "consoleErrors": "none",
+        "network": "Authenticated dashboard load observed GET /dashboard plus GET /api/auth/get-session, GET /api/onboarding/status, GET /api/projects/overview, and GET /api/projects",
+        "userInfoText": "Mobile Nav Validator"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-NAV-003",
+      "title": "Mobile menu navigation and dismissal",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Open the landing mobile menu and click the toggle again",
+          "expected": "Menu closes",
+          "observed": "Menu closed and returned to the landing layout with only the toggle visible"
+        },
+        {
+          "action": "Re-open the landing mobile menu and click Sign In",
+          "expected": "Navigation goes to /sign-in and the menu overlay closes",
+          "observed": "Navigated to /sign-in with the sign-in form visible and no menu overlay"
+        },
+        {
+          "action": "Open the authenticated dashboard mobile menu and click Projects",
+          "expected": "Navigation goes to /dashboard/projects and the menu closes",
+          "observed": "Navigated to /dashboard/projects with the menu closed and only the toggle remaining"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/mobile-nav/VAL-NAV-003-menu-closed-after-toggle.png",
+          "feature-fixes/mobile-nav/VAL-NAV-003-sign-in-after-mobile-link.png",
+          "feature-fixes/mobile-nav/VAL-NAV-003-projects-after-dashboard-menu-link.png"
+        ],
+        "consoleErrors": "none",
+        "network": "GET /sign-in observed after landing-menu navigation; GET /dashboard/projects observed after dashboard-menu navigation"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-NAV-004",
+      "title": "Hamburger hidden at desktop breakpoint",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Open / at 1280px viewport",
+          "expected": "Hamburger is hidden and inline nav links are shown",
+          "observed": "No toggle button was present in the interactive snapshot; inline links How it works, Features, Sign In, and Sign Up were visible"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/mobile-nav/VAL-NAV-004-landing-desktop-inline-nav.png"
+        ],
+        "consoleErrors": "none",
+        "network": "GET / document observed at desktop viewport; standard inline nav rendered without a hamburger control"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CROSS-002",
+      "title": "Auth gate redirects to sign-in",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "As an unauthenticated user, open /dashboard",
+          "expected": "Redirect to /sign-in with no dashboard flash",
+          "observed": "Browser landed on /sign-in; snapshot showed only the sign-in form and no dashboard navigation or dashboard content"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/mobile-nav/VAL-CROSS-002-dashboard-redirect-sign-in.png"
+        ],
+        "consoleErrors": "none",
+        "network": "GET /dashboard document was followed by client-side redirect to /sign-in; no dashboard interactive elements were present after redirect"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CROSS-005",
+      "title": "Sign-out flow",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Open the authenticated dashboard mobile menu",
+          "expected": "Sign Out action is available",
+          "observed": "Menu displayed Sign Out along with dashboard navigation items"
+        },
+        {
+          "action": "Click Sign Out",
+          "expected": "Session is invalidated and user is redirected to / or /sign-in",
+          "observed": "Clicking Sign Out triggered a POST to /api/auth/sign-out and redirected the session to /"
+        },
+        {
+          "action": "Attempt to revisit /dashboard after sign-out",
+          "expected": "Redirect to /sign-in",
+          "observed": "Direct visit to /dashboard redirected to /sign-in with the sign-in form rendered"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/mobile-nav/VAL-CROSS-005-dashboard-menu-before-signout.png",
+          "feature-fixes/mobile-nav/VAL-CROSS-005-after-signout-redirect.png",
+          "feature-fixes/mobile-nav/VAL-CROSS-005-dashboard-after-signout-redirect.png"
+        ],
+        "consoleErrors": "none",
+        "network": "POST /api/auth/sign-out observed in the browser network log; subsequent GET /dashboard redirected to /sign-in"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [
+    {
+      "description": "After onboarding completed, the app landed on /dashboard/projects/new rather than /dashboard, so I navigated to /dashboard explicitly for the dashboard nav assertions.",
+      "resolved": true,
+      "resolution": "Opened /dashboard directly after onboarding before running the authenticated nav checks.",
+      "affectedAssertions": [
+        "VAL-NAV-002",
+        "VAL-NAV-003",
+        "VAL-CROSS-005"
+      ]
+    }
+  ],
+  "blockers": [],
+  "summary": "Tested 6 assertions for mobile navigation and auth/session flows; all 6 passed."
+}

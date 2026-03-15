@@ -1,0 +1,163 @@
+{
+  "groupId": "onboarding-cross",
+  "testedAt": "2026-03-15T04:10:23Z",
+  "isolation": {
+    "session": "onboarding-cross",
+    "webApp": "http://localhost:3000",
+    "api": "http://localhost:3001",
+    "primaryAccount": "ff-onboarding-user-20260315-onboardingcross@example.com",
+    "supplementalAccountsUsedForNetworkCapture": [
+      "ff-onboarding-user-20260315-onboardingcross-net@example.com",
+      "ff-onboarding-user-20260315-onboardingcross-net2@example.com",
+      "ff-onboarding-user-20260315-onboardingcross-signupstatus@example.com"
+    ]
+  },
+  "toolsUsed": [
+    "agent-browser"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-FORM-003",
+      "title": "Onboarding step validation",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "On /onboarding step 1, click Continue with no role selected",
+          "expected": "Progress is blocked and an inline role error is shown",
+          "observed": "Stayed on step 1 and showed 'Please select a role to continue'"
+        },
+        {
+          "action": "Select Product Manager, advance to step 2, then click Continue with no company name or team size",
+          "expected": "Progress is blocked and both required field errors are shown",
+          "observed": "Stayed on step 2 and showed 'Company name is required' plus 'Please select a team size'"
+        },
+        {
+          "action": "Fill company name and team size, advance to step 3, then click Finish onboarding with no goals selected",
+          "expected": "Submission is blocked and a goal selection error is shown",
+          "observed": "Stayed on step 3 and showed 'Please select at least one goal'"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/onboarding-cross/VAL-FORM-003-step-1-role-required.png",
+          "feature-fixes/onboarding-cross/VAL-FORM-003-step-2-team-required.png",
+          "feature-fixes/onboarding-cross/VAL-FORM-003-step-3-goals-required.png"
+        ],
+        "consoleErrors": "none",
+        "network": "GET /api/onboarding/status -> 200 observed during onboarding load; validation failures did not navigate away or submit onboarding."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-FORM-004",
+      "title": "New project form validation",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Navigate to /dashboard/projects/new after completing onboarding",
+          "expected": "Create project form is displayed",
+          "observed": "Create project form rendered normally"
+        },
+        {
+          "action": "Click Create project with an empty Project name field",
+          "expected": "Form stays put, shows inline validation, and does not submit",
+          "observed": "Stayed on /dashboard/projects/new, showed 'Project name is required', and browser request log still showed no /api/projects requests"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/onboarding-cross/VAL-FORM-004-empty-project-name.png"
+        ],
+        "consoleErrors": "none",
+        "network": "No /api/projects requests were captured before or after the empty-name submit attempt."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CROSS-001",
+      "title": "First-visit flow",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Open / from a fresh browser session and navigate to Sign Up",
+          "expected": "Landing page and sign-up page render cleanly",
+          "observed": "Landing page and /sign-up both rendered with no stuck loading state"
+        },
+        {
+          "action": "Create a new account",
+          "expected": "Account is created and first-time user is redirected into onboarding",
+          "observed": "POST /api/auth/sign-up/email was observed in the browser request log and the browser landed on /onboarding with an authenticated session"
+        },
+        {
+          "action": "Complete onboarding",
+          "expected": "Successful onboarding redirects to project creation",
+          "observed": "Submitting role/company/team/goals redirected to /dashboard/projects/new"
+        },
+        {
+          "action": "Create a project from the first-visit flow",
+          "expected": "Project is created and the app navigates to the project detail page",
+          "observed": "Project creation redirected to /dashboard/projects/2, and the detail page loaded with the new project title and stats"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/onboarding-cross/VAL-CROSS-001-landing.png",
+          "feature-fixes/onboarding-cross/VAL-CROSS-001-sign-up.png",
+          "feature-fixes/onboarding-cross/VAL-CROSS-001-onboarding-first-visit.png",
+          "feature-fixes/onboarding-cross/VAL-CROSS-001-project-new-after-onboarding.png",
+          "feature-fixes/onboarding-cross/VAL-CROSS-001-project-detail-loaded.png"
+        ],
+        "consoleErrors": "none",
+        "network": "Browser network log showed POST /api/auth/sign-up/email during sign-up. Supplemental in-page request logging on isolated suffix accounts captured POST /api/onboarding -> 200 with role/company/team/goals payload and POST /api/projects -> 201 with project name/description payload."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-CROSS-003",
+      "title": "Onboarding gate",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "With an authenticated but incomplete user, open /dashboard",
+          "expected": "User is redirected to /onboarding",
+          "observed": "Opening /dashboard redirected straight back to /onboarding"
+        },
+        {
+          "action": "After completing onboarding, open /onboarding again",
+          "expected": "Completed user is redirected to /dashboard without looping",
+          "observed": "Opening /onboarding redirected to /dashboard and remained there after an additional wait"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/onboarding-cross/VAL-CROSS-003-incomplete-dashboard-redirect.png",
+          "feature-fixes/onboarding-cross/VAL-CROSS-003-complete-onboarding-redirect.png"
+        ],
+        "consoleErrors": "none",
+        "network": "GET /api/onboarding/status -> 200 observed during both redirect directions; no redirect loop occurred."
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [
+    {
+      "description": "agent-browser's network request listing duplicated some fetch entries and did not expose response status codes for the auth sign-up request.",
+      "resolved": true,
+      "resolution": "Used additional isolated suffix accounts in the same browser session plus an in-page request logger to capture 200/201 statuses for onboarding and project creation; sign-up success was confirmed by the observed /api/auth/sign-up/email request plus authenticated redirect to /onboarding.",
+      "affectedAssertions": [
+        "VAL-CROSS-001"
+      ]
+    },
+    {
+      "description": "The semantic button locator for '1-5' matched both '1-5' and '21-50' on the team-size step.",
+      "resolved": true,
+      "resolution": "Retried using an exact text click for '1-5'.",
+      "affectedAssertions": [
+        "VAL-FORM-003",
+        "VAL-CROSS-001"
+      ]
+    }
+  ],
+  "blockers": [],
+  "summary": "Tested 4 assertions for onboarding/project first-visit flow: 4 passed, 0 failed, 0 blocked. The primary browser flow successfully went landing -> sign-up -> onboarding -> project create -> project detail, onboarding gating worked in both directions, and inline validation blocked incomplete onboarding and empty project-name submissions."
+}

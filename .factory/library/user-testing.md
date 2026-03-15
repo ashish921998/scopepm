@@ -51,6 +51,8 @@ Cleanup-infrastructure runtime note:
 
 - AI features (interview analysis, spec generation) cannot be tested (no API key)
 - Password reset email delivery cannot be verified (would need SMTP/email service)
+- Current feature-fixes validation note (2026-03-15): `POST /api/auth/request-password-reset` returned `400 {"message":"Reset password isn't enabled","code":"RESET_PASSWORD_DISABLED"}` for both registered and unregistered emails, so the forgot-password success state and any real valid reset token are unavailable until reset-password is enabled server-side.
+- Repo-shell API validation successfully used Better Auth and app endpoints directly with isolated cookie jars: `POST /api/auth/sign-up/email`, `GET /api/auth/get-session`, `POST /api/onboarding`, `POST /api/projects`, `POST /api/interviews`, `GET /api/interviews/:id`, and `PUT /api/interviews/:id`.
 
 ## Flow Validator Guidance: repo-shell
 
@@ -66,4 +68,5 @@ Cleanup-infrastructure runtime note:
 - Isolation boundary: use a dedicated browser session; if sign-up is needed, create a unique test account for the assigned flow only.
 - Do not modify shared infrastructure outside normal user actions in the app. Avoid destructive actions on shared records unless the assertion explicitly requires it.
 - Prefer routes and interactions that stay within the assigned assertions. Capture screenshots for key states and note console/network observations in the flow report.
+- If `agent-browser`'s request list misses app fetch traffic for a loading-state check, it is acceptable to use a temporary in-session `window.fetch` wrapper that delays matching requests while still allowing the real backend response to resolve; document the wrapper and affected endpoints in the flow report.
 - Close the browser session before exiting the flow validator.

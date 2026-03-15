@@ -1,0 +1,145 @@
+{
+  "groupId": "interview-edit",
+  "testedAt": "2026-03-15T04:18:23.054247+00:00",
+  "isolation": {
+    "webApp": "http://localhost:3000",
+    "api": "http://localhost:3001",
+    "browserSession": "ff-interview-edit-flow",
+    "userEmail": "ff-interview-edit-user-20260315-0950@example.com",
+    "password": "Scopepm!234",
+    "project": {
+      "id": 7,
+      "name": "Interview Edit Project 20260315-0950"
+    },
+    "interview": {
+      "id": 2,
+      "initialTitle": "Support workflow interview",
+      "editedTitle": "Edited support workflow interview"
+    }
+  },
+  "toolsUsed": [
+    "agent-browser"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-DATA-005",
+      "title": "Web UI exposes interview editing",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Create an isolated project and interview, then open /dashboard/interviews?projectId=7&new=true",
+          "expected": "Interview card renders with an Edit control",
+          "observed": "The new interview card rendered with an Edit button alongside Analyze with AI and Delete actions."
+        },
+        {
+          "action": "Click the interview card Edit button",
+          "expected": "Editable form opens pre-populated with the current interview title and transcript",
+          "observed": "The card switched into edit mode, showing Save changes/Cancel buttons and the existing title/transcript already filled in."
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/interview-edit/interview-card-before-edit.png",
+          "feature-fixes/interview-edit/edit-form-prepopulated.png"
+        ],
+        "consoleErrors": "none",
+        "network": "No API call is required to open the edit form."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DATA-006",
+      "title": "Interview edit submits PUT and updates UI",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "From the pre-populated edit form, replace the title and transcript with valid values",
+          "expected": "Form accepts the edits and is ready to submit",
+          "observed": "Updated values were entered without validation errors."
+        },
+        {
+          "action": "Submit the edit form",
+          "expected": "Browser sends PUT /api/interviews/:id and the card updates in place without reloading the page",
+          "observed": "A single PUT /api/interviews/2 request returned 200, the card title changed to 'Edited support workflow interview', status remained pending, and the injected window marker persisted, showing no full page reload."
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/interview-edit/interview-card-before-edit.png",
+          "feature-fixes/interview-edit/interview-card-after-edit.png"
+        ],
+        "consoleErrors": "none",
+        "network": "PUT /api/interviews/2 -> 200; request body contained the edited title/transcript; page stayed on /dashboard/interviews?projectId=7&new=true and updated in place."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DATA-007",
+      "title": "Interview edit preserves analysis status",
+      "status": "blocked",
+      "steps": [
+        {
+          "action": "Attempt to analyze the isolated interview before testing an edit on an analyzed record",
+          "expected": "Interview becomes analyzed so title-only editing can verify status/summary/insights preservation",
+          "observed": "POST /api/interviews/2/analyze returned 500 and the page showed 'Anthropic API key not configured'; the interview remained pending with no summary or insights."
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/interview-edit/analyze-blocked-state.png"
+        ],
+        "consoleErrors": "none",
+        "network": "POST /api/interviews/2/analyze -> 500 (Anthropic API key not configured)."
+      },
+      "issues": "Blocked because this environment has no Anthropic API key, so an analyzed interview could not be produced within the isolated account and the analyzed-status preservation path could not be exercised."
+    },
+    {
+      "id": "VAL-FORM-009",
+      "title": "Interview edit form validation",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Open the edit form and clear both the title and transcript fields",
+          "expected": "Client-side validation should reject invalid values",
+          "observed": "Both fields were emptied successfully before submission."
+        },
+        {
+          "action": "Submit the empty edit form",
+          "expected": "Inline validation errors appear and no PUT request is sent",
+          "observed": "Inline errors appeared for both fields ('Title must be at least 3 characters' and 'Transcript must be at least 50 characters') and the recorded request list remained empty."
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/interview-edit/edit-form-validation-errors.png"
+        ],
+        "consoleErrors": "none",
+        "network": "No network request fired after invalid submit; recorded request list stayed []."
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [
+    {
+      "description": "After onboarding completed, the app redirected directly to /dashboard/projects/new instead of /dashboard, so project creation started immediately before reaching the interview flow.",
+      "resolved": true,
+      "resolution": "Used the redirected project creation page to create isolated test data, then continued to the interview route.",
+      "affectedAssertions": [
+        "VAL-DATA-005",
+        "VAL-DATA-006",
+        "VAL-DATA-007",
+        "VAL-FORM-009"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "description": "AI analysis is unavailable in this environment because the Anthropic API key is not configured.",
+      "affectedAssertions": [
+        "VAL-DATA-007"
+      ],
+      "quickFixAttempted": "Attempted Analyze with AI from the interview card; POST /api/interviews/2/analyze returned 500 with 'Anthropic API key not configured'."
+    }
+  ],
+  "summary": "Tested 4 assertions: 3 passed (VAL-DATA-005, VAL-DATA-006, VAL-FORM-009) and 1 was blocked (VAL-DATA-007) because analyzed interviews cannot be created without the Anthropic API key."
+}

@@ -1,0 +1,126 @@
+{
+  "groupId": "auth-forms",
+  "testedAt": "2026-03-15T04:12:04.669157+00:00",
+  "isolation": {
+    "webApp": "http://localhost:3000",
+    "api": "http://localhost:3001",
+    "browserSession": "auth-forms-validator",
+    "primaryAccount": "ff-auth-forms-primary-20260315-a@example.com",
+    "password": "[provided in task]",
+    "notes": "Cookies/storage were cleared between the successful sign-up, duplicate sign-up, and wrong-password sign-in checks to keep each auth-form scenario isolated."
+  },
+  "toolsUsed": [
+    "agent-browser"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-FORM-001",
+      "title": "Sign-in form inline validation",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Open /sign-in and submit the form with email 'not-an-email' and an empty password",
+          "expected": "Styled inline validation errors appear for both fields and the form does not submit",
+          "observed": "The sign-in form showed inline email and password validation messages in the page UI, and no auth request was sent"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/auth-forms/VAL-FORM-001-sign-in-inline-errors.png"
+        ],
+        "consoleErrors": "none",
+        "network": "No POST auth request was observed when submitting the invalid sign-in form; validation was handled entirely client-side."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-FORM-002",
+      "title": "Sign-up form inline validation",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Open /sign-up and submit with an empty name, invalid email 'bad-email', and short password 'short'",
+          "expected": "Each invalid field shows an inline error and the form is blocked from submitting",
+          "observed": "The sign-up form displayed inline errors for name, email, and password, and no sign-up request was sent"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/auth-forms/VAL-FORM-002-sign-up-inline-errors.png"
+        ],
+        "consoleErrors": "none",
+        "network": "No POST /api/auth/sign-up/email request was observed while the client-side validation errors were present."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-FORM-007",
+      "title": "Double submission prevention",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Instrument the page with an artificial fetch delay, enter valid sign-up data for a fresh account, and rapidly click submit twice",
+          "expected": "The submit button disables, shows loading text, and only one request is sent while the request is in-flight",
+          "observed": "The button changed to 'Creating account...' and stayed disabled during the in-flight request; the browser request log showed a single POST sign-up request before the session redirected to /dashboard"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/auth-forms/VAL-FORM-007-loading-disabled-sign-up.png"
+        ],
+        "consoleErrors": "none",
+        "network": "A 2500ms client-side delay was injected to hold the loading state open. During rapid double-clicking, the browser network log showed one POST /api/auth/sign-up/email request and no duplicate submission request."
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-FORM-008",
+      "title": "Server error display",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Clear the authenticated session and attempt to sign up again with the already-created primary account email",
+          "expected": "The duplicate-account API error is shown inside the sign-up form UI",
+          "observed": "The sign-up form displayed 'User already exists. Use another email.' inline after the POST completed"
+        },
+        {
+          "action": "Open /sign-in and submit the same email with an incorrect password",
+          "expected": "The invalid-credentials API error is shown inside the sign-in form UI without crashing",
+          "observed": "The sign-in form displayed 'Invalid email or password' inline, and no unhandled console errors appeared"
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/auth-forms/VAL-FORM-008-duplicate-sign-up-error.png",
+          "feature-fixes/auth-forms/VAL-FORM-008-wrong-password-sign-in-error.png"
+        ],
+        "consoleErrors": "none",
+        "network": "POST requests were observed for both duplicate sign-up and wrong-password sign-in attempts, and both server error messages were rendered inside the form UI."
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [
+    {
+      "description": "The browser network request view accumulates entries across navigations in a shared session, which made per-step request counting noisy.",
+      "resolved": true,
+      "resolution": "Filtered observations to the relevant auth endpoints and paired them with inline UI state plus isolated session resets between scenarios.",
+      "affectedAssertions": [
+        "VAL-FORM-001",
+        "VAL-FORM-002",
+        "VAL-FORM-007",
+        "VAL-FORM-008"
+      ]
+    },
+    {
+      "description": "In-page duplicate-request instrumentation did not produce a reliable counter while the delayed sign-up request was still pending.",
+      "resolved": true,
+      "resolution": "Accepted the disabled loading-state evidence together with the single observed POST request in the browser log as the validation signal for duplicate-submit prevention.",
+      "affectedAssertions": [
+        "VAL-FORM-007"
+      ]
+    }
+  ],
+  "blockers": [],
+  "summary": "Tested 4 auth-form assertions: 4 passed, 0 failed, 0 blocked. Inline validation, loading/disable behavior, duplicate-submit prevention, and server error rendering all worked in the browser."
+}

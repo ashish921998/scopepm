@@ -1,0 +1,204 @@
+{
+  "groupId": "repo-shell-api",
+  "testedAt": "2026-03-15T04:07:33.641034+00:00",
+  "isolation": {
+    "apiBaseUrl": "http://localhost:3001",
+    "tooling": "repo-shell/curl",
+    "ownerUser": "ff-api-owner-20260315-040733@example.com",
+    "otherUser": "ff-api-other-20260315-040733@example.com",
+    "password": "Scopepm!234",
+    "cookieJars": {
+      "owner": "/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/evidence/feature-fixes/repo-shell-api/owner.cookies.txt",
+      "other": "/Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/evidence/feature-fixes/repo-shell-api/other.cookies.txt"
+    }
+  },
+  "toolsUsed": [
+    "repo-shell",
+    "curl"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-AUTH-009",
+      "title": "No hardcoded localhost in auth source files",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Inspect auth-related route files for localhost:3000",
+          "expected": "No hardcoded localhost:3000 remains in forgot-password, reset-password, sign-in, and sign-up routes",
+          "observed": "No matches found in the auth-related route files checked via repo search"
+        }
+      ],
+      "curlCommands": [],
+      "evidence": {
+        "sourceCheck": "No matches found for localhost:3000 in auth-related web route files.",
+        "files": [
+          "packages/web/app/routes/forgot-password.tsx",
+          "packages/web/app/routes/reset-password.tsx",
+          "packages/web/app/routes/sign-in.tsx",
+          "packages/web/app/routes/sign-up.tsx"
+        ],
+        "artifacts": [
+          "feature-fixes/repo-shell-api/VAL-AUTH-009-source-check.txt"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DATA-001",
+      "title": "PUT /api/interviews/:id exists and returns updated interview",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Create an authenticated owner user, onboarding profile, project, and interview record",
+          "expected": "Interview record exists for owner",
+          "observed": "Owner project 3 and interview 1 were created successfully"
+        },
+        {
+          "action": "PUT /api/interviews/1 with updated title and transcript as the owner",
+          "expected": "200 response with updated interview payload and refreshed updatedAt",
+          "observed": "HTTP 200 with title='Updated repo-shell interview title' and updatedAt='2026-03-15T04:07:49.827Z'"
+        }
+      ],
+      "curlCommands": [
+        "curl -sS -X POST http://localhost:3001/api/projects -H 'Content-Type: application/json' -b /Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/evidence/feature-fixes/repo-shell-api/owner.cookies.txt -c /Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/evidence/feature-fixes/repo-shell-api/owner.cookies.txt -d '{\"name\": \"Feature Fixes Repo Shell Project 20260315-040733\", \"description\": \"Project created for repo-shell API validation flow\"}'",
+        "curl -sS -X POST http://localhost:3001/api/interviews -H 'Content-Type: application/json' -b /Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/evidence/feature-fixes/repo-shell-api/owner.cookies.txt -c /Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/evidence/feature-fixes/repo-shell-api/owner.cookies.txt -d '{\"projectId\": 3, \"title\": \"Initial repo-shell interview\", \"transcript\": \"Customer explained that the dashboard is slow to scan, wants clearer edit controls, and needs confidence that updates save immediately for product review meetings.\"}'",
+        "curl -sS -X PUT http://localhost:3001/api/interviews/1 -H 'Content-Type: application/json' -b /Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/evidence/feature-fixes/repo-shell-api/owner.cookies.txt -c /Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/evidence/feature-fixes/repo-shell-api/owner.cookies.txt -d '{\"title\": \"Updated repo-shell interview title\", \"transcript\": \"Updated transcript: the product manager needs fast in-place interview edits, preserved analysis status, and clear ownership protection for shared environments.\"}'"
+      ],
+      "evidence": {
+        "createResponse": {
+          "interview": {
+            "id": 1,
+            "userId": 10,
+            "projectId": 3,
+            "title": "Initial repo-shell interview",
+            "transcript": "Customer explained that the dashboard is slow to scan, wants clearer edit controls, and needs confidence that updates save immediately for product review meetings.",
+            "summary": null,
+            "insights": null,
+            "status": "pending",
+            "createdAt": "2026-03-15T04:07:46.818Z",
+            "updatedAt": "2026-03-15T04:07:46.818Z"
+          }
+        },
+        "updateResponse": {
+          "interview": {
+            "id": 1,
+            "userId": 10,
+            "projectId": 3,
+            "title": "Updated repo-shell interview title",
+            "transcript": "Updated transcript: the product manager needs fast in-place interview edits, preserved analysis status, and clear ownership protection for shared environments.",
+            "summary": null,
+            "insights": null,
+            "status": "pending",
+            "createdAt": "2026-03-15T04:07:46.818Z",
+            "updatedAt": "2026-03-15T04:07:49.827Z"
+          }
+        },
+        "artifacts": [
+          "feature-fixes/repo-shell-api/setup-owner-interview-create.txt",
+          "feature-fixes/repo-shell-api/VAL-DATA-001-put-owner.txt"
+        ],
+        "updatedAtComparison": {
+          "before": "2026-03-15T04:07:46.818Z",
+          "after": "2026-03-15T04:07:49.827Z"
+        }
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DATA-002",
+      "title": "PUT /api/interviews/:id validates required fields",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "PUT /api/interviews/1 with blank title and transcript as the owner",
+          "expected": "400 response with descriptive validation error",
+          "observed": "HTTP 400 body={\n  \"error\": \"Title and transcript are required\"\n}"
+        }
+      ],
+      "curlCommands": [
+        "curl -sS -X PUT http://localhost:3001/api/interviews/1 -H 'Content-Type: application/json' -b /Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/evidence/feature-fixes/repo-shell-api/owner.cookies.txt -c /Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/evidence/feature-fixes/repo-shell-api/owner.cookies.txt -d '{\"title\": \"   \", \"transcript\": \"   \"}'"
+      ],
+      "evidence": {
+        "response": {
+          "error": "Title and transcript are required"
+        },
+        "artifacts": [
+          "feature-fixes/repo-shell-api/VAL-DATA-002-put-empty-fields.txt"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DATA-003",
+      "title": "PUT /api/interviews/:id enforces ownership",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "PUT /api/interviews/1 as a different authenticated user",
+          "expected": "403 response",
+          "observed": "HTTP 403 body={\n  \"error\": \"Forbidden\"\n}"
+        },
+        {
+          "action": "GET /api/interviews/1 as the owner after the non-owner attempt",
+          "expected": "Interview remains unchanged",
+          "observed": "Title stayed 'Updated repo-shell interview title'; updatedAt stayed '2026-03-15T04:07:49.827Z'"
+        }
+      ],
+      "curlCommands": [
+        "curl -sS -X PUT http://localhost:3001/api/interviews/1 -H 'Content-Type: application/json' -b /Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/evidence/feature-fixes/repo-shell-api/other.cookies.txt -c /Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/evidence/feature-fixes/repo-shell-api/other.cookies.txt -d '{\"title\": \"Other user should not update this\", \"transcript\": \"Other user attempted to overwrite the interview transcript.\"}'",
+        "curl -sS -X GET http://localhost:3001/api/interviews/1 -b /Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/evidence/feature-fixes/repo-shell-api/owner.cookies.txt -c /Users/ashishhuddar/.factory/missions/8d555b3e-2948-4f0c-abd1-2fe8dc0952a9/evidence/feature-fixes/repo-shell-api/owner.cookies.txt"
+      ],
+      "evidence": {
+        "forbiddenResponse": {
+          "error": "Forbidden"
+        },
+        "ownerReadBack": {
+          "interview": {
+            "id": 1,
+            "userId": 10,
+            "projectId": 3,
+            "title": "Updated repo-shell interview title",
+            "transcript": "Updated transcript: the product manager needs fast in-place interview edits, preserved analysis status, and clear ownership protection for shared environments.",
+            "summary": null,
+            "insights": null,
+            "status": "pending",
+            "createdAt": "2026-03-15T04:07:46.818Z",
+            "updatedAt": "2026-03-15T04:07:49.827Z"
+          }
+        },
+        "artifacts": [
+          "feature-fixes/repo-shell-api/VAL-DATA-003-put-non-owner.txt",
+          "feature-fixes/repo-shell-api/VAL-DATA-003-owner-get-after-non-owner-put.txt"
+        ]
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-DATA-004",
+      "title": "PUT /api/interviews/:id requires authentication",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "PUT /api/interviews/1 without any auth cookie",
+          "expected": "401 response",
+          "observed": "HTTP 401 body={\n  \"error\": \"Unauthorized\"\n}"
+        }
+      ],
+      "curlCommands": [
+        "curl -sS -X PUT http://localhost:3001/api/interviews/1 -H 'Content-Type: application/json' -d '{\"title\": \"Unauthenticated update\", \"transcript\": \"This request should be rejected before any update happens.\"}'"
+      ],
+      "evidence": {
+        "response": {
+          "error": "Unauthorized"
+        },
+        "artifacts": [
+          "feature-fixes/repo-shell-api/VAL-DATA-004-put-without-auth.txt"
+        ]
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 5 assertions: 5 passed, 0 failed, 0 blocked."
+}

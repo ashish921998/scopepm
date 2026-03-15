@@ -1,0 +1,82 @@
+{
+  "groupId": "dashboard-forms",
+  "testedAt": "2026-03-15T04:18:34Z",
+  "isolation": {
+    "appUrl": "http://localhost:3000",
+    "apiUrl": "http://localhost:3001",
+    "browserSession": "dashboard-forms-validator",
+    "userEmail": "ff-dashboard-forms-user-20260315@example.com",
+    "userPassword": "Scopepm!234",
+    "projectCreated": "Dashboard Validation Project"
+  },
+  "toolsUsed": [
+    "agent-browser"
+  ],
+  "assertions": [
+    {
+      "id": "VAL-FORM-005",
+      "title": "New interview form validation",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Sign up the isolated user, complete onboarding, and create a prerequisite project.",
+          "expected": "A dashboard user with at least one project can access the new interview form.",
+          "observed": "Created user ff-dashboard-forms-user-20260315@example.com, completed onboarding, created project 'Dashboard Validation Project', and loaded /dashboard/interviews?new=true."
+        },
+        {
+          "action": "Open /dashboard/interviews?new=true and submit the empty form.",
+          "expected": "Field-specific inline errors appear for project, title, and transcript.",
+          "observed": "Inline errors displayed: 'Please select a project', 'Title must be at least 3 characters', and 'Transcript must be at least 50 characters'."
+        },
+        {
+          "action": "Inspect captured network activity after the invalid submission.",
+          "expected": "No create request is sent for the invalid form.",
+          "observed": "Request log showed repeated GET /api/interviews fetches from page load only; no POST /api/interviews request was captured after submit."
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/dashboard-forms/VAL-FORM-005-form-before-submit.png",
+          "feature-fixes/dashboard-forms/VAL-FORM-005-form-errors.png"
+        ],
+        "consoleErrors": "none after log reset; only Vite connection/debug and React DevTools info messages were present",
+        "network": "GET /api/interviews on page load only; no POST /api/interviews after invalid submit"
+      },
+      "issues": null
+    },
+    {
+      "id": "VAL-FORM-006",
+      "title": "New spec form validation",
+      "status": "pass",
+      "steps": [
+        {
+          "action": "Open /dashboard/specs?new=true with the isolated user and existing project.",
+          "expected": "The new spec form is available for validation.",
+          "observed": "Loaded the Feature Specs page with the new spec form open."
+        },
+        {
+          "action": "Submit the empty spec form.",
+          "expected": "Field-specific inline errors appear for project, title, and description.",
+          "observed": "Inline errors displayed: 'Please select a project', 'Title must be at least 3 characters', and 'Description must be at least 20 characters'."
+        },
+        {
+          "action": "Inspect captured network activity after the invalid submission.",
+          "expected": "No create request is sent for the invalid form.",
+          "observed": "Request log showed repeated GET /api/specs fetches from page load only; no POST /api/specs request was captured after submit."
+        }
+      ],
+      "evidence": {
+        "screenshots": [
+          "feature-fixes/dashboard-forms/VAL-FORM-006-form-before-submit.png",
+          "feature-fixes/dashboard-forms/VAL-FORM-006-form-errors.png"
+        ],
+        "consoleErrors": "none after log reset; only Vite connection/debug and React DevTools info messages were present",
+        "network": "GET /api/specs on page load only; no POST /api/specs after invalid submit"
+      },
+      "issues": null
+    }
+  ],
+  "frictions": [],
+  "blockers": [],
+  "summary": "Tested 2 dashboard form assertions through the real browser UI. Both passed: interview and spec forms showed field-specific inline validation errors and blocked invalid create requests."
+}
