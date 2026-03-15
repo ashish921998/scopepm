@@ -35,8 +35,10 @@ describe('DashboardLayout auth guard', () => {
     }))
 
     // Dynamically import after setting up the mock
-    const { default: mod } = await import('../../routes/dashboard?t=1')
-    const DashboardLayout = (mod as { component?: React.ComponentType })?.component
+    // vi.resetModules() ensures the module is freshly loaded with the current mocks applied
+    vi.resetModules()
+    const { Route } = await import('../../routes/dashboard')
+    const DashboardLayout = (Route as { component?: React.ComponentType })?.component
 
     if (!DashboardLayout) {
       // Component may be exported differently - just verify the mock would trigger navigation
