@@ -5,3 +5,8 @@ compatibility_flags = ["nodejs_compat"]
 
 [vars]
 ENVIRONMENT = "production"
+BETTER_AUTH_URL = "https://scopepm-api.ashish-hudar.workers.dev"
+
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "40426889d906450d8b4c4209272386ea"

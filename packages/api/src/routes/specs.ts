@@ -1,5 +1,4 @@
 import { Hono } from 'hono'
-import { db } from '../db'
 import { featureSpec, interview, project } from '../db/schema'
 import { and, desc, eq } from 'drizzle-orm'
 import { getAnthropicClient, generateFeatureSpec } from '../lib/anthropic'
@@ -13,6 +12,7 @@ app.get('/', async (c) => {
   const user = c.get('user')
   if (!user) return c.json({ error: 'Unauthorized' }, 401)
 
+  const db = c.get('db')
   const userId = getUserId(user)
   const projectId = parseInteger(c.req.query('projectId'))
 
@@ -47,6 +47,7 @@ app.get('/:id', async (c) => {
   const user = c.get('user')
   if (!user) return c.json({ error: 'Unauthorized' }, 401)
 
+  const db = c.get('db')
   const userId = getUserId(user)
   const id = parseInteger(c.req.param('id'))
   if (!id) return c.json({ error: 'Invalid feature spec ID' }, 400)
@@ -72,6 +73,7 @@ app.post('/', async (c) => {
   const user = c.get('user')
   if (!user) return c.json({ error: 'Unauthorized' }, 401)
 
+  const db = c.get('db')
   const userId = getUserId(user)
   const body = await c.req.json()
   const title = typeof body.title === 'string' ? body.title.trim() : ''
@@ -127,6 +129,7 @@ app.post('/generate', async (c) => {
   const user = c.get('user')
   if (!user) return c.json({ error: 'Unauthorized' }, 401)
 
+  const db = c.get('db')
   const userId = getUserId(user)
   const body = await c.req.json()
   const sourceInterviewId = typeof body.interviewId === 'number'
@@ -191,6 +194,7 @@ app.put('/:id', async (c) => {
   const user = c.get('user')
   if (!user) return c.json({ error: 'Unauthorized' }, 401)
 
+  const db = c.get('db')
   const userId = getUserId(user)
   const id = parseInteger(c.req.param('id'))
   if (!id) return c.json({ error: 'Invalid feature spec ID' }, 400)
@@ -249,6 +253,7 @@ app.delete('/:id', async (c) => {
   const user = c.get('user')
   if (!user) return c.json({ error: 'Unauthorized' }, 401)
 
+  const db = c.get('db')
   const userId = getUserId(user)
   const id = parseInteger(c.req.param('id'))
   if (!id) return c.json({ error: 'Invalid feature spec ID' }, 400)

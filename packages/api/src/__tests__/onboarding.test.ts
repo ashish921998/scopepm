@@ -28,16 +28,11 @@ const mocks = vi.hoisted(() => {
   }
 })
 
-vi.mock('../db', () => ({
-  db: {
-    select: mocks.mockSelect,
-    insert: mocks.mockInsert,
-  },
-}))
+const mockDb = {
+  select: mocks.mockSelect,
+  insert: mocks.mockInsert,
+}
 
-// ---------------------------------------------------------------------------
-// Import route AFTER vi.mock so the mock is in place
-// ---------------------------------------------------------------------------
 import onboardingRoutes from '../routes/onboarding'
 
 // ---------------------------------------------------------------------------
@@ -65,6 +60,7 @@ function createTestApp(userId = MOCK_USER_ID) {
   app.use('*', async (c, next) => {
     c.set('user', { id: String(userId), email: 'test@example.com', name: 'Test User' } as any)
     c.set('session', {} as any)
+    c.set('db', mockDb as any)
     await next()
   })
   app.route('/', onboardingRoutes)
@@ -76,6 +72,7 @@ function createUnauthApp() {
   app.use('*', async (c, next) => {
     c.set('user', null)
     c.set('session', null)
+    c.set('db', mockDb as any)
     await next()
   })
   app.route('/', onboardingRoutes)

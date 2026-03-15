@@ -1,5 +1,4 @@
 import { Hono } from 'hono'
-import { db } from '../db'
 import { interview } from '../db/schema'
 import { desc, eq } from 'drizzle-orm'
 import { getUserId } from '../lib/utils'
@@ -15,6 +14,7 @@ app.post('/seed-analyzed-interview', async (c) => {
   const user = c.get('user')
   if (!user) return c.json({ error: 'Unauthorized' }, 401)
 
+  const db = c.get('db')
   const userId = getUserId(user)
 
   const [latest] = await db

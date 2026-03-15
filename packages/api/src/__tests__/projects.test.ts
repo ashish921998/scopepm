@@ -41,23 +41,13 @@ const mocks = vi.hoisted(() => {
   }
 })
 
-vi.mock('../db', () => ({
-  db: {
-    select: mocks.mockSelect,
-    insert: mocks.mockInsert,
-    update: mocks.mockUpdate,
-    delete: mocks.mockDelete,
-  },
-  // Schema table references — kept as plain objects since the mocked db never
-  // executes SQL; drizzle-orm operators (eq, and, desc) handle them safely.
-  project: {},
-  interview: {},
-  featureSpec: {},
-}))
+const mockDb = {
+  select: mocks.mockSelect,
+  insert: mocks.mockInsert,
+  update: mocks.mockUpdate,
+  delete: mocks.mockDelete,
+}
 
-// ---------------------------------------------------------------------------
-// Import route AFTER vi.mock so the mock is in place
-// ---------------------------------------------------------------------------
 import projectRoutes from '../routes/projects'
 
 // ---------------------------------------------------------------------------
@@ -120,6 +110,7 @@ function createTestApp(userId = MOCK_USER_ID) {
   app.use('*', async (c, next) => {
     c.set('user', { id: String(userId), email: 'test@example.com', name: 'Test User' } as any)
     c.set('session', {} as any)
+    c.set('db', mockDb as any)
     await next()
   })
   app.route('/', projectRoutes)
@@ -131,6 +122,7 @@ function createUnauthApp() {
   app.use('*', async (c, next) => {
     c.set('user', null)
     c.set('session', null)
+    c.set('db', mockDb as any)
     await next()
   })
   app.route('/', projectRoutes)

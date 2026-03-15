@@ -1,13 +1,13 @@
 import { Hono } from 'hono'
 import { and, desc, eq } from 'drizzle-orm'
-import { db } from '../db'
 import { featureSpec, interview, project } from '../db/schema'
 import { getUserId, parseInteger } from '../lib/utils'
+import type { Database } from '../db'
 import { AppEnv } from '../lib/hono'
 
 const app = new Hono<AppEnv>()
 
-async function getOwnedProject(projectId: number, userId: number) {
+async function getOwnedProject(db: Database, projectId: number, userId: number) {
   const [found] = await db
     .select()
     .from(project)
@@ -33,6 +33,7 @@ app.get('/', async (c) => {
   const user = c.get('user')
   if (!user) return c.json({ error: 'Unauthorized' }, 401)
 
+  const db = c.get('db')
   const userId = getUserId(user)
   const projects = await db
     .select()
@@ -59,6 +60,7 @@ app.get('/overview', async (c) => {
   const user = c.get('user')
   if (!user) return c.json({ error: 'Unauthorized' }, 401)
 
+  const db = c.get('db')
   const userId = getUserId(user)
   const projects = await db
     .select()
@@ -120,6 +122,7 @@ app.post('/', async (c) => {
   const user = c.get('user')
   if (!user) return c.json({ error: 'Unauthorized' }, 401)
 
+  const db = c.get('db')
   const body = await c.req.json()
   const name = typeof body.name === 'string' ? body.name.trim() : ''
   const description = typeof body.description === 'string' ? body.description.trim() : ''
@@ -146,11 +149,12 @@ app.get('/:id', async (c) => {
   const user = c.get('user')
   if (!user) return c.json({ error: 'Unauthorized' }, 401)
 
+  const db = c.get('db')
   const userId = getUserId(user)
   const projectId = parseInteger(c.req.param('id'))
   if (!projectId) return c.json({ error: 'Invalid project ID' }, 400)
 
-  const found = await getOwnedProject(projectId, userId)
+  const found = await getOwnedProject(db, projectId, userId)
   if (!found) return c.json({ error: 'Project not found' }, 404)
 
   const interviews = await db
@@ -181,11 +185,12 @@ app.get('/:id/stats', async (c) => {
   const user = c.get('user')
   if (!user) return c.json({ error: 'Unauthorized' }, 401)
 
+  const db = c.get('db')
   const userId = getUserId(user)
   const projectId = parseInteger(c.req.param('id'))
   if (!projectId) return c.json({ error: 'Invalid project ID' }, 400)
 
-  const found = await getOwnedProject(projectId, userId)
+  const found = await getOwnedProject(db, projectId, userId)
   if (!found) return c.json({ error: 'Project not found' }, 404)
 
   const interviews = await db
@@ -212,11 +217,12 @@ app.put('/:id', async (c) => {
   const user = c.get('user')
   if (!user) return c.json({ error: 'Unauthorized' }, 401)
 
+  const db = c.get('db')
   const userId = getUserId(user)
   const projectId = parseInteger(c.req.param('id'))
   if (!projectId) return c.json({ error: 'Invalid project ID' }, 400)
 
-  const found = await getOwnedProject(projectId, userId)
+  const found = await getOwnedProject(db, projectId, userId)
   if (!found) return c.json({ error: 'Project not found' }, 404)
 
   const body = await c.req.json()
@@ -246,11 +252,12 @@ app.delete('/:id', async (c) => {
   const user = c.get('user')
   if (!user) return c.json({ error: 'Unauthorized' }, 401)
 
+  const db = c.get('db')
   const userId = getUserId(user)
   const projectId = parseInteger(c.req.param('id'))
   if (!projectId) return c.json({ error: 'Invalid project ID' }, 400)
 
-  const found = await getOwnedProject(projectId, userId)
+  const found = await getOwnedProject(db, projectId, userId)
   if (!found) return c.json({ error: 'Project not found' }, 404)
 
   await db.delete(project).where(eq(project.id, projectId))

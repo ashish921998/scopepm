@@ -1,8 +1,8 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
-import { auth } from './auth'
-import { db } from './db'
+import { createAuth } from './auth'
+import { createDb } from './db'
 import { userProfile } from './db/schema'
 import { eq } from 'drizzle-orm'
 import waitlistRoutes from './routes/waitlist'
@@ -20,11 +20,9 @@ const app = new Hono<AppEnv>()
 app.use('*', logger())
 app.use('*', cors({
   origin: (origin) => {
-    // Allow all localhost ports in development
     if (origin && /^http:\/\/localhost(:\d+)?$/.test(origin)) {
       return origin
     }
-    // Allow production domains
     if (origin && /^https:\/\/[a-z0-9-]+\.scopepm-web\.pages\.dev$/.test(origin)) {
       return origin
     }
@@ -35,8 +33,20 @@ app.use('*', cors({
   credentials: true,
 }))
 
-// Session middleware - attach user/session to context
+// Database middleware - uses Hyperdrive in production, DATABASE_URL locally
 app.use('*', async (c, next) => {
+  const db = c.env?.HYPERDRIVE ? createDb(c.env.HYPERDRIVE) : createDb()
+  c.set('db', db)
+  await next()
+})
+
+// Session middleware
+app.use('*', async (c, next) => {
+  const db = c.get('db')
+  const auth = createAuth(db, {
+    secret: c.env?.BETTER_AUTH_SECRET,
+    baseURL: c.env?.BETTER_AUTH_URL,
+  })
   const session = await auth.api.getSession({ headers: c.req.raw.headers })
 
   if (!session) {
@@ -53,11 +63,16 @@ app.use('*', async (c, next) => {
 
 // Mount Better Auth handler
 app.on(['POST', 'GET'], '/api/auth/*', (c) => {
+  const db = c.get('db')
+  const auth = createAuth(db, {
+    secret: c.env?.BETTER_AUTH_SECRET,
+    baseURL: c.env?.BETTER_AUTH_URL,
+  })
   return auth.handler(c.req.raw)
 })
 
 // Health check
-app.get('/', (c) => c.json({ status: 'ok', service: 'scopepm-api', environment: c.env.ENVIRONMENT || 'development' }))
+app.get('/', (c) => c.json({ status: 'ok', service: 'scopepm-api', environment: c.env?.ENVIRONMENT || 'development' }))
 
 // Routes
 app.route('/api/waitlist', waitlistRoutes)
@@ -71,6 +86,7 @@ app.route('/api/dev', devRoutes)
 app.get('/api/me', async (c) => {
   const user = c.get('user')
   const session = c.get('session')
+  const db = c.get('db')
 
   if (!user) {
     return c.json({ error: 'Unauthorized' }, 401)

@@ -1,4 +1,5 @@
 import type { AuthSession } from '../auth'
+import type { Database } from '../db'
 
 export type AppBindings = {
   DATABASE_URL: string
@@ -6,11 +7,13 @@ export type AppBindings = {
   BETTER_AUTH_URL: string
   ANTHROPIC_API_KEY: string
   ENVIRONMENT: string
+  HYPERDRIVE: { connectionString: string }
 }
 
 export type AppVariables = {
   user: AuthSession['user'] | null
   session: AuthSession['session'] | null
+  db: Database
 }
 
 export type AppEnv = {

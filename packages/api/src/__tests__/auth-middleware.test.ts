@@ -3,31 +3,33 @@ import { Hono } from 'hono'
 import type { AppEnv } from '../lib/hono'
 
 // ---------------------------------------------------------------------------
-// Mock db to prevent any real database connections
+// Hoisted mock setup — must run before any imports that touch '../db' or '../auth'
 // ---------------------------------------------------------------------------
-vi.mock('../db', () => ({
-  db: {
-    select: vi.fn().mockReturnValue({
-      from: vi.fn().mockReturnValue({
-        where: vi.fn().mockResolvedValue([]),
-      }),
+const mockDb = vi.hoisted(() => ({
+  select: vi.fn().mockReturnValue({
+    from: vi.fn().mockReturnValue({
+      where: vi.fn().mockResolvedValue([]),
     }),
-    insert: vi.fn(),
-    update: vi.fn(),
-    delete: vi.fn(),
-  },
+  }),
+  insert: vi.fn(),
+  update: vi.fn(),
+  delete: vi.fn(),
 }))
 
-// ---------------------------------------------------------------------------
-// Mock auth to prevent real session lookups
-// ---------------------------------------------------------------------------
+vi.mock('../db', () => ({
+  createDb: vi.fn().mockReturnValue(mockDb),
+  schema: {},
+  waitlist: {}, user: {}, session: {}, account: {}, verification: {},
+  userProfile: {}, project: {}, interview: {}, featureSpec: {},
+}))
+
 vi.mock('../auth', () => ({
-  auth: {
+  createAuth: vi.fn().mockReturnValue({
     api: {
       getSession: vi.fn().mockResolvedValue(null),
     },
     handler: vi.fn().mockImplementation(() => new Response('{}', { status: 200 })),
-  },
+  }),
 }))
 
 // ---------------------------------------------------------------------------
@@ -46,6 +48,7 @@ function createUnauthApp() {
   app.use('*', async (c, next) => {
     c.set('user', null)
     c.set('session', null)
+    c.set('db', mockDb as any)
     await next()
   })
   return app
@@ -89,7 +92,6 @@ describe('Auth middleware — protected endpoints return 401 without auth', () =
   })
 
   it('GET /api/me returns 401 without authentication', async () => {
-    // Use the real app from index.ts (auth.api.getSession is mocked to return null)
     const res = await realApp.request('/api/me')
 
     expect(res.status).toBe(401)

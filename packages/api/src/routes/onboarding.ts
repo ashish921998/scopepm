@@ -1,6 +1,5 @@
 import { Hono } from 'hono'
 import { eq } from 'drizzle-orm'
-import { db } from '../db'
 import { userProfile } from '../db/schema'
 import { getUserId, parseStringArray } from '../lib/utils'
 import { AppEnv } from '../lib/hono'
@@ -22,6 +21,7 @@ app.get('/status', async (c) => {
   const user = c.get('user')
   if (!user) return c.json({ error: 'Unauthorized' }, 401)
 
+  const db = c.get('db')
   const userId = getUserId(user)
   const [profile] = await db
     .select()
@@ -43,6 +43,7 @@ app.post('/', async (c) => {
   const user = c.get('user')
   if (!user) return c.json({ error: 'Unauthorized' }, 401)
 
+  const db = c.get('db')
   const userId = getUserId(user)
   const body = await c.req.json()
   const role = typeof body.role === 'string' ? body.role.trim() : ''

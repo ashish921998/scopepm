@@ -17,20 +17,24 @@ const mocks = vi.hoisted(() => {
   return { mockLimit, mockWhere, mockFrom, mockSelect, mockInsertValues, mockInsert }
 })
 
-vi.mock('../db', () => ({
-  db: {
-    select: mocks.mockSelect,
-    insert: mocks.mockInsert,
-  },
-  // waitlist table reference — kept as plain object since the mocked db never
-  // executes SQL; drizzle-orm's eq() handles undefined column refs safely
-  waitlist: {},
-}))
+const mockDb = {
+  select: mocks.mockSelect,
+  insert: mocks.mockInsert,
+}
 
-// ---------------------------------------------------------------------------
-// Import route AFTER vi.mock so the mock is in place
-// ---------------------------------------------------------------------------
 import waitlistRoutes from '../routes/waitlist'
+import { Hono } from 'hono'
+import type { AppEnv } from '../lib/hono'
+
+function createWaitlistApp() {
+  const app = new Hono<AppEnv>()
+  app.use('*', async (c, next) => {
+    c.set('db', mockDb as any)
+    await next()
+  })
+  app.route('/', waitlistRoutes)
+  return app
+}
 
 // ---------------------------------------------------------------------------
 // Mock data
@@ -59,7 +63,7 @@ describe('POST /api/waitlist', () => {
   })
 
   it('returns 201 with success for valid new email', async () => {
-    const res = await waitlistRoutes.request('/', {
+    const res = await createWaitlistApp().request('/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: 'new@example.com', name: 'New User' }),
@@ -72,7 +76,7 @@ describe('POST /api/waitlist', () => {
   })
 
   it('returns 201 with only email provided (no optional fields)', async () => {
-    const res = await waitlistRoutes.request('/', {
+    const res = await createWaitlistApp().request('/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: 'minimal@example.com' }),
@@ -84,7 +88,7 @@ describe('POST /api/waitlist', () => {
   })
 
   it('returns 400 for email without @ symbol', async () => {
-    const res = await waitlistRoutes.request('/', {
+    const res = await createWaitlistApp().request('/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: 'notanemail' }),
@@ -96,7 +100,7 @@ describe('POST /api/waitlist', () => {
   })
 
   it('returns 400 when email field is missing', async () => {
-    const res = await waitlistRoutes.request('/', {
+    const res = await createWaitlistApp().request('/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: 'User without email' }),
@@ -108,7 +112,7 @@ describe('POST /api/waitlist', () => {
   })
 
   it('returns 400 when email is an empty string', async () => {
-    const res = await waitlistRoutes.request('/', {
+    const res = await createWaitlistApp().request('/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: '' }),
@@ -121,7 +125,7 @@ describe('POST /api/waitlist', () => {
     // Simulate finding the email already in the DB
     mocks.mockLimit.mockResolvedValueOnce([mockWaitlistEntry])
 
-    const res = await waitlistRoutes.request('/', {
+    const res = await createWaitlistApp().request('/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: 'existing@example.com' }),
@@ -136,7 +140,7 @@ describe('POST /api/waitlist', () => {
   it('does NOT call insert for a duplicate email', async () => {
     mocks.mockLimit.mockResolvedValueOnce([mockWaitlistEntry])
 
-    await waitlistRoutes.request('/', {
+    await createWaitlistApp().request('/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: 'existing@example.com' }),
@@ -158,7 +162,7 @@ describe('GET /api/waitlist/count', () => {
   })
 
   it('returns 200 with a numeric count', async () => {
-    const res = await waitlistRoutes.request('/count')
+    const res = await createWaitlistApp().request('/count')
 
     expect(res.status).toBe(200)
     const body = await res.json() as { count: number }
@@ -169,7 +173,7 @@ describe('GET /api/waitlist/count', () => {
   it('returns count of 0 when waitlist is empty', async () => {
     mocks.mockFrom.mockResolvedValueOnce([{ value: 0 }])
 
-    const res = await waitlistRoutes.request('/count')
+    const res = await createWaitlistApp().request('/count')
 
     expect(res.status).toBe(200)
     const body = await res.json() as { count: number }
@@ -179,7 +183,7 @@ describe('GET /api/waitlist/count', () => {
   it('returns 200 with count 0 when db returns no rows (graceful fallback)', async () => {
     mocks.mockFrom.mockResolvedValueOnce([])
 
-    const res = await waitlistRoutes.request('/count')
+    const res = await createWaitlistApp().request('/count')
 
     expect(res.status).toBe(200)
     const body = await res.json() as { count: number }

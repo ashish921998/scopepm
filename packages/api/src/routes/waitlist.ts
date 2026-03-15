@@ -1,9 +1,10 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { db, waitlist } from '../db'
+import { waitlist } from '../db'
 import { eq, count } from 'drizzle-orm'
+import { AppEnv } from '../lib/hono'
 
-const app = new Hono()
+const app = new Hono<AppEnv>()
 
 // Enable CORS for frontend
 app.use('*', cors({
@@ -15,6 +16,7 @@ app.use('*', cors({
 // POST /api/waitlist - Submit email to waitlist
 app.post('/', async (c) => {
   try {
+    const db = c.get('db')
     const body = await c.req.json()
     const { email, name, role, companySize } = body
 
@@ -50,9 +52,10 @@ app.post('/', async (c) => {
 // GET /api/waitlist/count - Get total count for social proof
 app.get('/count', async (c) => {
   try {
+    const db = c.get('db')
     const result = await db.select({ value: count() })
       .from(waitlist)
-    
+
     const countValue = result[0]?.value || 0
     return c.json({ count: countValue }, 200)
   } catch (error) {
