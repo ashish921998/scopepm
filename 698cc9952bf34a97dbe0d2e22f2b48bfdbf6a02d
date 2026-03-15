@@ -1,0 +1,23 @@
+packages/api/.env.example
+  b70690d88f94c5ea 9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "698cc9952bf34a97dbe0d2e22f2b48bfdbf6a02d",
+  "prompts": {
+    "b70690d88f94c5ea": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "25821b48-7d44-4e99-95b4-b7a22024595b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
