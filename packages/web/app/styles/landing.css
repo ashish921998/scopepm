@@ -444,6 +444,29 @@ section {
   line-height: 1.6;
 }
 
+/* Coming Soon features */
+.feature-card--coming-soon {
+  opacity: 0.7;
+}
+
+.feature-card--coming-soon .feature-icon {
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+}
+
+.coming-soon-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.125rem 0.5rem;
+  background: var(--accent-soft);
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--accent);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  vertical-align: middle;
+}
+
 /* CTA Section */
 .cta-section {
   text-align: center;
@@ -1498,6 +1521,21 @@ section {
   color: var(--text-muted);
 }
 
+.status-in_review {
+  background: rgba(59, 130, 246, 0.12);
+  color: #3b82f6;
+}
+
+.status-approved {
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+}
+
+.status-in_progress {
+  background: rgba(234, 179, 8, 0.12);
+  color: #ca8a04;
+}
+
 .status-completed {
   background: rgba(22, 163, 74, 0.12);
   color: #16a34a;
@@ -1602,6 +1640,85 @@ section {
   background: var(--bg-tertiary);
   animation: skeleton-pulse 1.5s ease-in-out infinite;
   border-radius: 6px;
+}
+
+/* Insights Display */
+.insights-container {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.insights-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.insights-header h4 {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.insights-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.insight-section {
+  padding: 0.75rem;
+  background: var(--bg-primary);
+  border-radius: 8px;
+}
+
+.insight-section-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.insight-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.insight-list li {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  padding: 0.25rem 0;
+  padding-left: 1rem;
+  position: relative;
+  line-height: 1.5;
+}
+
+.insight-list li::before {
+  content: '\2022';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+.insight-more {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+/* Export button styles */
+.export-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 768px) {

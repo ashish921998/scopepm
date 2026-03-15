@@ -24,4 +24,22 @@ describe('Features component', () => {
     render(<Features />)
     expect(screen.getByText('Prioritization Engine')).toBeDefined()
   })
+
+  it('shows Coming Soon badges for unbuilt features', () => {
+    render(<Features />)
+    const comingSoonBadges = screen.getAllByText('Coming Soon')
+    expect(comingSoonBadges.length).toBe(4)
+  })
+
+  it('does not show Coming Soon for Interview Analysis', () => {
+    render(<Features />)
+    const interviewCard = screen.getByText('Interview Analysis').closest('.feature-card')
+    expect(interviewCard?.classList.contains('feature-card--coming-soon')).toBe(false)
+  })
+
+  it('does not show Coming Soon for Task Breakdown', () => {
+    render(<Features />)
+    const taskCard = screen.getByText('Task Breakdown').closest('.feature-card')
+    expect(taskCard?.classList.contains('feature-card--coming-soon')).toBe(false)
+  })
 })
