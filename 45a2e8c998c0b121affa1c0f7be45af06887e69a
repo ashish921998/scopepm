@@ -1,0 +1,27 @@
+packages/api/src/index.ts
+  c69ecdf29a9378de 96-98
+packages/api/src/__tests__/auth-middleware.test.ts
+  c69ecdf29a9378de 22-32,39,92-93
+packages/web/app/__tests__/routes/dashboard.test.tsx
+  c69ecdf29a9378de 2,5-13,30-36,38-40,47-48,52-53,57-58,60,62-65
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "45a2e8c998c0b121affa1c0f7be45af06887e69a",
+  "prompts": {
+    "c69ecdf29a9378de": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "11779041-ab09-48ed-910e-02ecc8f2cc83",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 53,
+      "total_deletions": 73,
+      "accepted_lines": 50,
+      "overriden_lines": 0
+    }
+  }
+}
