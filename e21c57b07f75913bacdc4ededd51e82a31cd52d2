@@ -1,0 +1,29 @@
+packages/web/app/__tests__/components/Features.test.tsx
+  86da54fbc8675c1e 1-27
+packages/web/app/__tests__/routes/dashboard.test.tsx
+  86da54fbc8675c1e 1-92
+packages/web/app/__tests__/components/LandingComponents.test.tsx
+  86da54fbc8675c1e 1-64
+packages/web/app/__tests__/components/Hero.test.tsx
+  86da54fbc8675c1e 1-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "e21c57b07f75913bacdc4ededd51e82a31cd52d2",
+  "prompts": {
+    "86da54fbc8675c1e": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "a4cb41ed-b3ea-424d-9a5d-8b5bdc181dec",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 207,
+      "total_deletions": 0,
+      "accepted_lines": 207,
+      "overriden_lines": 0
+    }
+  }
+}
