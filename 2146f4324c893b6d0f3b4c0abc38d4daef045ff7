@@ -1,0 +1,27 @@
+packages/api/src/__tests__/specs.test.ts
+  8308af2704b37ca3 1,9-20,24,29-34,39,46,48,62-86,91,94,116,125-143,145-452,454-460,462,464,468-475,479-480,537,549,561-563,588-604,607-632,634-652
+packages/api/src/__tests__/auth-middleware.test.ts
+  8308af2704b37ca3 1-134
+packages/api/src/__tests__/health.test.ts
+  8308af2704b37ca3 8,18-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "2146f4324c893b6d0f3b4c0abc38d4daef045ff7",
+  "prompts": {
+    "8308af2704b37ca3": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "b50860dd-1ee1-49bd-8949-80b6b3bea18b",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 639,
+      "total_deletions": 30,
+      "accepted_lines": 621,
+      "overriden_lines": 0
+    }
+  }
+}
