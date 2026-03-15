@@ -1,0 +1,23 @@
+packages/api/src/__tests__/projects.test.ts
+  1c2a7a73a631d7a0 1-628
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "af23db534b83827cc6d76659bf39566425228c15",
+  "prompts": {
+    "1c2a7a73a631d7a0": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "deaec263-610c-49c5-a800-a36e9e470ece",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 628,
+      "total_deletions": 0,
+      "accepted_lines": 628,
+      "overriden_lines": 0
+    }
+  }
+}
