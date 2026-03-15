@@ -1,0 +1,23 @@
+packages/api/src/__tests__/interviews.test.ts
+  d1e514af8676dfd3 1,9-20,24-25,29-34,37,39,46,48,62,64-72,77,113-128,130-360,362-385,387,394-395,399-400,445-447,557-667
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "dd695f03ac31c474ed32c9e8ebbce01eec24d46f",
+  "prompts": {
+    "d1e514af8676dfd3": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "c6edf739-7829-4cf0-9f3a-6c099f59af5a",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 438,
+      "total_deletions": 12,
+      "accepted_lines": 432,
+      "overriden_lines": 0
+    }
+  }
+}
