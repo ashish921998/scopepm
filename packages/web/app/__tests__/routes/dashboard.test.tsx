@@ -1,9 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import React from 'react'
 
+// ---------------------------------------------------------------------------
+// Use vi.hoisted() so these variables are available inside vi.mock() factories
+// ---------------------------------------------------------------------------
+const { mockNavigate, mockUseSession, mockSignOut } = vi.hoisted(() => ({
+  mockNavigate: vi.fn(),
+  mockUseSession: vi.fn(),
+  mockSignOut: vi.fn(),
+}))
+
 // Mock TanStack Router
-const mockNavigate = vi.fn()
 vi.mock('@tanstack/react-router', () => ({
   createFileRoute: () => (opts: unknown) => opts,
   Link: ({ children, to, className }: { children: React.ReactNode; to: string; className?: string }) => (
@@ -19,76 +27,41 @@ vi.mock('../../lib/api', () => ({
   API_URL: '',
 }))
 
-// Mock signOut
-const mockSignOut = vi.fn()
+// ---------------------------------------------------------------------------
+// Mock auth-client with a controllable useSession function
+// ---------------------------------------------------------------------------
+vi.mock('../../lib/auth-client', () => ({
+  useSession: () => mockUseSession(),
+  signOut: mockSignOut,
+}))
+
+// Import dashboard route after mocks are set up (vi.mock is hoisted)
+import { Route } from '../../routes/dashboard'
+const DashboardLayout = (Route as unknown as { component: React.ComponentType }).component
 
 describe('DashboardLayout auth guard', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  it('redirects to /sign-in when session is null', async () => {
-    // Mock useSession returning null (unauthenticated)
-    vi.doMock('../../lib/auth-client', () => ({
-      useSession: () => ({ data: null, isPending: false }),
-      signOut: mockSignOut,
-    }))
-
-    // Dynamically import after setting up the mock
-    // vi.resetModules() ensures the module is freshly loaded with the current mocks applied
-    vi.resetModules()
-    const { Route } = await import('../../routes/dashboard')
-    const DashboardLayout = (Route as { component?: React.ComponentType })?.component
-
-    if (!DashboardLayout) {
-      // Component may be exported differently - just verify the mock would trigger navigation
-      expect(mockNavigate).toBeDefined()
-      return
-    }
+  it('redirects to /sign-in when session is null and not pending', async () => {
+    mockUseSession.mockReturnValue({ data: null, isPending: false })
 
     render(<DashboardLayout />)
 
-    expect(mockNavigate).toHaveBeenCalledWith({ to: '/sign-in' })
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith({ to: '/sign-in' })
+    })
   })
 
-  it('redirects to /sign-in when session is null (static mock approach)', () => {
-    // Verify that the auth guard logic would navigate when there is no session
-    // This tests the guard logic directly
-    const navigate = mockNavigate
+  it('shows loading state and does not redirect when isPending is true', async () => {
+    mockUseSession.mockReturnValue({ data: null, isPending: true })
 
-    const session = null
-    const isPending = false
+    render(<DashboardLayout />)
 
-    if (!isPending && !session) {
-      navigate({ to: '/sign-in' })
-    }
-
-    expect(navigate).toHaveBeenCalledWith({ to: '/sign-in' })
-  })
-})
-
-describe('DashboardLayout with session', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
-
-  it('shows loading state when isPending is true', async () => {
-    vi.doMock('../../lib/auth-client', () => ({
-      useSession: () => ({ data: null, isPending: true }),
-      signOut: mockSignOut,
-    }))
-
-    const { apiFetch } = await import('../../lib/api')
-    vi.mocked(apiFetch).mockResolvedValue({ onboardingCompleted: true })
-
-    // Verify that when isPending is true, navigation is not triggered immediately
-    const navigate = mockNavigate
-    const isPending = true
-
-    if (!isPending) {
-      navigate({ to: '/sign-in' })
-    }
-
-    expect(navigate).not.toHaveBeenCalled()
+    // Loading text should be visible
+    expect(screen.getByText('Loading...')).toBeDefined()
+    // Navigation must NOT be triggered while loading
+    expect(mockNavigate).not.toHaveBeenCalled()
   })
 })

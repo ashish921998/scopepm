@@ -19,11 +19,24 @@ vi.mock('../db', () => ({
 }))
 
 // ---------------------------------------------------------------------------
+// Mock auth to prevent real session lookups
+// ---------------------------------------------------------------------------
+vi.mock('../auth', () => ({
+  auth: {
+    api: {
+      getSession: vi.fn().mockResolvedValue(null),
+    },
+    handler: vi.fn().mockImplementation(() => new Response('{}', { status: 200 })),
+  },
+}))
+
+// ---------------------------------------------------------------------------
 // Import route handlers AFTER vi.mock
 // ---------------------------------------------------------------------------
 import projectRoutes from '../routes/projects'
 import interviewRoutes from '../routes/interviews'
 import specRoutes from '../routes/specs'
+import { app as realApp } from '../index'
 
 // ---------------------------------------------------------------------------
 // Helper: creates an app with NO authenticated user
@@ -76,17 +89,8 @@ describe('Auth middleware — protected endpoints return 401 without auth', () =
   })
 
   it('GET /api/me returns 401 without authentication', async () => {
-    const app = createUnauthApp()
-    // Replicate the /api/me route from index.ts
-    app.get('/api/me', async (c) => {
-      const user = c.get('user')
-      if (!user) {
-        return c.json({ error: 'Unauthorized' }, 401)
-      }
-      return c.json({ user })
-    })
-
-    const res = await app.request('/api/me')
+    // Use the real app from index.ts (auth.api.getSession is mocked to return null)
+    const res = await realApp.request('/api/me')
 
     expect(res.status).toBe(401)
     const body = await res.json() as { error: string }

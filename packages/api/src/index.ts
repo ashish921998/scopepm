@@ -93,6 +93,9 @@ app.get('/api/me', async (c) => {
 // 404 handler
 app.notFound((c) => c.json({ error: 'Not found' }, 404))
 
+// Named export for testing
+export { app }
+
 // Export for Cloudflare Workers - bun also uses this to auto-start a dev server
 export default {
   port: process.env.PORT || 3001,
