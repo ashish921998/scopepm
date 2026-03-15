@@ -1,0 +1,23 @@
+.factory/validation/test-coverage/scrutiny/reviews/fix-test-quality-issues.json
+  b369dea57e36aef3 1-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "4093cde6b5eede51e2493d3d5a309dadc95e4e4e",
+  "prompts": {
+    "b369dea57e36aef3": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "c2a6f901-2e15-47cb-bd19-099b5d3c0db3",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 18,
+      "total_deletions": 0,
+      "accepted_lines": 18,
+      "overriden_lines": 0
+    }
+  }
+}
