@@ -1,0 +1,41 @@
+packages/web/app/styles/landing.css
+  53fee5b873f73226 447-469
+  125210db67724241 1524-1538,1645-1723
+packages/web/app/components/Features.tsx
+  53fee5b873f73226 12,18,29,35,48,52
+packages/web/app/__tests__/components/Features.test.tsx
+  53fee5b873f73226 27-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "9809d7e244ebe7570a902f23d7777d56abc58f51",
+  "prompts": {
+    "125210db67724241": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "5b2ec824-f075-4223-bbdb-84fe7691d13a",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 587,
+      "total_deletions": 49,
+      "accepted_lines": 580,
+      "overriden_lines": 0
+    },
+    "53fee5b873f73226": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "0a039c1e-48e6-4424-a96a-d9e6528c2639",
+        "model": "glm-5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 50,
+      "total_deletions": 2,
+      "accepted_lines": 47,
+      "overriden_lines": 0
+    }
+  }
+}
