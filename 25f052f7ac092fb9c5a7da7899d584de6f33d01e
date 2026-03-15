@@ -1,0 +1,25 @@
+packages/api/src/routes/specs.ts
+  b70690d88f94c5ea 162
+packages/api/src/routes/interviews.ts
+  b70690d88f94c5ea 134
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "25f052f7ac092fb9c5a7da7899d584de6f33d01e",
+  "prompts": {
+    "b70690d88f94c5ea": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "25821b48-7d44-4e99-95b4-b7a22024595b",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 2,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    }
+  }
+}
