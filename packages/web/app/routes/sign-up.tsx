@@ -12,6 +12,7 @@ export function SignUpPage() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [fieldErrors, setFieldErrors] = useState<SignUpErrors>({})
   const [serverError, setServerError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -93,15 +94,26 @@ export function SignUpPage() {
 
           <div className="form-group">
             <label htmlFor="password" className="form-label">Password</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={`form-input${fieldErrors.password ? ' form-input--error' : ''}`}
-              placeholder="Create a password (min 8 characters)"
-              autoComplete="new-password"
-            />
+            <div className="password-input-wrap">
+              <input
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`form-input password-input${fieldErrors.password ? ' form-input--error' : ''}`}
+                placeholder="Create a password (min 8 characters)"
+                autoComplete="new-password"
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword((value) => !value)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                aria-pressed={showPassword}
+              >
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
             {fieldErrors.password && (
               <span className="field-error">{fieldErrors.password}</span>
             )}
