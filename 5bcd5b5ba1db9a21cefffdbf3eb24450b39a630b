@@ -1,0 +1,23 @@
+packages/api/src/db/index.ts
+  82328ad8830bb96a 1,7,13-17
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "5bcd5b5ba1db9a21cefffdbf3eb24450b39a630b",
+  "prompts": {
+    "82328ad8830bb96a": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "9f0737ad-a327-45a8-914e-e2ce9032ab15",
+        "model": "glm-5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 26,
+      "total_deletions": 21,
+      "accepted_lines": 10,
+      "overriden_lines": 0
+    }
+  }
+}
