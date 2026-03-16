@@ -32,7 +32,6 @@ export function SignUpPage() {
         email,
         password,
         name,
-        callbackURL: '/dashboard',
       })
 
       if (signUpError) {
@@ -41,6 +40,8 @@ export function SignUpPage() {
         return
       }
 
+      // Small delay to allow session to be established
+      await new Promise(resolve => setTimeout(resolve, 100))
       navigate({ to: '/dashboard' })
     } catch (err) {
       setServerError('An unexpected error occurred')

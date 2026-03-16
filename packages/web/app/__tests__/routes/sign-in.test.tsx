@@ -196,7 +196,6 @@ describe('SignInPage', () => {
         expect(mockSignInEmail).toHaveBeenCalledWith({
           email: 'user@example.com',
           password: 'password123',
-          callbackURL: '/dashboard',
         })
       })
     })

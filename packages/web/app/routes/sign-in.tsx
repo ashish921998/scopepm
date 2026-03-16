@@ -30,7 +30,6 @@ export function SignInPage() {
       const { error: signInError } = await authClient.signIn.email({
         email,
         password,
-        callbackURL: '/dashboard',
       })
 
       if (signInError) {
@@ -39,6 +38,8 @@ export function SignInPage() {
         return
       }
 
+      // Small delay to allow session to be established
+      await new Promise(resolve => setTimeout(resolve, 100))
       navigate({ to: '/dashboard' })
     } catch (err) {
       setServerError('An unexpected error occurred')

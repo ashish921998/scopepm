@@ -45,8 +45,10 @@ export function createAuth(db: Database, options?: AuthOptions) {
     trustedOrigins: [
       'http://localhost:5173',
       'http://localhost:3000',
+      'http://localhost:3001',
       'https://scopepm.pages.dev',
       'https://scopepm-web.pages.dev',
+      'https://scopepm-api.ashish-hudar.workers.dev',
       /^https:\/\/([a-z0-9-]+\.)?scopepm(-web)?\.pages\.dev$/,
     ],
     plugins: [

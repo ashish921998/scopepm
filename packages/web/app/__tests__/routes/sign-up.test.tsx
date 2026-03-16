@@ -252,7 +252,6 @@ describe('SignUpPage', () => {
           email: 'alice@example.com',
           password: 'password123',
           name: 'Alice',
-          callbackURL: '/dashboard',
         })
       })
     })
