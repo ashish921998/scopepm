@@ -1,0 +1,38 @@
+packages/web/app/routes/sign-up.tsx
+  357d0bd3ed626a84 43-50
+packages/web/app/routes/sign-in.tsx
+  357d0bd3ed626a84 41-48
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "bc9267045952554b4d7d094e7cf379b80fb47fb1",
+  "prompts": {
+    "00f5c187d500cf4b": {
+      "agent_id": {
+        "tool": "github-copilot",
+        "id": "34503867-d34d-46cf-bd50-21b5ee53b2d2",
+        "model": "unknown"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    },
+    "357d0bd3ed626a84": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "c2312964-829e-45ee-a047-534e83b2187e",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 16,
+      "total_deletions": 4,
+      "accepted_lines": 16,
+      "overriden_lines": 0
+    }
+  }
+}
