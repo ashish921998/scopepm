@@ -1,0 +1,27 @@
+packages/api/src/auth.ts
+  9f9d1a29450078c6 3,48,50,52-53
+packages/api/src/index.ts
+  9f9d1a29450078c6 26
+packages/web/app/lib/auth-client.ts
+  9f9d1a29450078c6 2,7-9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "a19822947bb64f10b0b612d209be0e73924ba391",
+  "prompts": {
+    "9f9d1a29450078c6": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "758ab0d1-ac5c-415a-bd5b-49d260d11a9b",
+        "model": "glm-5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 13,
+      "total_deletions": 3,
+      "accepted_lines": 11,
+      "overriden_lines": 0
+    }
+  }
+}
