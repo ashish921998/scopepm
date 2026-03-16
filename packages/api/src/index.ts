@@ -23,7 +23,7 @@ app.use('*', cors({
     if (origin && /^http:\/\/localhost(:\d+)?$/.test(origin)) {
       return origin
     }
-    if (origin && /^https:\/\/[a-z0-9-]+\.scopepm-web\.pages\.dev$/.test(origin)) {
+    if (origin && /^https:\/\/([a-z0-9-]+\.)?scopepm(-web)?\.pages\.dev$/.test(origin)) {
       return origin
     }
     return 'http://localhost:5173'

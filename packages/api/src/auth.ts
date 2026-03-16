@@ -1,5 +1,6 @@
 import { betterAuth } from 'better-auth'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
+import { dash } from '@better-auth/infra'
 import type { Database } from './db'
 import { user, session, account, verification } from './db/schema'
 
@@ -44,7 +45,12 @@ export function createAuth(db: Database, options?: AuthOptions) {
     trustedOrigins: [
       'http://localhost:5173',
       'http://localhost:3000',
+      'https://scopepm.pages.dev',
       'https://scopepm-web.pages.dev',
+      /^https:\/\/([a-z0-9-]+\.)?scopepm(-web)?\.pages\.dev$/,
+    ],
+    plugins: [
+      dash(),
     ],
   })
 }
