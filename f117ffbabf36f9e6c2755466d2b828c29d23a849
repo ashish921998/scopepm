@@ -1,0 +1,27 @@
+packages/web/app/routes/sign-in.tsx
+  82328ad8830bb96a 30,35-38,43-44,47
+packages/web/app/routes/sign-up.tsx
+  82328ad8830bb96a 31,37-40,45-47,49
+packages/api/src/index.ts
+  82328ad8830bb96a 48,51,70,73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "f117ffbabf36f9e6c2755466d2b828c29d23a849",
+  "prompts": {
+    "82328ad8830bb96a": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "9f0737ad-a327-45a8-914e-e2ce9032ab15",
+        "model": "glm-5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 47,
+      "total_deletions": 51,
+      "accepted_lines": 22,
+      "overriden_lines": 0
+    }
+  }
+}
