@@ -1,0 +1,29 @@
+packages/web/app/routes/sign-in.tsx
+  f9ee02567462f266 41-42
+packages/web/app/lib/auth-client.ts
+  f9ee02567462f266 4-6,9
+packages/api/src/auth.ts
+  f9ee02567462f266 48,51
+packages/web/app/routes/sign-up.tsx
+  f9ee02567462f266 43-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "cd35b3881d69c446162e0a79d3f833283be16d55",
+  "prompts": {
+    "f9ee02567462f266": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "9e75dbec-9a9a-4f2b-b22f-8a1c09404c0a",
+        "model": "glm-5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 11,
+      "total_deletions": 6,
+      "accepted_lines": 11,
+      "overriden_lines": 0
+    }
+  }
+}
