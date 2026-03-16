@@ -40,8 +40,14 @@ export function SignUpPage() {
         return
       }
 
-      // Small delay to allow session to be established
-      await new Promise(resolve => setTimeout(resolve, 100))
+      const sessionAtom = authClient.$store.atoms.session
+      let waited = 0
+      while (waited < 3000) {
+        const s = sessionAtom.get()
+        if (!s.isPending && s.data) break
+        await new Promise(r => setTimeout(r, 50))
+        waited += 50
+      }
       navigate({ to: '/dashboard' })
     } catch (err) {
       setServerError('An unexpected error occurred')
