@@ -29,7 +29,7 @@ app.use('*', cors({
     return 'http://localhost:5173'
   },
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowHeaders: ['Content-Type', 'Authorization'],
+  allowHeaders: ['Content-Type', 'Authorization', 'x-request-id'],
   credentials: true,
 }))
 
