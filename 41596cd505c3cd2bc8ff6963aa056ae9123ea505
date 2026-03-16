@@ -1,0 +1,37 @@
+packages/api/wrangler.toml
+  025197cbc233e540 10,14
+  b5f8dc8fe2d54b45 11-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "41596cd505c3cd2bc8ff6963aa056ae9123ea505",
+  "prompts": {
+    "025197cbc233e540": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_30af874c8ffelhm3Bu3NP0Ebx8",
+        "model": "zai-coding-plan/glm-4.7"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 0,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    },
+    "b5f8dc8fe2d54b45": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019cf539-9a02-7572-acba-28f4f53a0abc",
+        "model": "unknown"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 1,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    }
+  }
+}
