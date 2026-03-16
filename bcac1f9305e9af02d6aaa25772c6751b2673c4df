@@ -1,0 +1,27 @@
+packages/web/app/styles/landing.css
+  3d756cb3d8c1d344 866-897
+packages/web/app/routes/sign-up.tsx
+  3d756cb3d8c1d344 15,97-98,100,103,106-116
+packages/web/app/routes/sign-in.tsx
+  3d756cb3d8c1d344 14,79-80,82,85,88-98
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "bcac1f9305e9af02d6aaa25772c6751b2673c4df",
+  "prompts": {
+    "3d756cb3d8c1d344": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019cf4f9-b86a-7f50-901e-cc9ed2c76e30",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 74,
+      "total_deletions": 18,
+      "accepted_lines": 64,
+      "overriden_lines": 0
+    }
+  }
+}
