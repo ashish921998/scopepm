@@ -20,16 +20,18 @@ const app = new Hono<AppEnv>()
 app.use('*', logger())
 app.use('*', cors({
   origin: (origin) => {
+    if (!origin) return '*'
     if (origin && /^http:\/\/localhost(:\d+)?$/.test(origin)) {
       return origin
     }
     if (origin && /^https:\/\/([a-z0-9-]+\.)?scopepm(-web)?\.pages\.dev$/.test(origin)) {
       return origin
     }
-    return 'http://localhost:5173'
+    console.log('CORS: Unrecognized origin:', origin)
+    return origin
   },
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowHeaders: ['Content-Type', 'Authorization', 'x-request-id'],
+  allowHeaders: ['Content-Type', 'Authorization', 'x-request-id', 'x-visitor-id'],
   credentials: true,
 }))
 
