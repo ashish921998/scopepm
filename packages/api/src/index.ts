@@ -45,9 +45,10 @@ app.use('*', async (c, next) => {
 // Session middleware
 app.use('*', async (c, next) => {
   const db = c.get('db')
+  const isLocal = !c.env?.HYPERDRIVE
   const auth = createAuth(db, {
     secret: c.env?.BETTER_AUTH_SECRET,
-    baseURL: c.env?.BETTER_AUTH_URL,
+    baseURL: isLocal ? 'http://localhost:3001' : c.env?.BETTER_AUTH_URL,
   })
   const session = await auth.api.getSession({ headers: c.req.raw.headers })
 
@@ -66,9 +67,10 @@ app.use('*', async (c, next) => {
 // Mount Better Auth handler
 app.on(['POST', 'GET'], '/api/auth/*', (c) => {
   const db = c.get('db')
+  const isLocal = !c.env?.HYPERDRIVE
   const auth = createAuth(db, {
     secret: c.env?.BETTER_AUTH_SECRET,
-    baseURL: c.env?.BETTER_AUTH_URL,
+    baseURL: isLocal ? 'http://localhost:3001' : c.env?.BETTER_AUTH_URL,
   })
   return auth.handler(c.req.raw)
 })

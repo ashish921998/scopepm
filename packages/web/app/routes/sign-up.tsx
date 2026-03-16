@@ -28,28 +28,25 @@ export function SignUpPage() {
     setLoading(true)
 
     try {
-      const { error: signUpError } = await authClient.signUp.email({
+      const result = await authClient.signUp.email({
         email,
         password,
         name,
       })
 
-      if (signUpError) {
-        setServerError(signUpError.message || 'Failed to create account')
+      console.log('Sign up result:', result)
+
+      if (result.error) {
+        setServerError(result.error.message || 'Failed to create account')
         setLoading(false)
         return
       }
 
-      const sessionAtom = authClient.$store.atoms.session
-      let waited = 0
-      while (waited < 3000) {
-        const s = sessionAtom.get()
-        if (!s.isPending && s.data) break
-        await new Promise(r => setTimeout(r, 50))
-        waited += 50
-      }
-      navigate({ to: '/dashboard' })
+      // Small delay to ensure cookie is set
+      await new Promise(r => setTimeout(r, 100))
+      navigate({ to: '/onboarding' })
     } catch (err) {
+      console.error('Sign up error:', err)
       setServerError('An unexpected error occurred')
       setLoading(false)
     }

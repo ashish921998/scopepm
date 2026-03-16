@@ -27,27 +27,24 @@ export function SignInPage() {
     setLoading(true)
 
     try {
-      const { error: signInError } = await authClient.signIn.email({
+      const result = await authClient.signIn.email({
         email,
         password,
       })
 
-      if (signInError) {
-        setServerError(signInError.message || 'Failed to sign in')
+      console.log('Sign in result:', result)
+
+      if (result.error) {
+        setServerError(result.error.message || 'Failed to sign in')
         setLoading(false)
         return
       }
 
-      const sessionAtom = authClient.$store.atoms.session
-      let waited = 0
-      while (waited < 3000) {
-        const s = sessionAtom.get()
-        if (!s.isPending && s.data) break
-        await new Promise(r => setTimeout(r, 50))
-        waited += 50
-      }
+      // Small delay to ensure cookie is set
+      await new Promise(r => setTimeout(r, 100))
       navigate({ to: '/dashboard' })
     } catch (err) {
+      console.error('Sign in error:', err)
       setServerError('An unexpected error occurred')
       setLoading(false)
     }
