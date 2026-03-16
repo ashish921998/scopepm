@@ -1,0 +1,37 @@
+packages/api/src/index.ts
+  3d756cb3d8c1d344 34
+  025197cbc233e540 23,30-31
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "e4974a2b87d11c39f5e204987df2825d72615a39",
+  "prompts": {
+    "025197cbc233e540": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_30af874c8ffelhm3Bu3NP0Ebx8",
+        "model": "zai-coding-plan/glm-4.7"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 1,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    },
+    "3d756cb3d8c1d344": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019cf4f9-b86a-7f50-901e-cc9ed2c76e30",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
