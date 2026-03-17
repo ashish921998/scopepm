@@ -1,0 +1,25 @@
+packages/web/app/__tests__/routes/dashboard.settings.integrations.slack.test.tsx
+  146c3a25eb5a950f 3-16,19-20,23-24,29-30,33-34,37-38,41-42,45-46,49-50,55-56
+packages/web/app/__tests__/routes/dashboard.specs.$specId.slack.test.tsx
+  146c3a25eb5a950f 3-11,14-15,18-19,24-25,28-29,32-33,36-37,40-41,44-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "8a047b2ec5e52b351cb2bd605e8c1e74fca63970",
+  "prompts": {
+    "146c3a25eb5a950f": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "ad4c4ed1-93d6-4674-8d81-9bdbe0cbfbfb",
+        "model": "minimax-m2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 136,
+      "total_deletions": 737,
+      "accepted_lines": 57,
+      "overriden_lines": 0
+    }
+  }
+}
