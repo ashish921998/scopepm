@@ -1,0 +1,99 @@
+packages/api/src/lib/posthog.ts
+  467e5604b5533c8d 1-258
+packages/api/src/db/schema.ts
+  467e5604b5533c8d 221-233,257-258
+packages/api/src/routes/integrations.posthog.ts
+  1af18af6948555a9 461,471
+  467e5604b5533c8d 1-460,462-470,472-556
+packages/api/src/index.ts
+  467e5604b5533c8d 20,108-109
+packages/api/src/__tests__/integrations.posthog.test.ts
+  fd5721509f783df4 654
+  e068174a47cfd78a 75-76
+  1af18af6948555a9 1-74,77-265,267-296,298-408,410-653,655-876
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "df7d630652daf46c41e20e2bdd00e64e1e448d0c",
+  "prompts": {
+    "19ae3d52fc8febf2": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "888d59dc-bd21-44c5-948e-f50cc18e9cf8",
+        "model": "kimi-k2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    },
+    "1af18af6948555a9": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "8743769b-5ec1-4b2a-b45e-0e519293ffba",
+        "model": "kimi-k2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 910,
+      "total_deletions": 35,
+      "accepted_lines": 872,
+      "overriden_lines": 3
+    },
+    "31923521d1d861d5": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "1ee3c2e0-56eb-4420-b680-d8bba8e26fbe",
+        "model": "kimi-k2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 614,
+      "total_deletions": 0,
+      "accepted_lines": 614,
+      "overriden_lines": 0
+    },
+    "467e5604b5533c8d": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "b25f546f-01af-4d5b-921d-878b1402f547",
+        "model": "kimi-k2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 831,
+      "total_deletions": 0,
+      "accepted_lines": 830,
+      "overriden_lines": 0
+    },
+    "e068174a47cfd78a": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "9b43a2e1-563e-47cc-9403-ee33b1e86d97",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 0,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    },
+    "fd5721509f783df4": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "fa8d3d98-2642-46c3-8a7f-01655f86572a",
+        "model": "kimi-k2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
