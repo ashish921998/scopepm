@@ -1,0 +1,245 @@
+packages/api/src/__tests__/integrations.test.ts
+  daff64dbe788680c 65-73
+.factory/validation/auto-ingestion/user-testing/flows/project-detail.json
+  d113ba10b01e3688 4,9,11-16,22,24-29,34-35,37-41,46-48,51-52,56-57
+  d063b365544bfa09 1-3,5-8,10,17-21,23,30-33,36,42-45,49-50,53-55,58-59
+packages/api/src/routes/integrations.slack.ts
+  daff64dbe788680c 1-490
+packages/api/src/__tests__/integrations.slack.test.ts
+  daff64dbe788680c 1-634
+packages/api/src/__tests__/webhooks.slack.test.ts
+  afca2115211b1303 1-1065
+packages/api/src/routes/interviews.ts
+  9aa6e6065b477a53 9,164-173
+packages/api/src/routes/integrations.ts
+  daff64dbe788680c 8,15-16
+.factory/validation/auto-ingestion/user-testing/flows/error-retry.json
+  1311df09b34bc438 1-7,9,13-17,19,25-28,31,36-39,42-43,46-48,51-52
+  1f4776b1e7be7447 8,10-12,18,20-24,29-30,32-35,40-41,44-45,49-50
+.factory/validation/auto-ingestion/user-testing/flows/main-interviews.json
+  de6b2384675d888e 1-3,5-8,10,15-18,21,24-27,30,34-37,40,44-47,50,54-57,60,67-70,73,75-78,81,86-88,90,92-97
+.factory/validation/auto-ingestion/user-testing/flows/audio-status.json
+  08c640a8b92ea1a5 4,9,11-15,20-21,23-26,31-32,34-36,41-42,44-47,52-53,55-57,62-63,66-67
+  cdbe5ad9ec999cf4 1-3,5-8,10,16-19,22,27-30,33,37-40,43,48-51,54,58-61,64-65,68-73
+packages/api/src/__tests__/slack-notifications.test.ts
+  9aa6e6065b477a53 1-393
+packages/api/src/routes/webhooks.slack.ts
+  afca2115211b1303 1-597
+.factory/library/slack-integration.md
+  daff64dbe788680c 1-109
+.factory/library/environment.md
+  2404e23b3081f05a 19,22,27,29-30
+.factory/validation/linear-integration/scrutiny/synthesis.json
+  e068174a47cfd78a 4-5
+packages/api/src/routes/specs.ts
+  9aa6e6065b477a53 8,244-245,253,261-272,305-378
+packages/api/src/__tests__/integrations.linear.test.ts
+  2404e23b3081f05a 1-463
+packages/api/src/lib/slack-notifications.ts
+  9aa6e6065b477a53 1-117
+packages/api/src/routes/webhooks.slack.commands.ts
+  9aa6e6065b477a53 1-344
+packages/api/src/db/index.ts
+  9aa6e6065b477a53 9-11
+.env.example
+  e35a5f8499a62c90 1-23,25,34-44
+  2404e23b3081f05a 24,45
+  a67b29c90da5fc70 26-33
+packages/api/src/db/schema.ts
+  daff64dbe788680c 195-220,240-243
+packages/api/src/lib/slack.ts
+  daff64dbe788680c 1-334,548-569
+  9aa6e6065b477a53 335-547
+packages/api/src/index.ts
+  9aa6e6065b477a53 18,104-105
+  afca2115211b1303 17,102-103
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "788d86add8e695765112501b9019b0b3371472b5",
+  "prompts": {
+    "08c640a8b92ea1a5": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "fe367a27-59bc-4bac-8305-f04c8c94987c",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 33,
+      "overriden_lines": 0
+    },
+    "1311df09b34bc438": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "e771a838-4be5-432c-ab9c-4e878b7049ac",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 30,
+      "overriden_lines": 0
+    },
+    "1f4776b1e7be7447": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "e4f610ab-a33c-4200-be59-e2dfcb531fc4",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 22,
+      "overriden_lines": 0
+    },
+    "2404e23b3081f05a": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "671f90ba-da0f-497f-a3e4-60889b20d292",
+        "model": "kimi-k2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 470,
+      "overriden_lines": 0
+    },
+    "9aa6e6065b477a53": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "e66f1769-b6a4-4e9f-bef1-1123d8a2727c",
+        "model": "kimi-k2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 1860,
+      "total_deletions": 686,
+      "accepted_lines": 1175,
+      "overriden_lines": 0
+    },
+    "a67b29c90da5fc70": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "5aa98b3d-965d-4667-9ca7-5790f19cd199",
+        "model": "kimi-k2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 8,
+      "overriden_lines": 0
+    },
+    "afca2115211b1303": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "c6906aea-7e92-4dd8-a9c7-d945e128136b",
+        "model": "kimi-k2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 1831,
+      "total_deletions": 166,
+      "accepted_lines": 1665,
+      "overriden_lines": 0
+    },
+    "cdbe5ad9ec999cf4": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "e2434b20-e1da-42f6-848a-941f278c4811",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 40,
+      "overriden_lines": 0
+    },
+    "d063b365544bfa09": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "0e8c7e83-9bdb-496c-8bc7-c653ff1b57cc",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 30,
+      "overriden_lines": 0
+    },
+    "d113ba10b01e3688": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "0f731432-c1b9-45c5-a1d1-a90f57c3d201",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 29,
+      "overriden_lines": 0
+    },
+    "daff64dbe788680c": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "eef2044b-75a4-4308-9f89-5e03d209ae32",
+        "model": "kimi-k2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 1633,
+      "total_deletions": 1,
+      "accepted_lines": 1632,
+      "overriden_lines": 0
+    },
+    "de6b2384675d888e": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "96a1c273-bdbf-488d-9534-c6d0c9bac046",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 53,
+      "overriden_lines": 0
+    },
+    "e068174a47cfd78a": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "9b43a2e1-563e-47cc-9403-ee33b1e86d97",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 1,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    },
+    "e35a5f8499a62c90": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "2ca62b7e-16d8-451d-8779-80a06cc4270b",
+        "model": "kimi-k2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 35,
+      "overriden_lines": 0
+    }
+  }
+}
