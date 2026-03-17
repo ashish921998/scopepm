@@ -1,0 +1,52 @@
+packages/api/src/__tests__/document-parser.test.ts
+  d96daf73ba95ac2e 61-64,72-73,80,237-241,587-606
+packages/web/app/routes/dashboard/projects.$projectId.tsx
+  d96daf73ba95ac2e 2,5-7,9-14,45,59-63,125-317,467-472,482-511
+packages/api/src/lib/document-parser.ts
+  d96daf73ba95ac2e 120-126,141-147
+packages/api/src/__tests__/uploads.test.ts
+  d96daf73ba95ac2e 907-934
+packages/api/src/routes/uploads.ts
+  d96daf73ba95ac2e 23,420
+packages/api/src/__tests__/assemblyai.test.ts
+  d96daf73ba95ac2e 346-350,499-520,655-659,838-864,892-895
+packages/api/src/auth.ts
+  d96daf73ba95ac2e 53-54
+packages/api/src/lib/assemblyai.ts
+  d96daf73ba95ac2e 124-126,135-141,256-262,366-372
+packages/web/app/__tests__/routes/project-detail-upload.test.tsx
+  d96daf73ba95ac2e 1-214
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "0f502a2c5b9ca3e4f9d333b3b2e187d707180446",
+  "prompts": {
+    "7d55269c79d584f3": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "5d764e1b-b262-4a5d-94f6-b71f965f511d",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 42,
+      "overriden_lines": 0
+    },
+    "d96daf73ba95ac2e": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "1d6b4f00-d039-4e54-a59f-f1287f27402d",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 626,
+      "total_deletions": 7,
+      "accepted_lines": 626,
+      "overriden_lines": 0
+    }
+  }
+}
