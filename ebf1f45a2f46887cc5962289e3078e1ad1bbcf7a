@@ -1,0 +1,25 @@
+packages/api/src/__tests__/slack-notifications.test.ts
+  a4044c356663d3f5 9-13,16-18,32-35,278-284,290,294-297,299,328,332-334,336,362,390-396
+packages/api/src/__tests__/webhooks.slack.test.ts
+  a4044c356663d3f5 9-13,16-18,32-35,178-188,371,373,532,703,705-706,765,767-768,836,905,1053
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "ebf1f45a2f46887cc5962289e3078e1ad1bbcf7a",
+  "prompts": {
+    "a4044c356663d3f5": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "ec92be55-f026-45cc-9893-952c0b2d3446",
+        "model": "kimi-k2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 83,
+      "total_deletions": 36,
+      "accepted_lines": 73,
+      "overriden_lines": 0
+    }
+  }
+}
