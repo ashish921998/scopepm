@@ -1,0 +1,23 @@
+README.md
+  7fea11fddb6149c4 5-12,45-59,88-103,113-133,140-148,158
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "6381287cf2cc9a67392f355182d731e56d5957de",
+  "prompts": {
+    "7fea11fddb6149c4": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "1b96d9cc-862c-4e17-bc87-7f002da38602",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 81,
+      "total_deletions": 20,
+      "accepted_lines": 70,
+      "overriden_lines": 0
+    }
+  }
+}
