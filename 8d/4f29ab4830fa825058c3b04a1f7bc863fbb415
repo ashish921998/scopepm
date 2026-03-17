@@ -1,0 +1,25 @@
+.factory/validation/misc-hardening/scrutiny/synthesis.json
+  3cf487214840fdc6 1-75
+.factory/library/environment.md
+  3cf487214840fdc6 20-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "8d4f29ab4830fa825058c3b04a1f7bc863fbb415",
+  "prompts": {
+    "3cf487214840fdc6": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "616a8d56-5daf-44e5-b4fd-73a40b0187fc",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 78,
+      "total_deletions": 0,
+      "accepted_lines": 78,
+      "overriden_lines": 0
+    }
+  }
+}
