@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate, Link } from '@tanstack/react-router'
 import { useState } from 'react'
 import { authClient } from '../lib/auth-client'
 import { validateSignUp, hasNoErrors, type SignUpErrors } from '../lib/validation'
+import { Logo } from '../components/Logo'
 
 export const Route = createFileRoute('/sign-up')({
   component: SignUpPage,
@@ -56,7 +57,7 @@ export function SignUpPage() {
     <div className="auth-page">
       <div className="auth-container">
         <div className="auth-header">
-          <Link to="/" className="auth-logo">Scope</Link>
+          <Logo className="auth-logo" />
           <h1 className="auth-title">Create your account</h1>
           <p className="auth-subtitle">Join Scope to transform your product management workflow</p>
         </div>

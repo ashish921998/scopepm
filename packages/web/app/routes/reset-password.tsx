@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { authClient } from '../lib/auth-client'
+import { Logo } from '../components/Logo'
 
 export const Route = createFileRoute('/reset-password')({
   component: ResetPasswordPage,
@@ -27,7 +28,7 @@ function ResetPasswordPage() {
       <div className="auth-page">
         <div className="auth-container">
           <div className="auth-header">
-            <Link to="/" className="auth-logo">Scope</Link>
+            <Logo className="auth-logo" />
             <h1 className="auth-title">Invalid reset link</h1>
             <p className="auth-subtitle">
               This password reset link is missing a valid token.
@@ -55,7 +56,7 @@ function ResetPasswordPage() {
       <div className="auth-page">
         <div className="auth-container">
           <div className="auth-header">
-            <Link to="/" className="auth-logo">Scope</Link>
+            <Logo className="auth-logo" />
             <h1 className="auth-title">Password updated</h1>
           </div>
           <div className="form-success">
@@ -121,7 +122,7 @@ function ResetPasswordPage() {
     <div className="auth-page">
       <div className="auth-container">
         <div className="auth-header">
-          <Link to="/" className="auth-logo">Scope</Link>
+          <Logo className="auth-logo" />
           <h1 className="auth-title">Set new password</h1>
           <p className="auth-subtitle">Enter and confirm your new password below</p>
         </div>
