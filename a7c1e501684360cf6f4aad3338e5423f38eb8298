@@ -1,0 +1,23 @@
+packages/api/src/lib/assemblyai.ts
+  1ba1ca29633b433f 340-358
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "a7c1e501684360cf6f4aad3338e5423f38eb8298",
+  "prompts": {
+    "1ba1ca29633b433f": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "e6ee2b81-d8d0-401c-ad3d-7618b6d0c63d",
+        "model": "minimax-m2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 1322,
+      "total_deletions": 669,
+      "accepted_lines": 653,
+      "overriden_lines": 0
+    }
+  }
+}
