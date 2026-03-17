@@ -1,0 +1,138 @@
+.factory/research/posthog-api.md
+  a41caae1e5dbb79b 1-169
+.factory/init.sh
+  e068174a47cfd78a 9-26
+.factory/library/user-testing.md
+  e068174a47cfd78a 3,5,11-15,17-20,24-35
+.factory/research/val-posthog-assertions.md
+  1ae91c68405a697a 1-153
+.factory/research/val-slack-integration.md
+  0b413ad9c24119ef 1-194
+.factory/services.yaml
+  e068174a47cfd78a 2-8,11-17,19-21,23,26-28
+.factory/research/transcription-apis.md
+  a41caae1e5dbb79b 1-204
+.factory/research/validation-cross-area.md
+  429dc9f9ebc24535 1-191
+.factory/validation/linear-integration/assertions.md
+  905e882519d57184 1-73
+.factory/library/architecture.md
+  e068174a47cfd78a 3,5,10-12,14-27,29-34,36-40,42-48,50-62,65-68
+.factory/research/linear-api.md
+  a41caae1e5dbb79b 1-189
+.factory/research/slack-api.md
+  a41caae1e5dbb79b 1-209
+.factory/research/val-auto-ingestion.md
+  d056562411fddbfb 1-81
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "5882b79b054d5d312671a350fa2938674b5c89aa",
+  "prompts": {
+    "0b413ad9c24119ef": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "eb86f942-acba-4f3c-a4d1-9d367898cceb",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 194,
+      "total_deletions": 0,
+      "accepted_lines": 194,
+      "overriden_lines": 0
+    },
+    "1ae91c68405a697a": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "3696dda5-cb68-4f5e-a189-d08876c549ec",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 153,
+      "total_deletions": 0,
+      "accepted_lines": 153,
+      "overriden_lines": 0
+    },
+    "429dc9f9ebc24535": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "38a1dfdc-fcc9-468c-bb03-b390c6a03928",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 191,
+      "total_deletions": 0,
+      "accepted_lines": 191,
+      "overriden_lines": 0
+    },
+    "7d55269c79d584f3": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "5d764e1b-b262-4a5d-94f6-b71f965f511d",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 46,
+      "total_deletions": 9,
+      "accepted_lines": 44,
+      "overriden_lines": 0
+    },
+    "905e882519d57184": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "5b653d43-57ea-453f-8edd-a85504cd5def",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 73,
+      "total_deletions": 0,
+      "accepted_lines": 73,
+      "overriden_lines": 0
+    },
+    "a41caae1e5dbb79b": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "ea380ef5-654c-43e9-aab1-1e310909260d",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 771,
+      "total_deletions": 0,
+      "accepted_lines": 771,
+      "overriden_lines": 0
+    },
+    "d056562411fddbfb": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "a63cec45-dd34-4605-9fcc-cb145bf88d54",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 81,
+      "total_deletions": 0,
+      "accepted_lines": 81,
+      "overriden_lines": 0
+    },
+    "e068174a47cfd78a": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "9b43a2e1-563e-47cc-9403-ee33b1e86d97",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 120,
+      "total_deletions": 117,
+      "accepted_lines": 120,
+      "overriden_lines": 0
+    }
+  }
+}
