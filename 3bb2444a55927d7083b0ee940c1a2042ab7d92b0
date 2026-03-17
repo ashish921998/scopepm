@@ -1,0 +1,38 @@
+.factory/validation/posthog-integration/scrutiny/reviews/fix-posthog-security-and-contracts.json
+  3ed0ad6b8e8fb3da 1-69
+.factory/validation/posthog-integration/scrutiny/synthesis.json
+  e9acdfa2c458adc3 3,8,13,18,23-25,27,32,34,37,39,42,44,47,49,52,54,57,59,62,64,74,84,88,91-92,95
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "3bb2444a55927d7083b0ee940c1a2042ab7d92b0",
+  "prompts": {
+    "3ed0ad6b8e8fb3da": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "d58f773e-f5eb-404b-8294-fd6cad26bad6",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 69,
+      "total_deletions": 0,
+      "accepted_lines": 69,
+      "overriden_lines": 0
+    },
+    "e9acdfa2c458adc3": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "20dccf21-db79-41ca-969a-c515ffcb0d10",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 28,
+      "total_deletions": 83,
+      "accepted_lines": 28,
+      "overriden_lines": 0
+    }
+  }
+}
