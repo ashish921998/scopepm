@@ -1,0 +1,29 @@
+packages/web/app/routes/dashboard/settings.integrations.tsx
+  b1e492765d6469e9 115,218-221
+packages/web/app/routes/dashboard.specs.$specId.tsx
+  b1e492765d6469e9 47-52,87-92,150-182,434-596,651-678
+packages/web/app/routes/dashboard/projects.$projectId.tsx
+  b1e492765d6469e9 41-60,84-264,766-982
+packages/web/app/routes/dashboard/index.tsx
+  b1e492765d6469e9 43-59,69-72,83-116,322-417
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "cc8948c499dbc1a28650ec7a8f8edcef63ca07bc",
+  "prompts": {
+    "b1e492765d6469e9": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "7ce38d3c-60c5-4410-99a3-935e7b5a2df2",
+        "model": "minimax-m2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 816,
+      "total_deletions": 12,
+      "accepted_lines": 813,
+      "overriden_lines": 0
+    }
+  }
+}
