@@ -1,0 +1,38 @@
+.factory/validation/posthog-integration/scrutiny/synthesis.json
+  e7624a7d15a32df8 1-151
+.factory/validation/posthog-integration/scrutiny/reviews/posthog-integration-ui.json
+  c19f513b9f51b8fa 1-63
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "4af7d590e8b1e4d2086385510b79445901e45359",
+  "prompts": {
+    "c19f513b9f51b8fa": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "10830a80-e990-4e55-a484-68ebe9a4eadc",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 63,
+      "total_deletions": 0,
+      "accepted_lines": 63,
+      "overriden_lines": 0
+    },
+    "e7624a7d15a32df8": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "22e3c922-d4c3-4882-b206-5f56da336026",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 151,
+      "total_deletions": 0,
+      "accepted_lines": 151,
+      "overriden_lines": 0
+    }
+  }
+}
