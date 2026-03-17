@@ -1,0 +1,29 @@
+packages/web/app/routes/dashboard/projects.$projectId.tsx
+  fd80831d61f92714 49-63,123,126-144,147,150,170-171,177,197,205-206,209-221,269,273,276,294,298,301
+packages/api/src/__tests__/integrations.posthog.test.ts
+  fd80831d61f92714 363-549
+packages/api/src/routes/integrations.posthog.ts
+  fd80831d61f92714 14-104,215,222-227
+packages/api/src/lib/posthog.ts
+  fd80831d61f92714 150-156,174-175,200,217,232,236,239-260,263-269
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "fee165c0acb2fe7487dd49683bffb2f18c9ed6e7",
+  "prompts": {
+    "fd80831d61f92714": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "a31cc9e2-1ae7-48dc-9d2a-f898dcc6d3c4",
+        "model": "minimax-m2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 406,
+      "total_deletions": 48,
+      "accepted_lines": 394,
+      "overriden_lines": 0
+    }
+  }
+}
