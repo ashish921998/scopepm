@@ -1,0 +1,40 @@
+packages/api/src/auth.ts
+  7d55269c79d584f3 3,55
+packages/web/app/__tests__/routes/sign-in.test.tsx
+  0b39b6bffdb70778 28
+packages/web/app/__tests__/routes/sign-up.test.tsx
+  0b39b6bffdb70778 28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "520b3ef0f3568f74057d9c610400191453524726",
+  "prompts": {
+    "0b39b6bffdb70778": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "70185cab-6872-4573-8bb9-9c51c1f6c3ba",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 2,
+      "total_deletions": 1,
+      "accepted_lines": 2,
+      "overriden_lines": 0
+    },
+    "7d55269c79d584f3": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "5d764e1b-b262-4a5d-94f6-b71f965f511d",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 44,
+      "overriden_lines": 0
+    }
+  }
+}
