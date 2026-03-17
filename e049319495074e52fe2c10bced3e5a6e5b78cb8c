@@ -1,0 +1,42 @@
+packages/web/app/components/UploadQueueItem.tsx
+  4ba701249e0ca09f 1-201
+packages/web/app/__tests__/routes/file-upload-ui.test.tsx
+  4ba701249e0ca09f 1-608
+packages/web/app/components/FileUploadZone.tsx
+  4ba701249e0ca09f 1-290
+packages/web/app/routes/dashboard/interviews.tsx
+  4ba701249e0ca09f 2,5-7,21,35-45,126,150-155,171-193,204-437,674-690,716-745,899-920
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "e049319495074e52fe2c10bced3e5a6e5b78cb8c",
+  "prompts": {
+    "4ba701249e0ca09f": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "d4db8be2-d6d3-449d-b4b1-a00c75d936ec",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 1458,
+      "total_deletions": 5,
+      "accepted_lines": 1453,
+      "overriden_lines": 0
+    },
+    "7d55269c79d584f3": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "5d764e1b-b262-4a5d-94f6-b71f965f511d",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 44,
+      "overriden_lines": 0
+    }
+  }
+}
