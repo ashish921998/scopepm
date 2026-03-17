@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useState } from 'react'
 import { authClient } from '../lib/auth-client'
+import { Logo } from '../components/Logo'
 
 export const Route = createFileRoute('/forgot-password')({
   component: ForgotPasswordPage,
@@ -42,7 +43,7 @@ export function ForgotPasswordPage() {
       <div className="auth-page">
         <div className="auth-container">
           <div className="auth-header">
-            <Link to="/" className="auth-logo">Scope</Link>
+            <Logo className="auth-logo" />
             <h1 className="auth-title">Check your email</h1>
           </div>
           <div className="form-success">
@@ -61,7 +62,7 @@ export function ForgotPasswordPage() {
     <div className="auth-page">
       <div className="auth-container">
         <div className="auth-header">
-          <Link to="/" className="auth-logo">Scope</Link>
+          <Logo className="auth-logo" />
           <h1 className="auth-title">Reset your password</h1>
           <p className="auth-subtitle">Enter your email and we'll send you a reset link</p>
         </div>

@@ -6,6 +6,7 @@ import { HowItWorks } from '../components/HowItWorks'
 import { Features } from '../components/Features'
 import { CTA } from '../components/CTA'
 import { Footer } from '../components/Footer'
+import { Logo } from '../components/Logo'
 
 export const Route = createFileRoute('/')({
   component: LandingPage,
@@ -49,7 +50,7 @@ function LandingPage() {
     <>
       <nav className="nav">
         <div className="container nav-content">
-          <Link to="/" className="logo">Scope</Link>
+          <Logo />
           <div className="nav-links">
             <a href="#how-it-works" className="nav-link">How it works</a>
             <a href="#features" className="nav-link">Features</a>

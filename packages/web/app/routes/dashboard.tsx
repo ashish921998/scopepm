@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate, Link, Outlet } from '@tanstack/react-rout
 import { useEffect, useRef, useState } from 'react'
 import { useSession, signOut } from '../lib/auth-client'
 import { apiFetch } from '../lib/api'
+import { Logo } from '../components/Logo'
 
 type OnboardingStatus = {
   onboardingCompleted: boolean
@@ -112,7 +113,7 @@ function DashboardLayout() {
     <div className="dashboard-page">
       <nav className="nav">
         <div className="container nav-content">
-          <Link to="/" className="logo">Scope</Link>
+          <Logo />
           <div className="nav-links">
             <Link to="/dashboard" className="nav-link">Dashboard</Link>
             <Link to="/dashboard/projects" className="nav-link">Projects</Link>

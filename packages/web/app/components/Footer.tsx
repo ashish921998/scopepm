@@ -1,11 +1,12 @@
 import { Link } from '@tanstack/react-router'
+import { Logo } from './Logo'
 
 export function Footer() {
   return (
     <footer className="footer">
       <div className="container">
         <div className="footer-content">
-          <Link to="/" className="logo">Scope</Link>
+          <Logo />
           <div className="footer-links">
             <a href="#" className="footer-link">Privacy</a>
             <a href="#" className="footer-link">Terms</a>

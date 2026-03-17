@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
 import { useSession } from '../lib/auth-client'
 import { apiFetch } from '../lib/api'
+import { Logo } from '../components/Logo'
 
 type ProfileResponse = {
   onboardingCompleted: boolean
@@ -182,7 +183,7 @@ export function OnboardingPage() {
     <div className="auth-page onboarding-page">
       <div className="auth-container onboarding-container">
         <div className="auth-header">
-          <Link to="/" className="auth-logo">Scope</Link>
+          <Logo className="auth-logo" />
           <h1 className="auth-title">Let’s set up your workspace</h1>
           <p className="auth-subtitle">A few quick questions so your dashboard feels useful from day one.</p>
         </div>
