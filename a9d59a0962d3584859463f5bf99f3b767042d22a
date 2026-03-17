@@ -1,0 +1,35 @@
+packages/api/src/__tests__/webhooks.slack.test.ts
+  0af5c90ae92b7241 107-109,181,197-201,414,416-419,421-423,746-749,751-753,811-814,816-818
+packages/web/vitest.config.ts
+  0af5c90ae92b7241 9
+packages/web/app/routes/dashboard.specs.$specId.tsx
+  0af5c90ae92b7241 42-46
+packages/web/app/__tests__/routes/dashboard.settings.integrations.slack.test.tsx
+  0af5c90ae92b7241 158,174,203,219,248,264
+packages/web/app/__tests__/test-utils.tsx
+  0af5c90ae92b7241 1-20
+packages/web/app/__tests__/setup.ts
+  0af5c90ae92b7241 1
+packages/web/app/__tests__/routes/dashboard.specs.$specId.slack.test.tsx
+  0af5c90ae92b7241 4-16,19,21,24-26,32,113-114,160-161,173,226-227,239,333-334,346
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "a9d59a0962d3584859463f5bf99f3b767042d22a",
+  "prompts": {
+    "0af5c90ae92b7241": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "16214d74-5ded-4ce3-89e6-24d9ef8fc3b3",
+        "model": "kimi-k2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 134,
+      "total_deletions": 79,
+      "accepted_lines": 100,
+      "overriden_lines": 0
+    }
+  }
+}
