@@ -1,0 +1,25 @@
+packages/api/src/routes/specs.ts
+  31923521d1d861d5 2-3,18,840-1058
+packages/api/src/routes/projects.ts
+  31923521d1d861d5 2-3,7-8,270-441
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "87b9b9cf0b7329adf8206e46c0e31a1a3052a84a",
+  "prompts": {
+    "31923521d1d861d5": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "1ee3c2e0-56eb-4420-b680-d8bba8e26fbe",
+        "model": "kimi-k2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 1498,
+      "total_deletions": 408,
+      "accepted_lines": 1094,
+      "overriden_lines": 0
+    }
+  }
+}
