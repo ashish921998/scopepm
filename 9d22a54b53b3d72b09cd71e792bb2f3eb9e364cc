@@ -1,0 +1,44 @@
+packages/api/src/__tests__/document-parser.test.ts
+  33b7edcd260f9be6 1-575
+packages/api/src/types.d.ts
+  33b7edcd260f9be6 1-12
+packages/api/src/__tests__/uploads.test.ts
+  33b7edcd260f9be6 30-35
+packages/api/src/routes/uploads.ts
+  33b7edcd260f9be6 9,108-121
+packages/api/src/lib/document-parser.ts
+  33b7edcd260f9be6 1-204
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "9d22a54b53b3d72b09cd71e792bb2f3eb9e364cc",
+  "prompts": {
+    "33b7edcd260f9be6": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "7c5afa4e-bfd2-458a-a03f-b96bf777c41e",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 812,
+      "total_deletions": 0,
+      "accepted_lines": 812,
+      "overriden_lines": 0
+    },
+    "7d55269c79d584f3": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "5d764e1b-b262-4a5d-94f6-b71f965f511d",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 44,
+      "overriden_lines": 0
+    }
+  }
+}
