@@ -1,0 +1,27 @@
+packages/api/src/__tests__/webhooks.slack.test.ts
+  67593ee79ac472ed 418-422,425,427-428,752,817,819,822
+packages/web/app/__tests__/routes/dashboard.specs.$specId.slack.test.tsx
+  67593ee79ac472ed 6-9
+packages/api/src/__tests__/integrations.posthog.test.ts
+  67593ee79ac472ed 277,757
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.12",
+  "base_commit_sha": "8b5b6d62de64fb81b4cb614459eb9f4b851fb3bd",
+  "prompts": {
+    "67593ee79ac472ed": {
+      "agent_id": {
+        "tool": "droid",
+        "id": "1cdf8cbc-75f4-404f-93b8-a230ec1c274d",
+        "model": "minimax-m2.5"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 41,
+      "total_deletions": 33,
+      "accepted_lines": 23,
+      "overriden_lines": 0
+    }
+  }
+}
