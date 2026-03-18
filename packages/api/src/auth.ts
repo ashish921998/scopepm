@@ -10,6 +10,12 @@ type AuthOptions = {
   baseURL?: string
 }
 
+function maskEmail(email: string): string {
+  const [localPart = '', domain = 'unknown'] = email.split('@')
+  const visiblePrefix = localPart.slice(0, 2)
+  return `${visiblePrefix}${localPart.length > 2 ? '***' : ''}@${domain}`
+}
+
 export function createAuth(db: Database, options?: AuthOptions) {
   return betterAuth({
     secret: options?.secret || process.env.BETTER_AUTH_SECRET,
@@ -35,7 +41,11 @@ export function createAuth(db: Database, options?: AuthOptions) {
     emailAndPassword: {
       enabled: true,
       sendResetPassword: async ({ user, url }: { user: { email: string }, url: string }) => {
-        logger.info('Password reset requested', { email: user.email, url })
+        const [, emailDomain = 'unknown'] = user.email.split('@')
+        logger.info('Password reset requested', {
+          maskedEmail: maskEmail(user.email),
+          emailDomain,
+        })
       },
     },
     advanced: {

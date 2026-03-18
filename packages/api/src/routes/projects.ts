@@ -85,11 +85,28 @@ app.get('/overview', async (c) => {
     .where(eq(featureSpec.userId, userId))
     .orderBy(desc(featureSpec.createdAt))
 
+  const interviewCountByProject = new Map<number, number>()
+  const pendingInterviewCountByProject = new Map<number, number>()
+  const specCountByProject = new Map<number, number>()
+
+  for (const item of interviews) {
+    if (item.projectId === null) continue
+    interviewCountByProject.set(item.projectId, (interviewCountByProject.get(item.projectId) ?? 0) + 1)
+    if (item.status === 'pending') {
+      pendingInterviewCountByProject.set(item.projectId, (pendingInterviewCountByProject.get(item.projectId) ?? 0) + 1)
+    }
+  }
+
+  for (const item of specs) {
+    if (item.projectId === null) continue
+    specCountByProject.set(item.projectId, (specCountByProject.get(item.projectId) ?? 0) + 1)
+  }
+
   const projectsWithCounts = projects.map((item) => ({
     ...item,
-    interviewCount: interviews.filter((entry) => entry.projectId === item.id).length,
-    specCount: specs.filter((entry) => entry.projectId === item.id).length,
-    pendingInterviewCount: interviews.filter((entry) => entry.projectId === item.id && entry.status === 'pending').length,
+    interviewCount: interviewCountByProject.get(item.id) ?? 0,
+    specCount: specCountByProject.get(item.id) ?? 0,
+    pendingInterviewCount: pendingInterviewCountByProject.get(item.id) ?? 0,
   }))
   const projectNameMap = new Map(projects.map((item) => [item.id, item.name]))
 

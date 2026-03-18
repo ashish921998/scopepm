@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { logger } from 'hono/logger'
+import { logger as honoLogger } from 'hono/logger'
 import { createAuth } from './auth'
 import { createDb } from './db'
 import { userProfile } from './db/schema'
@@ -15,11 +15,17 @@ import { getUserId } from './lib/utils'
 import { validateEnv } from './lib/env'
 import { authRateLimit, apiRateLimit } from './lib/rate-limit'
 import { AppEnv } from './lib/hono'
+import { configureLogger, logger } from './lib/logger'
 
 const app = new Hono<AppEnv>()
 
 // Middleware
-app.use('*', logger())
+app.use('*', honoLogger())
+app.use('*', async (c, next) => {
+  const isLocal = !c.env?.HYPERDRIVE
+  configureLogger({ isProduction: !isLocal })
+  await next()
+})
 
 // Env validation — runs once on first request, fails fast with clear errors
 let envValidated = false
@@ -28,7 +34,8 @@ app.use('*', async (c, next) => {
     const isLocal = !c.env?.HYPERDRIVE
     const { valid, errors } = validateEnv(c.env ?? {}, isLocal)
     if (!valid) {
-      return c.json({ error: 'Server misconfigured', details: errors }, 500)
+      logger.error('Server misconfigured', { errors })
+      return c.json({ error: 'Server misconfigured' }, 500)
     }
     envValidated = true
   }

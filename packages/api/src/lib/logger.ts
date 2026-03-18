@@ -2,20 +2,60 @@ type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
 const LEVEL_ORDER: Record<LogLevel, number> = { debug: 0, info: 1, warn: 2, error: 3 }
 
-const rawLevel = process.env.LOG_LEVEL
-const minLevel: LogLevel = rawLevel && rawLevel in LEVEL_ORDER ? (rawLevel as LogLevel) : 'info'
-const isProduction = process.env.ENVIRONMENT === 'production' || process.env.NODE_ENV === 'production'
+type LoggerConfig = {
+  isProduction?: boolean
+  minLevel?: LogLevel
+}
+
+function isLogLevel(value: unknown): value is LogLevel {
+  return typeof value === 'string' && Object.prototype.hasOwnProperty.call(LEVEL_ORDER, value)
+}
+
+function resolveLogLevel(value: unknown): LogLevel {
+  return isLogLevel(value) ? value : 'info'
+}
+
+const config: Required<LoggerConfig> = {
+  // Default to structured JSON unless runtime env config explicitly says otherwise.
+  isProduction: true,
+  minLevel: resolveLogLevel(process.env.LOG_LEVEL),
+}
+
+export function configureLogger(nextConfig: LoggerConfig): void {
+  if (typeof nextConfig.isProduction === 'boolean') {
+    config.isProduction = nextConfig.isProduction
+  }
+  if (isLogLevel(nextConfig.minLevel)) {
+    config.minLevel = nextConfig.minLevel
+  }
+}
 
 function shouldLog(level: LogLevel): boolean {
-  return LEVEL_ORDER[level] >= LEVEL_ORDER[minLevel]
+  return LEVEL_ORDER[level] >= LEVEL_ORDER[config.minLevel]
+}
+
+function safeStringify(payload: Record<string, unknown>): string {
+  try {
+    return JSON.stringify(payload)
+  } catch {
+    return JSON.stringify({
+      level: payload.level,
+      msg: payload.msg,
+      ts: payload.ts,
+      unserializable_data: true,
+    })
+  }
 }
 
 function formatMessage(level: LogLevel, message: string, data?: Record<string, unknown>): string {
-  if (isProduction) {
-    return JSON.stringify({ level, msg: message, ts: new Date().toISOString(), ...data })
+  const payload = { level, msg: message, ts: new Date().toISOString(), ...data }
+
+  if (config.isProduction) {
+    return safeStringify(payload)
   }
+
   const prefix = `[${level.toUpperCase()}]`
-  const extra = data ? ` ${JSON.stringify(data)}` : ''
+  const extra = data ? ` ${safeStringify(data)}` : ''
   return `${prefix} ${message}${extra}`
 }
 
