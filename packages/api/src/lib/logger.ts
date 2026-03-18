@@ -57,7 +57,7 @@ function formatMessage(level: LogLevel, message: string, data?: Record<string, u
   }
 
   const prefix = `[${level.toUpperCase()}]`
-  const extra = safeData ? ` ${safeStringify(safeData)}` : ''
+  const extra = Object.keys(safeData).length > 0 ? ` ${safeStringify(safeData)}` : ''
   return `${prefix} ${message}${extra}`
 }
 

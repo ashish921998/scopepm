@@ -80,7 +80,7 @@ app.get('/overview', async (c) => {
       pendingCount: sql<number>`count(*) filter (where ${interview.status} = 'pending')`.mapWith(Number),
     })
     .from(interview)
-    .where(and(eq(interview.userId, userId), sql`${interview.projectId} is not null`))
+    .where(eq(interview.userId, userId))
     .groupBy(interview.projectId)
 
   const specStats = await db
@@ -89,7 +89,7 @@ app.get('/overview', async (c) => {
       total: count().mapWith(Number),
     })
     .from(featureSpec)
-    .where(and(eq(featureSpec.userId, userId), sql`${featureSpec.projectId} is not null`))
+    .where(eq(featureSpec.userId, userId))
     .groupBy(featureSpec.projectId)
 
   const interviewMap = new Map(interviewStats.map((r) => [r.projectId, r]))
