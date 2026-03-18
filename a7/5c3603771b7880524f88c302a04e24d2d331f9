@@ -1,0 +1,37 @@
+packages/api/src/lib/rate-limit.ts
+  3b494a59d5096803 14,16,38-43,50
+packages/api/src/index.ts
+  3b494a59d5096803 56-59
+packages/api/src/routes/waitlist.ts
+  3b494a59d5096803 48,63
+packages/api/src/routes/specs.ts
+  3b494a59d5096803 188
+packages/api/src/routes/interviews.ts
+  3b494a59d5096803 164
+packages/api/src/routes/projects.ts
+  3b494a59d5096803 36,210-211
+packages/api/src/auth.ts
+  3b494a59d5096803 38,53-54
+packages/api/src/lib/logger.ts
+  3b494a59d5096803 5-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "a75c3603771b7880524f88c302a04e24d2d331f9",
+  "prompts": {
+    "3b494a59d5096803": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d0150-f925-7570-83c1-60e5b2de6c5a",
+        "model": "unknown"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 25,
+      "total_deletions": 17,
+      "accepted_lines": 25,
+      "overriden_lines": 0
+    }
+  }
+}
