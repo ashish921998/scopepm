@@ -12,12 +12,28 @@ import onboardingRoutes from './routes/onboarding'
 import projectRoutes from './routes/projects'
 import devRoutes from './routes/dev'
 import { getUserId } from './lib/utils'
+import { validateEnv } from './lib/env'
+import { authRateLimit, apiRateLimit } from './lib/rate-limit'
 import { AppEnv } from './lib/hono'
 
 const app = new Hono<AppEnv>()
 
 // Middleware
 app.use('*', logger())
+
+// Env validation — runs once on first request, fails fast with clear errors
+let envValidated = false
+app.use('*', async (c, next) => {
+  if (!envValidated && !process.env.VITEST) {
+    const isLocal = !c.env?.HYPERDRIVE
+    const { valid, errors } = validateEnv(c.env ?? {}, isLocal)
+    if (!valid) {
+      return c.json({ error: 'Server misconfigured', details: errors }, 500)
+    }
+    envValidated = true
+  }
+  await next()
+})
 app.use('*', cors({
   origin: (origin) => {
     if (!origin) return '*'
@@ -30,7 +46,6 @@ app.use('*', cors({
     if (origin && /^https:\/\/([a-z0-9-]+\.)?scopepm(-web)?\.pages\.dev$/.test(origin)) {
       return origin
     }
-    console.log('CORS: Unrecognized origin:', origin)
     return origin
   },
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -66,6 +81,10 @@ app.use('*', async (c, next) => {
   c.set('session', session.session)
   await next()
 })
+
+// Rate limiting
+app.use('/api/auth/*', authRateLimit)
+app.use('/api/*', apiRateLimit)
 
 // Mount Better Auth handler
 app.on(['POST', 'GET'], '/api/auth/*', (c) => {

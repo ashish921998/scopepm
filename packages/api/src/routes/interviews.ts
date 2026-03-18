@@ -4,6 +4,7 @@ import { and, desc, eq } from 'drizzle-orm'
 import { getAnthropicClient, analyzeInterview } from '../lib/anthropic'
 import { getString, getStringArray, getUserId, parseInteger, parseJsonFromText } from '../lib/utils'
 import { AppEnv } from '../lib/hono'
+import { logger } from '../lib/logger'
 
 const app = new Hono<AppEnv>()
 
@@ -160,7 +161,7 @@ app.post('/:id/analyze', async (c) => {
 
     return c.json({ interview: updated, analysis })
   } catch (error) {
-    console.error('Analysis error:', error)
+    logger.error('Interview analysis failed', { error: String(error) })
     return c.json({ error: 'Failed to analyze interview' }, 500)
   }
 })

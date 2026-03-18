@@ -7,7 +7,8 @@
     "start": "vite preview",
     "deploy": "wrangler pages deploy dist",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@knadh/oat": "^0.3.0",

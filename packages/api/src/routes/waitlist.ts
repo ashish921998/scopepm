@@ -3,6 +3,7 @@ import { cors } from 'hono/cors'
 import { waitlist } from '../db'
 import { eq, count } from 'drizzle-orm'
 import { AppEnv } from '../lib/hono'
+import { logger } from '../lib/logger'
 
 const app = new Hono<AppEnv>()
 
@@ -44,7 +45,7 @@ app.post('/', async (c) => {
 
     return c.json({ message: 'Successfully joined waitlist', success: true }, 201)
   } catch (error) {
-    console.error('Waitlist signup error:', error)
+    logger.error('Waitlist signup failed', { error: String(error) })
     return c.json({ error: 'Internal server error' }, 500)
   }
 })
@@ -59,7 +60,7 @@ app.get('/count', async (c) => {
     const countValue = result[0]?.value || 0
     return c.json({ count: countValue }, 200)
   } catch (error) {
-    console.error('Count fetch error:', error)
+    logger.error('Waitlist count fetch failed', { error: String(error) })
     return c.json({ count: 0 }, 200)
   }
 })

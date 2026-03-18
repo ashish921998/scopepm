@@ -6,3 +6,4 @@ dist/
 .tanstack/
 *.timestamp_*.js
 .firecrawl/
+uploads/
