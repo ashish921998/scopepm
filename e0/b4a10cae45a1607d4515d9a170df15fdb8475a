@@ -1,0 +1,25 @@
+packages/api/src/routes/projects.ts
+  0b6075ebcc5a8597 76-100,105,107,112,114-122,124-131,134,138-139,143-145,151-153
+packages/api/src/lib/logger.ts
+  0b6075ebcc5a8597 51,53,60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "e0b4a10cae45a1607d4515d9a170df15fdb8475a",
+  "prompts": {
+    "0b6075ebcc5a8597": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_2fde1b41affeaO5lWzhyrMJSQu",
+        "model": "zai-coding-plan/glm-4.7"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 63,
+      "total_deletions": 49,
+      "accepted_lines": 63,
+      "overriden_lines": 0
+    }
+  }
+}
