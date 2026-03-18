@@ -1,0 +1,31 @@
+packages/api/src/routes/projects.ts
+  28f07d2767468bbf 88-104,107-109
+packages/api/src/index.ts
+  28f07d2767468bbf 3,18,23-28,37-38
+packages/api/src/auth.ts
+  28f07d2767468bbf 13-18,44,46-47
+packages/api/src/lib/logger.ts
+  28f07d2767468bbf 5-31,34-47,51-54,56,58
+packages/api/src/__tests__/logger.test.ts
+  28f07d2767468bbf 1-32
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "7d7b47c68a9da63214b184f1bb5edb5a560b3573",
+  "prompts": {
+    "28f07d2767468bbf": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019cf77a-d803-7a11-8a91-d59485464fd0",
+        "model": "gpt-5.4"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 120,
+      "total_deletions": 14,
+      "accepted_lines": 118,
+      "overriden_lines": 0
+    }
+  }
+}
