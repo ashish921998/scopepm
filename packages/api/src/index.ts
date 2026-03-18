@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { logger } from 'hono/logger'
+import { logger as honoLogger } from 'hono/logger'
 import { createAuth } from './auth'
 import { createDb } from './db'
 import { userProfile } from './db/schema'
@@ -12,12 +12,35 @@ import onboardingRoutes from './routes/onboarding'
 import projectRoutes from './routes/projects'
 import devRoutes from './routes/dev'
 import { getUserId } from './lib/utils'
+import { validateEnv } from './lib/env'
+import { authRateLimit, apiRateLimit } from './lib/rate-limit'
 import { AppEnv } from './lib/hono'
+import { configureLogger, logger } from './lib/logger'
 
 const app = new Hono<AppEnv>()
 
 // Middleware
-app.use('*', logger())
+app.use('*', honoLogger())
+app.use('*', async (c, next) => {
+  const isLocal = !c.env?.HYPERDRIVE
+  configureLogger({ isProduction: !isLocal })
+  await next()
+})
+
+// Env validation — runs once on first request, fails fast with clear errors
+let envValidated = false
+app.use('*', async (c, next) => {
+  if (!envValidated && !process.env.VITEST) {
+    const isLocal = !c.env?.HYPERDRIVE
+    const { valid, errors } = validateEnv(c.env ?? {}, isLocal)
+    if (!valid) {
+      logger.error('Server misconfigured', { errors })
+      return c.json({ error: 'Server misconfigured' }, 500)
+    }
+    envValidated = true
+  }
+  await next()
+})
 app.use('*', cors({
   origin: (origin) => {
     if (!origin) return '*'
@@ -30,13 +53,16 @@ app.use('*', cors({
     if (origin && /^https:\/\/([a-z0-9-]+\.)?scopepm(-web)?\.pages\.dev$/.test(origin)) {
       return origin
     }
-    console.log('CORS: Unrecognized origin:', origin)
     return origin
   },
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization', 'x-request-id', 'x-visitor-id'],
   credentials: true,
 }))
+
+// Rate limiting — before DB/session middleware so abusive requests don't burn resources
+app.use('/api/auth/*', authRateLimit)
+app.use('/api/*', apiRateLimit)
 
 // Database middleware - uses Hyperdrive in production, DATABASE_URL locally
 app.use('*', async (c, next) => {

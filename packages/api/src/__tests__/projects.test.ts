@@ -134,15 +134,24 @@ function createUnauthApp() {
 // patterns. Each element specifies whether the query has a trailing
 // .orderBy() call and what array to return.
 // ---------------------------------------------------------------------------
-type FromConfig = { withOrderBy: boolean; result: unknown[] }
+type FromConfig = { withOrderBy?: boolean; withLimit?: boolean; withGroupBy?: boolean; result: unknown[] }
 
 function makeFromSequence(...configs: FromConfig[]) {
   let callIdx = 0
   return () => {
-    const config = configs[callIdx++] ?? { withOrderBy: false, result: [] }
+    const config = configs[callIdx++] ?? { result: [] }
     if (config.withOrderBy) {
+      if (config.withLimit) {
+        const limitFn = vi.fn().mockResolvedValue(config.result)
+        const orderByFn = vi.fn().mockReturnValue({ limit: limitFn })
+        return { where: vi.fn().mockReturnValue({ orderBy: orderByFn }) }
+      }
       const orderByFn = vi.fn().mockResolvedValue(config.result)
       return { where: vi.fn().mockReturnValue({ orderBy: orderByFn }) }
+    }
+    if (config.withGroupBy) {
+      const groupByFn = vi.fn().mockResolvedValue(config.result)
+      return { where: vi.fn().mockReturnValue({ groupBy: groupByFn }) }
     }
     return { where: vi.fn().mockResolvedValue(config.result) }
   }
@@ -154,15 +163,15 @@ function makeFromSequence(...configs: FromConfig[]) {
 describe('GET /api/projects', () => {
   // Route fires 3 SELECT queries in order:
   //   1. projects  → .where().orderBy()
-  //   2. interviews → .where()  (no orderBy)
-  //   3. specs      → .where()  (no orderBy)
+  //   2. interview stats (COUNT + GROUP BY) → .where().groupBy()
+  //   3. spec stats (COUNT + GROUP BY) → .where().groupBy()
   beforeEach(() => {
     vi.clearAllMocks()
     mocks.mockFrom.mockImplementation(
       makeFromSequence(
         { withOrderBy: true, result: [] },  // projects
-        { withOrderBy: false, result: [] }, // interviews
-        { withOrderBy: false, result: [] }, // specs
+        { withGroupBy: true, result: [] },  // interview stats
+        { withGroupBy: true, result: [] },  // spec stats
       ),
     )
   })
@@ -181,8 +190,8 @@ describe('GET /api/projects', () => {
     mocks.mockFrom.mockImplementation(
       makeFromSequence(
         { withOrderBy: true, result: [mockProject] },
-        { withOrderBy: false, result: [mockInterview, mockAnalyzedInterview] },
-        { withOrderBy: false, result: [mockSpec] },
+        { withGroupBy: true, result: [{ projectId: MOCK_PROJECT_ID, total: 2, pendingCount: 1 }] },
+        { withGroupBy: true, result: [{ projectId: MOCK_PROJECT_ID, total: 1 }] },
       ),
     )
 
@@ -211,14 +220,21 @@ describe('GET /api/projects', () => {
 // Tests: GET /api/projects/overview
 // ---------------------------------------------------------------------------
 describe('GET /api/projects/overview', () => {
-  // All 3 SELECT queries use orderBy in this handler
+  // Route fires 5 SELECT queries in order:
+  //   1. projects  → .where().orderBy()
+  //   2. interview stats (COUNT + GROUP BY) → .where().groupBy()
+  //   3. spec stats (COUNT + GROUP BY) → .where().groupBy()
+  //   4. recent interviews → .where().orderBy().limit()
+  //   5. recent specs → .where().orderBy().limit()
   beforeEach(() => {
     vi.clearAllMocks()
     mocks.mockFrom.mockImplementation(
       makeFromSequence(
         { withOrderBy: true, result: [] },  // projects
-        { withOrderBy: true, result: [] },  // interviews
-        { withOrderBy: true, result: [] },  // specs
+        { withGroupBy: true, result: [] },  // interview stats
+        { withGroupBy: true, result: [] },  // spec stats
+        { withOrderBy: true, withLimit: true, result: [] },  // recent interviews
+        { withOrderBy: true, withLimit: true, result: [] },  // recent specs
       ),
     )
   })
@@ -237,9 +253,11 @@ describe('GET /api/projects/overview', () => {
   it('returns correct stat counts from overview data', async () => {
     mocks.mockFrom.mockImplementation(
       makeFromSequence(
-        { withOrderBy: true, result: [mockProject] },
-        { withOrderBy: true, result: [mockInterview, mockAnalyzedInterview] },
-        { withOrderBy: true, result: [mockSpec] },
+        { withOrderBy: true, result: [mockProject] },  // projects
+        { withGroupBy: true, result: [{ projectId: MOCK_PROJECT_ID, total: 2, pendingCount: 1 }] },  // interview stats
+        { withGroupBy: true, result: [{ projectId: MOCK_PROJECT_ID, total: 1 }] },  // spec stats
+        { withOrderBy: true, withLimit: true, result: [mockInterview, mockAnalyzedInterview] },  // recent interviews
+        { withOrderBy: true, withLimit: true, result: [mockSpec] },  // recent specs
       ),
     )
 
@@ -421,15 +439,15 @@ describe('GET /api/projects/:id', () => {
 describe('GET /api/projects/:id/stats', () => {
   // Queries:
   //   1. getOwnedProject → .where()  (no orderBy)
-  //   2. interviews      → .where()  (no orderBy)
-  //   3. specs           → .where()  (no orderBy)
+  //   2. interview counts (COUNT aggregate) → .where()  (no orderBy)
+  //   3. spec counts (COUNT aggregate) → .where()  (no orderBy)
   beforeEach(() => {
     vi.clearAllMocks()
     mocks.mockFrom.mockImplementation(
       makeFromSequence(
         { withOrderBy: false, result: [mockProject] },
-        { withOrderBy: false, result: [mockInterview, mockAnalyzedInterview] },
-        { withOrderBy: false, result: [mockSpec] },
+        { withOrderBy: false, result: [{ total: 2, pendingCount: 1, analyzedCount: 1 }] },
+        { withOrderBy: false, result: [{ total: 1 }] },
       ),
     )
   })

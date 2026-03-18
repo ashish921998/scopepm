@@ -3,10 +3,17 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { dash } from '@better-auth/infra'
 import type { Database } from './db'
 import { user, session, account, verification } from './db/schema'
+import { logger } from './lib/logger'
 
 type AuthOptions = {
   secret?: string
   baseURL?: string
+}
+
+function maskEmail(email: string): string {
+  const [localPart = '', domain = 'unknown'] = email.split('@')
+  const visiblePrefix = localPart.slice(0, 2)
+  return `${visiblePrefix}${localPart.length > 2 ? '***' : ''}@${domain}`
 }
 
 export function createAuth(db: Database, options?: AuthOptions) {
@@ -34,7 +41,11 @@ export function createAuth(db: Database, options?: AuthOptions) {
     emailAndPassword: {
       enabled: true,
       sendResetPassword: async ({ user, url }: { user: { email: string }, url: string }) => {
-        console.log('Password reset URL:', url)
+        const [, emailDomain = 'unknown'] = user.email.split('@')
+        logger.info('Password reset requested', {
+          maskedEmail: maskEmail(user.email),
+          emailDomain,
+        })
       },
     },
     advanced: {
@@ -49,7 +60,8 @@ export function createAuth(db: Database, options?: AuthOptions) {
       'https://scopepm.pages.dev',
       'https://scopepm-web.pages.dev',
       'https://scopepm-api.ashish-hudar.workers.dev',
-      /^https:\/\/([a-z0-9-]+\.)?scopepm(-web)?\.pages\.dev$/,
+      'https://*.scopepm.pages.dev',
+      'https://*.scopepm-web.pages.dev',
     ],
     plugins: [
       dash(),

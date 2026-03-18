@@ -4,6 +4,7 @@ import { and, desc, eq } from 'drizzle-orm'
 import { getAnthropicClient, generateFeatureSpec } from '../lib/anthropic'
 import { getString, getStringArray, getUserId, parseInteger, parseJsonFromText } from '../lib/utils'
 import { AppEnv } from '../lib/hono'
+import { logger } from '../lib/logger'
 
 const app = new Hono<AppEnv>()
 
@@ -184,7 +185,7 @@ app.post('/generate', async (c) => {
 
     return c.json({ spec: created, generated: specData }, 201)
   } catch (error) {
-    console.error('Spec generation error:', error)
+    logger.error('Spec generation failed', error instanceof Error ? { error: error.message, stack: error.stack } : { error: String(error) })
     return c.json({ error: 'Failed to generate feature spec' }, 500)
   }
 })
