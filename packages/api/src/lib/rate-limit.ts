@@ -11,9 +11,9 @@ interface RateLimitEntry {
   resetAt: number
 }
 
-// In-memory sliding window rate limiter.
+// In-memory fixed-window rate limiter.
 // For single-instance deployments (Cloudflare Workers isolates) this is sufficient.
-// For multi-instance, migrate state to KV.
+// For multi-instance, migrate state to KV or Durable Objects.
 const store = new Map<string, RateLimitEntry>()
 
 function getClientKey(c: Context<AppEnv>): string {
@@ -35,13 +35,19 @@ let lastCleanup = Date.now()
 
 export function rateLimit(config: RateLimitConfig): MiddlewareHandler<AppEnv> {
   return async (c, next) => {
+    // Skip CORS preflight requests
+    if (c.req.method === 'OPTIONS') {
+      await next()
+      return
+    }
+
     const now = Date.now()
     if (now - lastCleanup > 60_000) {
       cleanExpired()
       lastCleanup = now
     }
 
-    const key = `${getClientKey(c)}:${config.max}`
+    const key = `${getClientKey(c)}:${config.windowMs}:${config.max}`
     const entry = store.get(key)
 
     if (!entry || now > entry.resetAt) {

@@ -45,7 +45,7 @@ app.post('/', async (c) => {
 
     return c.json({ message: 'Successfully joined waitlist', success: true }, 201)
   } catch (error) {
-    logger.error('Waitlist signup failed', { error: String(error) })
+    logger.error('Waitlist signup failed', error instanceof Error ? { error: error.message, stack: error.stack } : { error: String(error) })
     return c.json({ error: 'Internal server error' }, 500)
   }
 })
@@ -60,7 +60,7 @@ app.get('/count', async (c) => {
     const countValue = result[0]?.value || 0
     return c.json({ count: countValue }, 200)
   } catch (error) {
-    logger.error('Waitlist count fetch failed', { error: String(error) })
+    logger.error('Waitlist count fetch failed', error instanceof Error ? { error: error.message, stack: error.stack } : { error: String(error) })
     return c.json({ count: 0 }, 200)
   }
 })

@@ -2,7 +2,8 @@ type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
 const LEVEL_ORDER: Record<LogLevel, number> = { debug: 0, info: 1, warn: 2, error: 3 }
 
-const minLevel: LogLevel = (process.env.LOG_LEVEL as LogLevel) || 'info'
+const rawLevel = process.env.LOG_LEVEL
+const minLevel: LogLevel = rawLevel && rawLevel in LEVEL_ORDER ? (rawLevel as LogLevel) : 'info'
 const isProduction = process.env.ENVIRONMENT === 'production' || process.env.NODE_ENV === 'production'
 
 function shouldLog(level: LogLevel): boolean {

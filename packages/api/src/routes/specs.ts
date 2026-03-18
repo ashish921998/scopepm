@@ -185,7 +185,7 @@ app.post('/generate', async (c) => {
 
     return c.json({ spec: created, generated: specData }, 201)
   } catch (error) {
-    logger.error('Spec generation failed', { error: String(error) })
+    logger.error('Spec generation failed', error instanceof Error ? { error: error.message, stack: error.stack } : { error: String(error) })
     return c.json({ error: 'Failed to generate feature spec' }, 500)
   }
 })

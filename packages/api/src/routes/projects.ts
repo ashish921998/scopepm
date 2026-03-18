@@ -33,7 +33,7 @@ app.get('/', async (c) => {
     .select({
       projectId: interview.projectId,
       total: count(),
-      pendingCount: sql<number>`count(*) filter (where ${interview.status} = 'pending')`,
+      pendingCount: sql<number>`count(*) filter (where ${interview.status} = 'pending')`.mapWith(Number),
     })
     .from(interview)
     .where(eq(interview.userId, userId))
@@ -207,8 +207,8 @@ app.get('/:id/stats', async (c) => {
   const [interviewCounts] = await db
     .select({
       total: count(),
-      pendingCount: sql<number>`count(*) filter (where ${interview.status} = 'pending')`,
-      analyzedCount: sql<number>`count(*) filter (where ${interview.status} = 'analyzed')`,
+      pendingCount: sql<number>`count(*) filter (where ${interview.status} = 'pending')`.mapWith(Number),
+      analyzedCount: sql<number>`count(*) filter (where ${interview.status} = 'analyzed')`.mapWith(Number),
     })
     .from(interview)
     .where(and(eq(interview.userId, userId), eq(interview.projectId, projectId)))

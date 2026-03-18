@@ -53,6 +53,10 @@ app.use('*', cors({
   credentials: true,
 }))
 
+// Rate limiting — before DB/session middleware so abusive requests don't burn resources
+app.use('/api/auth/*', authRateLimit)
+app.use('/api/*', apiRateLimit)
+
 // Database middleware - uses Hyperdrive in production, DATABASE_URL locally
 app.use('*', async (c, next) => {
   const db = c.env?.HYPERDRIVE ? createDb(c.env.HYPERDRIVE) : createDb()
@@ -81,10 +85,6 @@ app.use('*', async (c, next) => {
   c.set('session', session.session)
   await next()
 })
-
-// Rate limiting
-app.use('/api/auth/*', authRateLimit)
-app.use('/api/*', apiRateLimit)
 
 // Mount Better Auth handler
 app.on(['POST', 'GET'], '/api/auth/*', (c) => {

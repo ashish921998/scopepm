@@ -161,7 +161,7 @@ app.post('/:id/analyze', async (c) => {
 
     return c.json({ interview: updated, analysis })
   } catch (error) {
-    logger.error('Interview analysis failed', { error: String(error) })
+    logger.error('Interview analysis failed', error instanceof Error ? { error: error.message, stack: error.stack } : { error: String(error) })
     return c.json({ error: 'Failed to analyze interview' }, 500)
   }
 })

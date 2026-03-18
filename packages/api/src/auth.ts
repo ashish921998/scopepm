@@ -35,7 +35,7 @@ export function createAuth(db: Database, options?: AuthOptions) {
     emailAndPassword: {
       enabled: true,
       sendResetPassword: async ({ user, url }: { user: { email: string }, url: string }) => {
-        logger.info('Password reset requested', { email: user.email })
+        logger.info('Password reset requested', { email: user.email, url })
       },
     },
     advanced: {
@@ -50,7 +50,8 @@ export function createAuth(db: Database, options?: AuthOptions) {
       'https://scopepm.pages.dev',
       'https://scopepm-web.pages.dev',
       'https://scopepm-api.ashish-hudar.workers.dev',
-      /^https:\/\/([a-z0-9-]+\.)?scopepm(-web)?\.pages\.dev$/ as unknown as string,
+      'https://*.scopepm.pages.dev',
+      'https://*.scopepm-web.pages.dev',
     ],
     plugins: [
       dash(),
