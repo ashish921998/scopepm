@@ -73,72 +73,84 @@ app.get('/overview', async (c) => {
     .where(eq(project.userId, userId))
     .orderBy(desc(project.updatedAt))
 
-  const interviews = await db
+  const interviewStats = await db
+    .select({
+      projectId: interview.projectId,
+      total: count().mapWith(Number),
+      pendingCount: sql<number>`count(*) filter (where ${interview.status} = 'pending')`.mapWith(Number),
+    })
+    .from(interview)
+    .where(and(eq(interview.userId, userId), sql`${interview.projectId} is not null`))
+    .groupBy(interview.projectId)
+
+  const specStats = await db
+    .select({
+      projectId: featureSpec.projectId,
+      total: count().mapWith(Number),
+    })
+    .from(featureSpec)
+    .where(and(eq(featureSpec.userId, userId), sql`${featureSpec.projectId} is not null`))
+    .groupBy(featureSpec.projectId)
+
+  const interviewMap = new Map(interviewStats.map((r) => [r.projectId, r]))
+  const specMap = new Map(specStats.map((r) => [r.projectId, r]))
+
+  const projectNameMap = new Map(projects.map((item) => [item.id, item.name]))
+
+  const recentInterviews = await db
     .select()
     .from(interview)
     .where(eq(interview.userId, userId))
     .orderBy(desc(interview.createdAt))
+    .limit(5)
 
-  const specs = await db
+  const recentSpecs = await db
     .select()
     .from(featureSpec)
     .where(eq(featureSpec.userId, userId))
     .orderBy(desc(featureSpec.createdAt))
+    .limit(5)
 
-  const interviewCountByProject = new Map<number, number>()
-  const pendingInterviewCountByProject = new Map<number, number>()
-  const specCountByProject = new Map<number, number>()
+  const interviewItems = recentInterviews.map((item) => ({
+    id: item.id,
+    type: 'interview' as const,
+    title: item.title,
+    status: item.status,
+    projectId: item.projectId,
+    projectName: item.projectId ? projectNameMap.get(item.projectId) ?? null : null,
+    createdAt: item.createdAt,
+  }))
 
-  for (const item of interviews) {
-    if (item.projectId === null) continue
-    interviewCountByProject.set(item.projectId, (interviewCountByProject.get(item.projectId) ?? 0) + 1)
-    if (item.status === 'pending') {
-      pendingInterviewCountByProject.set(item.projectId, (pendingInterviewCountByProject.get(item.projectId) ?? 0) + 1)
-    }
-  }
+  const specItems = recentSpecs.map((item) => ({
+    id: item.id,
+    type: 'spec' as const,
+    title: item.title,
+    status: item.status,
+    projectId: item.projectId,
+    projectName: item.projectId ? projectNameMap.get(item.projectId) ?? null : null,
+    createdAt: item.createdAt,
+  }))
 
-  for (const item of specs) {
-    if (item.projectId === null) continue
-    specCountByProject.set(item.projectId, (specCountByProject.get(item.projectId) ?? 0) + 1)
-  }
+  const recentActivity = [...interviewItems, ...specItems]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 5)
+
+  const totalInterviews = interviewStats.reduce((sum, r) => sum + r.total, 0)
+  const pendingInterviews = interviewStats.reduce((sum, r) => sum + r.pendingCount, 0)
 
   const projectsWithCounts = projects.map((item) => ({
     ...item,
-    interviewCount: interviewCountByProject.get(item.id) ?? 0,
-    specCount: specCountByProject.get(item.id) ?? 0,
-    pendingInterviewCount: pendingInterviewCountByProject.get(item.id) ?? 0,
+    interviewCount: interviewMap.get(item.id)?.total ?? 0,
+    specCount: specMap.get(item.id)?.total ?? 0,
+    pendingInterviewCount: interviewMap.get(item.id)?.pendingCount ?? 0,
   }))
-  const projectNameMap = new Map(projects.map((item) => [item.id, item.name]))
-
-  const recentActivity = [
-    ...interviews.map((item) => ({
-      id: item.id,
-      type: 'interview',
-      title: item.title,
-      status: item.status,
-      projectId: item.projectId,
-      projectName: item.projectId ? projectNameMap.get(item.projectId) ?? null : null,
-      createdAt: item.createdAt,
-    })),
-    ...specs.map((item) => ({
-      id: item.id,
-      type: 'spec',
-      title: item.title,
-      status: item.status,
-      projectId: item.projectId,
-      projectName: item.projectId ? projectNameMap.get(item.projectId) ?? null : null,
-      createdAt: item.createdAt,
-    })),
-  ]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, 5)
 
   return c.json({
     stats: {
       projectCount: projects.length,
-      interviewCount: interviews.length,
-      specCount: specs.length,
-      pendingInterviewCount: interviews.filter((item) => item.status === 'pending').length,
+      interviewCount: totalInterviews,
+      specCount: specStats.reduce((sum, r) => sum + r.total, 0),
+      pendingInterviewCount: pendingInterviews,
     },
     recentActivity,
     projects: projectsWithCounts.slice(0, 6),
@@ -223,7 +235,7 @@ app.get('/:id/stats', async (c) => {
   // Use COUNT aggregates instead of fetching all rows
   const [interviewCounts] = await db
     .select({
-      total: count(),
+      total: count().mapWith(Number),
       pendingCount: sql<number>`count(*) filter (where ${interview.status} = 'pending')`.mapWith(Number),
       analyzedCount: sql<number>`count(*) filter (where ${interview.status} = 'analyzed')`.mapWith(Number),
     })
@@ -231,7 +243,7 @@ app.get('/:id/stats', async (c) => {
     .where(and(eq(interview.userId, userId), eq(interview.projectId, projectId)))
 
   const [specCounts] = await db
-    .select({ total: count() })
+    .select({ total: count().mapWith(Number) })
     .from(featureSpec)
     .where(and(eq(featureSpec.userId, userId), eq(featureSpec.projectId, projectId)))
 

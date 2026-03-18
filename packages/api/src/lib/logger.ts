@@ -48,14 +48,16 @@ function safeStringify(payload: Record<string, unknown>): string {
 }
 
 function formatMessage(level: LogLevel, message: string, data?: Record<string, unknown>): string {
-  const payload = { level, msg: message, ts: new Date().toISOString(), ...data }
+  const { level: _, msg: __, ts: ___, ...safeData } = data ?? {}
+
+  const payload = { level, msg: message, ts: new Date().toISOString(), ...safeData }
 
   if (config.isProduction) {
     return safeStringify(payload)
   }
 
   const prefix = `[${level.toUpperCase()}]`
-  const extra = data ? ` ${safeStringify(data)}` : ''
+  const extra = safeData ? ` ${safeStringify(safeData)}` : ''
   return `${prefix} ${message}${extra}`
 }
 
