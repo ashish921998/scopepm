@@ -254,8 +254,8 @@ describe('GET /api/projects/overview', () => {
     mocks.mockFrom.mockImplementation(
       makeFromSequence(
         { withOrderBy: true, result: [mockProject] },  // projects
-        { withGroupBy: true, result: [{ projectId: 1, total: 2, pendingCount: 1 }] },  // interview stats
-        { withGroupBy: true, result: [{ projectId: 1, total: 1 }] },  // spec stats
+        { withGroupBy: true, result: [{ projectId: MOCK_PROJECT_ID, total: 2, pendingCount: 1 }] },  // interview stats
+        { withGroupBy: true, result: [{ projectId: MOCK_PROJECT_ID, total: 1 }] },  // spec stats
         { withOrderBy: true, withLimit: true, result: [mockInterview, mockAnalyzedInterview] },  // recent interviews
         { withOrderBy: true, withLimit: true, result: [mockSpec] },  // recent specs
       ),
