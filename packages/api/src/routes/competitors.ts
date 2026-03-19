@@ -200,6 +200,18 @@ app.post('/:id/analyze', async (c) => {
     const analysisText = await analyzeCompetitor(client, websiteText)
     const analysis = parseJsonFromText(analysisText)
 
+    const hasUsableAnalysis = Object.keys(analysis).length > 0 && (analysis.name || analysis.description || analysis.features)
+
+    if (!hasUsableAnalysis) {
+      const [failed] = await db
+        .update(competitor)
+        .set({ status: 'failed', updatedAt: new Date() })
+        .where(eq(competitor.id, id))
+        .returning()
+
+      return c.json({ competitor: failed, error: 'Analysis produced no usable data' }, 422)
+    }
+
     const [updated] = await db
       .update(competitor)
       .set({

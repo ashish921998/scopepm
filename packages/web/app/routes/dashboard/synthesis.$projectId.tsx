@@ -60,10 +60,12 @@ function SynthesisPage() {
     const loadSynthesis = async () => {
       setLoading(true)
       setError('')
+      setSynthesis(null)
       try {
         const res = await apiFetch<{ synthesis: SynthesisData | null }>(`/api/synthesis/${projectId}`)
         setSynthesis(res.synthesis)
       } catch (err) {
+        setSynthesis(null)
         setError(err instanceof Error ? err.message : 'Failed to load synthesis')
       } finally {
         setLoading(false)

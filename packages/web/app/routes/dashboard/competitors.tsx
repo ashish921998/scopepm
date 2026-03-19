@@ -138,7 +138,9 @@ function CompetitorsPage() {
         }),
       })
 
-      setCompetitors((current) => [data.competitor, ...current])
+      if (!initialProjectId || data.competitor.projectId === initialProjectId) {
+        setCompetitors((current) => [data.competitor, ...current])
+      }
       setShowForm(false)
       setUrl('')
       setProjectId(initialProjectId ? String(initialProjectId) : '')

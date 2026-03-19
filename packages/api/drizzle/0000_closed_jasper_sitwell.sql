@@ -25,8 +25,8 @@ CREATE TABLE "competitor" (
 	"pricing" text,
 	"positioning" text,
 	"status" varchar(50) DEFAULT 'pending' NOT NULL,
-	"created_at" timestamp DEFAULT now(),
-	"updated_at" timestamp DEFAULT now()
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "feature_spec" (

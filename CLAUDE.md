@@ -96,7 +96,7 @@ These rules apply when the Figma MCP server is connected.
 
 ### Asset Handling
 
-- IMPORTANT: If the Figma MCP server returns a localhost source for an image or SVG, use that source directly
+- IMPORTANT: If the Figma MCP server returns a localhost source for an image or SVG, download the asset to `packages/web/public/` and reference it by its checked-in path — do NOT ship localhost URLs in code
 - IMPORTANT: DO NOT import/add new icon packages — all assets should come from the Figma payload
 - IMPORTANT: DO NOT use or create placeholders if a localhost source is provided
 - Store downloaded assets in `packages/web/public/`
