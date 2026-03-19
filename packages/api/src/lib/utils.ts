@@ -57,6 +57,10 @@ export function isPrivateHostname(hostname: string): boolean {
     /^172\.(1[6-9]|2\d|3[01])\./.test(h) ||
     h === '0.0.0.0' ||
     h === '[::1]' ||
+    h === '[::]' ||
+    /^\[::ffff:/i.test(h) ||
+    /^\[f[cd][0-9a-f]{2}:/i.test(h) ||
+    /^\[fe80:/i.test(h) ||
     h.endsWith('.local') ||
     h.endsWith('.internal')
   )

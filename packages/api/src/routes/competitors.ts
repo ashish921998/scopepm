@@ -147,16 +147,28 @@ app.post('/:id/analyze', async (c) => {
     // Fetch the competitor's website
     let html: string
     try {
-      const response = await fetch(found.url, {
-        headers: { 'User-Agent': 'ScopePM/1.0 (competitor analysis)' },
-        redirect: 'follow',
-      })
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`)
+      const maxRedirects = 5
+      let currentUrl = found.url
+      let response: Response | undefined
+      for (let i = 0; i <= maxRedirects; i++) {
+        const targetHostname = new URL(currentUrl).hostname
+        if (i > 0 && isPrivateHostname(targetHostname)) {
+          throw new Error('Redirect to private address')
+        }
+        response = await fetch(currentUrl, {
+          headers: { 'User-Agent': 'ScopePM/1.0 (competitor analysis)' },
+          redirect: 'manual',
+        })
+        if (response.status >= 300 && response.status < 400) {
+          const location = response.headers.get('location')
+          if (!location) break
+          currentUrl = new URL(location, currentUrl).href
+          continue
+        }
+        break
       }
-      const finalHostname = new URL(response.url).hostname
-      if (isPrivateHostname(finalHostname)) {
-        throw new Error('Redirect to private address')
+      if (!response || !response.ok) {
+        throw new Error(`HTTP ${response?.status ?? 'no response'}`)
       }
       html = await response.text()
     } catch (fetchError) {

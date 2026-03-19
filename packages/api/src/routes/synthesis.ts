@@ -73,6 +73,7 @@ app.post('/:projectId/generate', async (c) => {
       )
     )
     .orderBy(desc(interview.createdAt))
+    .limit(20)
 
   if (interviews.length < 2) {
     return c.json({ error: 'At least 2 analyzed interviews are required for synthesis' }, 400)
@@ -102,27 +103,25 @@ app.post('/:projectId/generate', async (c) => {
       ? parsed.consensus
       : {}
 
-    // Atomic replace: delete old + insert new in a transaction
-    const [created] = await db.transaction(async (tx) => {
-      await tx
-        .delete(synthesis)
-        .where(and(eq(synthesis.projectId, projectId), eq(synthesis.userId, userId)))
+    const synthesisValues = {
+      themes: JSON.stringify(themes),
+      painPoints: JSON.stringify(painPoints),
+      featureRequests: JSON.stringify(featureRequests),
+      consensus: JSON.stringify(consensus),
+      aiSummary: typeof parsed.summary === 'string' ? parsed.summary : null,
+      interviewCount: Math.min(interviews.length, 20),
+      status: 'completed' as const,
+      updatedAt: new Date(),
+    }
 
-      return tx
-        .insert(synthesis)
-        .values({
-          userId,
-          projectId,
-          themes: JSON.stringify(themes),
-          painPoints: JSON.stringify(painPoints),
-          featureRequests: JSON.stringify(featureRequests),
-          consensus: JSON.stringify(consensus),
-          aiSummary: typeof parsed.summary === 'string' ? parsed.summary : null,
-          interviewCount: Math.min(interviews.length, 20),
-          status: 'completed',
-        })
-        .returning()
-    })
+    const [created] = await db
+      .insert(synthesis)
+      .values({ userId, projectId, ...synthesisValues })
+      .onConflictDoUpdate({
+        target: [synthesis.userId, synthesis.projectId],
+        set: synthesisValues,
+      })
+      .returning()
 
     return c.json({ synthesis: created })
   } catch (error) {

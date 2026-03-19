@@ -161,10 +161,11 @@ function makeFromSequence(...configs: FromConfig[]) {
 // Tests: GET /api/projects
 // ---------------------------------------------------------------------------
 describe('GET /api/projects', () => {
-  // Route fires 3 SELECT queries in order:
+  // Route fires 4 SELECT queries in order:
   //   1. projects  → .where().orderBy()
   //   2. interview stats (COUNT + GROUP BY) → .where().groupBy()
   //   3. spec stats (COUNT + GROUP BY) → .where().groupBy()
+  //   4. competitor stats (COUNT + GROUP BY) → .where().groupBy()
   beforeEach(() => {
     vi.clearAllMocks()
     mocks.mockFrom.mockImplementation(
@@ -172,6 +173,7 @@ describe('GET /api/projects', () => {
         { withOrderBy: true, result: [] },  // projects
         { withGroupBy: true, result: [] },  // interview stats
         { withGroupBy: true, result: [] },  // spec stats
+        { withGroupBy: true, result: [] },  // competitor stats
       ),
     )
   })
@@ -192,6 +194,7 @@ describe('GET /api/projects', () => {
         { withOrderBy: true, result: [mockProject] },
         { withGroupBy: true, result: [{ projectId: MOCK_PROJECT_ID, total: 2, pendingCount: 1 }] },
         { withGroupBy: true, result: [{ projectId: MOCK_PROJECT_ID, total: 1 }] },
+        { withGroupBy: true, result: [{ projectId: MOCK_PROJECT_ID, total: 3 }] },  // competitor stats
       ),
     )
 
@@ -220,12 +223,13 @@ describe('GET /api/projects', () => {
 // Tests: GET /api/projects/overview
 // ---------------------------------------------------------------------------
 describe('GET /api/projects/overview', () => {
-  // Route fires 5 SELECT queries in order:
+  // Route fires 6 SELECT queries in order:
   //   1. projects  → .where().orderBy()
   //   2. interview stats (COUNT + GROUP BY) → .where().groupBy()
   //   3. spec stats (COUNT + GROUP BY) → .where().groupBy()
-  //   4. recent interviews → .where().orderBy().limit()
-  //   5. recent specs → .where().orderBy().limit()
+  //   4. competitor stats (COUNT + GROUP BY) → .where().groupBy()
+  //   5. recent interviews → .where().orderBy().limit()
+  //   6. recent specs → .where().orderBy().limit()
   beforeEach(() => {
     vi.clearAllMocks()
     mocks.mockFrom.mockImplementation(
@@ -233,6 +237,7 @@ describe('GET /api/projects/overview', () => {
         { withOrderBy: true, result: [] },  // projects
         { withGroupBy: true, result: [] },  // interview stats
         { withGroupBy: true, result: [] },  // spec stats
+        { withGroupBy: true, result: [] },  // competitor stats
         { withOrderBy: true, withLimit: true, result: [] },  // recent interviews
         { withOrderBy: true, withLimit: true, result: [] },  // recent specs
       ),
@@ -256,6 +261,7 @@ describe('GET /api/projects/overview', () => {
         { withOrderBy: true, result: [mockProject] },  // projects
         { withGroupBy: true, result: [{ projectId: MOCK_PROJECT_ID, total: 2, pendingCount: 1 }] },  // interview stats
         { withGroupBy: true, result: [{ projectId: MOCK_PROJECT_ID, total: 1 }] },  // spec stats
+        { withGroupBy: true, result: [{ projectId: MOCK_PROJECT_ID, total: 2 }] },  // competitor stats
         { withOrderBy: true, withLimit: true, result: [mockInterview, mockAnalyzedInterview] },  // recent interviews
         { withOrderBy: true, withLimit: true, result: [mockSpec] },  // recent specs
       ),
@@ -362,6 +368,7 @@ describe('GET /api/projects/:id', () => {
   //   1. getOwnedProject → .where()  (no orderBy)
   //   2. interviews      → .where().orderBy()
   //   3. specs           → .where().orderBy()
+  //   4. competitors     → .where().orderBy()
   beforeEach(() => {
     vi.clearAllMocks()
     mocks.mockFrom.mockImplementation(
@@ -369,6 +376,7 @@ describe('GET /api/projects/:id', () => {
         { withOrderBy: false, result: [mockProject] },        // getOwnedProject
         { withOrderBy: true, result: [mockInterview] },       // interviews
         { withOrderBy: true, result: [mockSpec] },            // specs
+        { withOrderBy: true, result: [] },                    // competitors
       ),
     )
   })

@@ -157,6 +157,7 @@ export const synthesis = pgTable('synthesis', {
 }, (table) => ({
   projectIdIdx: index('synthesis_project_id_idx').on(table.projectId),
   userIdIdx: index('synthesis_user_id_idx').on(table.userId),
+  userProjectUidx: uniqueIndex('synthesis_user_project_uidx').on(table.userId, table.projectId),
 }))
 
 // Types

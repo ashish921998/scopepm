@@ -119,6 +119,7 @@ function DashboardLayout() {
             <Link to="/dashboard/projects" className="nav-link">Projects</Link>
             <Link to="/dashboard/interviews" className="nav-link">Interviews</Link>
             <Link to="/dashboard/specs" className="nav-link">Specs</Link>
+            <Link to="/dashboard/competitors" className="nav-link">Competitors</Link>
             <span className="nav-user">{session.user.name || session.user.email}</span>
             <button onClick={handleSignOut} className="btn-secondary">
               Sign Out
@@ -148,6 +149,7 @@ function DashboardLayout() {
             <Link to="/dashboard/projects" className="mobile-nav-link" onClick={closeMenu}>Projects</Link>
             <Link to="/dashboard/interviews" className="mobile-nav-link" onClick={closeMenu}>Interviews</Link>
             <Link to="/dashboard/specs" className="mobile-nav-link" onClick={closeMenu}>Specs</Link>
+            <Link to="/dashboard/competitors" className="mobile-nav-link" onClick={closeMenu}>Competitors</Link>
             <span className="mobile-nav-user">{session.user.name || session.user.email}</span>
             <button
               className="mobile-nav-signout"

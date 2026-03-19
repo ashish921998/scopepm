@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { and, count, desc, eq, sql } from 'drizzle-orm'
-import { featureSpec, interview, project } from '../db/schema'
+import { competitor, featureSpec, interview, project } from '../db/schema'
 import { getUserId, parseInteger } from '../lib/utils'
 import type { Database } from '../db'
 import { AppEnv } from '../lib/hono'
@@ -48,8 +48,18 @@ app.get('/', async (c) => {
     .where(eq(featureSpec.userId, userId))
     .groupBy(featureSpec.projectId)
 
+  const competitorStats = await db
+    .select({
+      projectId: competitor.projectId,
+      total: count().mapWith(Number),
+    })
+    .from(competitor)
+    .where(eq(competitor.userId, userId))
+    .groupBy(competitor.projectId)
+
   const interviewMap = new Map(interviewStats.map((r) => [r.projectId, r]))
   const specMap = new Map(specStats.map((r) => [r.projectId, r]))
+  const competitorMap = new Map(competitorStats.map((r) => [r.projectId, r]))
 
   return c.json({
     projects: projects.map((p) => ({
@@ -57,6 +67,7 @@ app.get('/', async (c) => {
       interviewCount: interviewMap.get(p.id)?.total ?? 0,
       specCount: specMap.get(p.id)?.total ?? 0,
       pendingInterviewCount: interviewMap.get(p.id)?.pendingCount ?? 0,
+      competitorCount: competitorMap.get(p.id)?.total ?? 0,
     })),
   })
 })
@@ -92,8 +103,18 @@ app.get('/overview', async (c) => {
     .where(eq(featureSpec.userId, userId))
     .groupBy(featureSpec.projectId)
 
+  const competitorStats = await db
+    .select({
+      projectId: competitor.projectId,
+      total: count().mapWith(Number),
+    })
+    .from(competitor)
+    .where(eq(competitor.userId, userId))
+    .groupBy(competitor.projectId)
+
   const interviewMap = new Map(interviewStats.map((r) => [r.projectId, r]))
   const specMap = new Map(specStats.map((r) => [r.projectId, r]))
+  const competitorMap = new Map(competitorStats.map((r) => [r.projectId, r]))
 
   const projectNameMap = new Map(projects.map((item) => [item.id, item.name]))
 
@@ -143,6 +164,7 @@ app.get('/overview', async (c) => {
     interviewCount: interviewMap.get(item.id)?.total ?? 0,
     specCount: specMap.get(item.id)?.total ?? 0,
     pendingInterviewCount: interviewMap.get(item.id)?.pendingCount ?? 0,
+    competitorCount: competitorMap.get(item.id)?.total ?? 0,
   }))
 
   return c.json({
@@ -150,6 +172,7 @@ app.get('/overview', async (c) => {
       projectCount: projects.length,
       interviewCount: totalInterviews,
       specCount: specStats.reduce((sum, r) => sum + r.total, 0),
+      competitorCount: competitorStats.reduce((sum, r) => sum + r.total, 0),
       pendingInterviewCount: pendingInterviews,
     },
     recentActivity,
@@ -208,15 +231,23 @@ app.get('/:id', async (c) => {
     .where(and(eq(featureSpec.userId, userId), eq(featureSpec.projectId, projectId)))
     .orderBy(desc(featureSpec.createdAt))
 
+  const competitors = await db
+    .select()
+    .from(competitor)
+    .where(and(eq(competitor.userId, userId), eq(competitor.projectId, projectId)))
+    .orderBy(desc(competitor.createdAt))
+
   return c.json({
     project: {
       ...found,
       interviewCount: interviews.length,
       specCount: specs.length,
       pendingInterviewCount: interviews.filter((item) => item.status === 'pending').length,
+      competitorCount: competitors.length,
     },
     recentInterviews: interviews.slice(0, 5),
     recentSpecs: specs.slice(0, 5),
+    recentCompetitors: competitors.slice(0, 5),
   })
 })
 

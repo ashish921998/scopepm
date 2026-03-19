@@ -56,20 +56,19 @@ function SynthesisPage() {
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState('')
 
-  const loadSynthesis = async () => {
-    setLoading(true)
-    setError('')
-    try {
-      const res = await apiFetch<{ synthesis: SynthesisData | null }>(`/api/synthesis/${projectId}`)
-      setSynthesis(res.synthesis)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load synthesis')
-    } finally {
-      setLoading(false)
-    }
-  }
-
   useEffect(() => {
+    const loadSynthesis = async () => {
+      setLoading(true)
+      setError('')
+      try {
+        const res = await apiFetch<{ synthesis: SynthesisData | null }>(`/api/synthesis/${projectId}`)
+        setSynthesis(res.synthesis)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load synthesis')
+      } finally {
+        setLoading(false)
+      }
+    }
     void loadSynthesis()
   }, [projectId])
 
@@ -177,14 +176,14 @@ function SynthesisPage() {
                   <div className="synthesis-item-header">
                     <strong className="activity-title">{theme.name}</strong>
                     <span className="synthesis-frequency-badge">
-                      {theme.frequency} of {synthesis.interviewCount}
+                      {Math.min(theme.frequency, synthesis.interviewCount)} of {synthesis.interviewCount}
                     </span>
                   </div>
                   <p className="synthesis-item-desc">{theme.description}</p>
                   <div className="synthesis-frequency-bar-track">
                     <div
                       className="synthesis-frequency-bar-fill"
-                      style={{ width: `${synthesis.interviewCount ? (theme.frequency / synthesis.interviewCount) * 100 : 0}%` }}
+                      style={{ width: `${synthesis.interviewCount ? Math.min((theme.frequency / synthesis.interviewCount) * 100, 100) : 0}%` }}
                     />
                   </div>
                   {theme.relatedQuotes && theme.relatedQuotes.length > 0 && (
@@ -210,13 +209,13 @@ function SynthesisPage() {
                   <div className="synthesis-item-header">
                     <span className="activity-title">{pp.point}</span>
                     <span className="synthesis-frequency-badge">
-                      {pp.frequency} of {synthesis.interviewCount}
+                      {Math.min(pp.frequency, synthesis.interviewCount)} of {synthesis.interviewCount}
                     </span>
                   </div>
                   <div className="synthesis-frequency-bar-track">
                     <div
                       className="synthesis-frequency-bar-fill"
-                      style={{ width: `${synthesis.interviewCount ? (pp.frequency / synthesis.interviewCount) * 100 : 0}%` }}
+                      style={{ width: `${synthesis.interviewCount ? Math.min((pp.frequency / synthesis.interviewCount) * 100, 100) : 0}%` }}
                     />
                   </div>
                 </div>
@@ -235,13 +234,13 @@ function SynthesisPage() {
                   <div className="synthesis-item-header">
                     <span className="activity-title">{fr.request}</span>
                     <span className="synthesis-frequency-badge">
-                      {fr.frequency} of {synthesis.interviewCount}
+                      {Math.min(fr.frequency, synthesis.interviewCount)} of {synthesis.interviewCount}
                     </span>
                   </div>
                   <div className="synthesis-frequency-bar-track">
                     <div
                       className="synthesis-frequency-bar-fill"
-                      style={{ width: `${synthesis.interviewCount ? (fr.frequency / synthesis.interviewCount) * 100 : 0}%` }}
+                      style={{ width: `${synthesis.interviewCount ? Math.min((fr.frequency / synthesis.interviewCount) * 100, 100) : 0}%` }}
                     />
                   </div>
                 </div>
