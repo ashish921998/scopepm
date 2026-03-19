@@ -1,0 +1,21 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "73df2cb947cb5ad3a6875dbad7f4df4b0df22a49",
+  "prompts": {
+    "ec76896091c9bbf4": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_2fd50b00bffe618Z0N1u4Cjjbh",
+        "model": "zai-coding-plan/glm-4.7"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 93,
+      "overriden_lines": 0
+    }
+  }
+}
