@@ -123,6 +123,42 @@ export const featureSpec = pgTable('feature_spec', {
   interviewIdIdx: index('feature_spec_interview_id_idx').on(table.interviewId),
 }))
 
+export const competitor = pgTable('competitor', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').notNull().references(() => user.id),
+  projectId: integer('project_id').references(() => project.id, { onDelete: 'cascade' }),
+  url: varchar('url', { length: 2048 }).notNull(),
+  name: varchar('name', { length: 255 }),
+  description: text('description'),
+  features: text('features'),
+  pricing: text('pricing'),
+  positioning: text('positioning'),
+  status: varchar('status', { length: 50 }).notNull().default('pending'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+}, (table) => ({
+  userIdIdx: index('competitor_user_id_idx').on(table.userId),
+  projectIdIdx: index('competitor_project_id_idx').on(table.projectId),
+}))
+
+export const synthesis = pgTable('synthesis', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id').notNull().references(() => user.id),
+  projectId: integer('project_id').notNull().references(() => project.id, { onDelete: 'cascade' }),
+  themes: text('themes'),
+  painPoints: text('pain_points'),
+  featureRequests: text('feature_requests'),
+  consensus: text('consensus'),
+  aiSummary: text('ai_summary'),
+  interviewCount: integer('interview_count').notNull().default(0),
+  status: varchar('status', { length: 50 }).notNull().default('pending'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => ({
+  projectIdIdx: index('synthesis_project_id_idx').on(table.projectId),
+  userIdIdx: index('synthesis_user_id_idx').on(table.userId),
+}))
+
 // Types
 export type WaitlistEntry = typeof waitlist.$inferSelect
 export type NewWaitlistEntry = typeof waitlist.$inferInsert
@@ -134,3 +170,7 @@ export type Interview = typeof interview.$inferSelect
 export type NewInterview = typeof interview.$inferInsert
 export type FeatureSpec = typeof featureSpec.$inferSelect
 export type NewFeatureSpec = typeof featureSpec.$inferInsert
+export type Competitor = typeof competitor.$inferSelect
+export type NewCompetitor = typeof competitor.$inferInsert
+export type Synthesis = typeof synthesis.$inferSelect
+export type NewSynthesis = typeof synthesis.$inferInsert

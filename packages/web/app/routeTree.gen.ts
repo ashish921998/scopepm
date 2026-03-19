@@ -20,7 +20,9 @@ import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as DashboardSpecsRouteImport } from './routes/dashboard/specs'
 import { Route as DashboardProjectsRouteImport } from './routes/dashboard/projects'
 import { Route as DashboardInterviewsRouteImport } from './routes/dashboard/interviews'
+import { Route as DashboardCompetitorsRouteImport } from './routes/dashboard/competitors'
 import { Route as DashboardProjectsIndexRouteImport } from './routes/dashboard/projects.index'
+import { Route as DashboardSynthesisProjectIdRouteImport } from './routes/dashboard/synthesis.$projectId'
 import { Route as DashboardProjectsNewRouteImport } from './routes/dashboard/projects.new'
 import { Route as DashboardProjectsProjectIdRouteImport } from './routes/dashboard/projects.$projectId'
 
@@ -79,11 +81,22 @@ const DashboardInterviewsRoute = DashboardInterviewsRouteImport.update({
   path: '/interviews',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardCompetitorsRoute = DashboardCompetitorsRouteImport.update({
+  id: '/competitors',
+  path: '/competitors',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardProjectsIndexRoute = DashboardProjectsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardProjectsRoute,
 } as any)
+const DashboardSynthesisProjectIdRoute =
+  DashboardSynthesisProjectIdRouteImport.update({
+    id: '/synthesis/$projectId',
+    path: '/synthesis/$projectId',
+    getParentRoute: () => DashboardRoute,
+  } as any)
 const DashboardProjectsNewRoute = DashboardProjectsNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -104,12 +117,14 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/dashboard/competitors': typeof DashboardCompetitorsRoute
   '/dashboard/interviews': typeof DashboardInterviewsRoute
   '/dashboard/projects': typeof DashboardProjectsRouteWithChildren
   '/dashboard/specs': typeof DashboardSpecsRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/projects/$projectId': typeof DashboardProjectsProjectIdRoute
   '/dashboard/projects/new': typeof DashboardProjectsNewRoute
+  '/dashboard/synthesis/$projectId': typeof DashboardSynthesisProjectIdRoute
   '/dashboard/projects/': typeof DashboardProjectsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -119,11 +134,13 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/dashboard/competitors': typeof DashboardCompetitorsRoute
   '/dashboard/interviews': typeof DashboardInterviewsRoute
   '/dashboard/specs': typeof DashboardSpecsRoute
   '/dashboard': typeof DashboardIndexRoute
   '/dashboard/projects/$projectId': typeof DashboardProjectsProjectIdRoute
   '/dashboard/projects/new': typeof DashboardProjectsNewRoute
+  '/dashboard/synthesis/$projectId': typeof DashboardSynthesisProjectIdRoute
   '/dashboard/projects': typeof DashboardProjectsIndexRoute
 }
 export interface FileRoutesById {
@@ -135,12 +152,14 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/dashboard/competitors': typeof DashboardCompetitorsRoute
   '/dashboard/interviews': typeof DashboardInterviewsRoute
   '/dashboard/projects': typeof DashboardProjectsRouteWithChildren
   '/dashboard/specs': typeof DashboardSpecsRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/projects/$projectId': typeof DashboardProjectsProjectIdRoute
   '/dashboard/projects/new': typeof DashboardProjectsNewRoute
+  '/dashboard/synthesis/$projectId': typeof DashboardSynthesisProjectIdRoute
   '/dashboard/projects/': typeof DashboardProjectsIndexRoute
 }
 export interface FileRouteTypes {
@@ -153,12 +172,14 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/dashboard/competitors'
     | '/dashboard/interviews'
     | '/dashboard/projects'
     | '/dashboard/specs'
     | '/dashboard/'
     | '/dashboard/projects/$projectId'
     | '/dashboard/projects/new'
+    | '/dashboard/synthesis/$projectId'
     | '/dashboard/projects/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -168,11 +189,13 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/dashboard/competitors'
     | '/dashboard/interviews'
     | '/dashboard/specs'
     | '/dashboard'
     | '/dashboard/projects/$projectId'
     | '/dashboard/projects/new'
+    | '/dashboard/synthesis/$projectId'
     | '/dashboard/projects'
   id:
     | '__root__'
@@ -183,12 +206,14 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sign-in'
     | '/sign-up'
+    | '/dashboard/competitors'
     | '/dashboard/interviews'
     | '/dashboard/projects'
     | '/dashboard/specs'
     | '/dashboard/'
     | '/dashboard/projects/$projectId'
     | '/dashboard/projects/new'
+    | '/dashboard/synthesis/$projectId'
     | '/dashboard/projects/'
   fileRoutesById: FileRoutesById
 }
@@ -281,12 +306,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardInterviewsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/competitors': {
+      id: '/dashboard/competitors'
+      path: '/competitors'
+      fullPath: '/dashboard/competitors'
+      preLoaderRoute: typeof DashboardCompetitorsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/projects/': {
       id: '/dashboard/projects/'
       path: '/'
       fullPath: '/dashboard/projects/'
       preLoaderRoute: typeof DashboardProjectsIndexRouteImport
       parentRoute: typeof DashboardProjectsRoute
+    }
+    '/dashboard/synthesis/$projectId': {
+      id: '/dashboard/synthesis/$projectId'
+      path: '/synthesis/$projectId'
+      fullPath: '/dashboard/synthesis/$projectId'
+      preLoaderRoute: typeof DashboardSynthesisProjectIdRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/dashboard/projects/new': {
       id: '/dashboard/projects/new'
@@ -321,17 +360,21 @@ const DashboardProjectsRouteWithChildren =
   DashboardProjectsRoute._addFileChildren(DashboardProjectsRouteChildren)
 
 interface DashboardRouteChildren {
+  DashboardCompetitorsRoute: typeof DashboardCompetitorsRoute
   DashboardInterviewsRoute: typeof DashboardInterviewsRoute
   DashboardProjectsRoute: typeof DashboardProjectsRouteWithChildren
   DashboardSpecsRoute: typeof DashboardSpecsRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardSynthesisProjectIdRoute: typeof DashboardSynthesisProjectIdRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardCompetitorsRoute: DashboardCompetitorsRoute,
   DashboardInterviewsRoute: DashboardInterviewsRoute,
   DashboardProjectsRoute: DashboardProjectsRouteWithChildren,
   DashboardSpecsRoute: DashboardSpecsRoute,
   DashboardIndexRoute: DashboardIndexRoute,
+  DashboardSynthesisProjectIdRoute: DashboardSynthesisProjectIdRoute,
 }
 
 const DashboardRouteWithChildren = DashboardRoute._addFileChildren(

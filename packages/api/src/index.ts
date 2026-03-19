@@ -10,6 +10,8 @@ import interviewRoutes from './routes/interviews'
 import specRoutes from './routes/specs'
 import onboardingRoutes from './routes/onboarding'
 import projectRoutes from './routes/projects'
+import competitorRoutes from './routes/competitors'
+import synthesisRoutes from './routes/synthesis'
 import devRoutes from './routes/dev'
 import { getUserId } from './lib/utils'
 import { validateEnv } from './lib/env'
@@ -113,6 +115,8 @@ app.route('/api/interviews', interviewRoutes)
 app.route('/api/specs', specRoutes)
 app.route('/api/onboarding', onboardingRoutes)
 app.route('/api/projects', projectRoutes)
+app.route('/api/competitors', competitorRoutes)
+app.route('/api/synthesis', synthesisRoutes)
 app.route('/api/dev', devRoutes)
 
 // Protected route - get current user

@@ -1,11 +1,13 @@
 export function parseJsonFromText(text: string): Record<string, unknown> {
-  // Try to extract JSON from the text
-  const jsonMatch = text.match(/\{[\s\S]*\}/)
-  if (jsonMatch) {
+  // Find the first '{' and try progressively shorter substrings ending at each '}'
+  const start = text.indexOf('{')
+  if (start === -1) return {}
+
+  for (let end = text.lastIndexOf('}'); end > start; end = text.lastIndexOf('}', end - 1)) {
     try {
-      return JSON.parse(jsonMatch[0])
+      return JSON.parse(text.slice(start, end + 1))
     } catch {
-      // Fall through to return empty object
+      // Try a shorter substring
     }
   }
   return {}
