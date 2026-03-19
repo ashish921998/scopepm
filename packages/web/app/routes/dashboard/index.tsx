@@ -13,6 +13,7 @@ type DashboardOverview = {
     projectCount: number
     interviewCount: number
     specCount: number
+    competitorCount: number
     pendingInterviewCount: number
   }
   recentActivity: Array<{
@@ -30,6 +31,7 @@ type DashboardOverview = {
     description: string | null
     interviewCount: number
     specCount: number
+    competitorCount: number
     pendingInterviewCount: number
     updatedAt: string
   }>
@@ -68,7 +70,7 @@ function DashboardIndex() {
         </div>
 
         <div className="stats-grid">
-          {[...Array(4)].map((_, i) => (
+          {[...Array(5)].map((_, i) => (
             <SkeletonStatCard key={i} />
           ))}
         </div>
@@ -175,6 +177,10 @@ function DashboardIndex() {
           <strong className="stats-value">{overview.stats.specCount}</strong>
         </div>
         <div className="stats-card">
+          <span className="stats-label">Competitors</span>
+          <strong className="stats-value">{overview.stats.competitorCount}</strong>
+        </div>
+        <div className="stats-card">
           <span className="stats-label">Pending analysis</span>
           <strong className="stats-value">{overview.stats.pendingInterviewCount}</strong>
         </div>
@@ -203,6 +209,11 @@ function DashboardIndex() {
               <div className="feature-icon">📋</div>
               <h3 className="feature-title">Create spec</h3>
               <p className="feature-description">Draft a feature spec manually or generate one from an interview.</p>
+            </Link>
+            <Link to="/dashboard/competitors" search={{ new: true }} className="dashboard-card dashboard-card-link">
+              <div className="feature-icon">🏢</div>
+              <h3 className="feature-title">Track competitor</h3>
+              <p className="feature-description">Add a competitor URL and let AI extract their profile.</p>
             </Link>
           </div>
         </section>

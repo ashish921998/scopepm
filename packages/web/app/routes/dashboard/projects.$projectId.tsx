@@ -11,6 +11,7 @@ type ProjectDetail = {
     status?: string
     interviewCount: number
     specCount: number
+    competitorCount: number
     pendingInterviewCount: number
     updatedAt: string
   }
@@ -23,6 +24,13 @@ type ProjectDetail = {
   recentSpecs: Array<{
     id: number
     title: string
+    status: string
+    createdAt: string
+  }>
+  recentCompetitors: Array<{
+    id: number
+    url: string
+    name: string | null
     status: string
     createdAt: string
   }>
@@ -133,7 +141,7 @@ function ProjectDetailPage() {
         </div>
 
         <div className="stats-grid compact-stats-grid">
-          {[...Array(3)].map((_, i) => (
+          {[...Array(4)].map((_, i) => (
             <SkeletonStatCard key={i} />
           ))}
         </div>
@@ -259,6 +267,12 @@ function ProjectDetailPage() {
           <Link to="/dashboard/interviews" search={{ projectId: data.project.id, new: true }} className="btn-secondary">
             New Interview
           </Link>
+          <Link to="/dashboard/competitors" search={{ projectId: data.project.id, new: true }} className="btn-secondary">
+            New Competitor
+          </Link>
+          <Link to="/dashboard/synthesis/$projectId" params={{ projectId: String(data.project.id) }} className="btn-secondary">
+            Synthesis
+          </Link>
           <Link to="/dashboard/specs" search={{ projectId: data.project.id, new: true }} className="btn-primary">
             New Spec
           </Link>
@@ -273,6 +287,10 @@ function ProjectDetailPage() {
         <div className="stats-card">
           <span className="stats-label">Specs</span>
           <strong className="stats-value">{data.project.specCount}</strong>
+        </div>
+        <div className="stats-card">
+          <span className="stats-label">Competitors</span>
+          <strong className="stats-value">{data.project.competitorCount}</strong>
         </div>
         <div className="stats-card">
           <span className="stats-label">Pending analysis</span>
@@ -324,6 +342,32 @@ function ProjectDetailPage() {
                 <div key={item.id} className="activity-item">
                   <div>
                     <p className="activity-title">{item.title}</p>
+                    <p className="activity-meta">{new Date(item.createdAt).toLocaleDateString()}</p>
+                  </div>
+                  <span className={`status-badge status-${item.status}`}>{item.status}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section className="dashboard-section-card">
+          <div className="section-header-row">
+            <div>
+              <h2 className="section-card-title">Recent competitors</h2>
+              <p className="section-card-subtitle">Competitor profiles tracked for this project.</p>
+            </div>
+            <Link to="/dashboard/competitors" search={{ projectId: data.project.id }} className="btn-ghost">View all</Link>
+          </div>
+
+          {data.recentCompetitors.length === 0 ? (
+            <p style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>No competitors yet.</p>
+          ) : (
+            <div className="activity-list">
+              {data.recentCompetitors.map((item) => (
+                <div key={item.id} className="activity-item">
+                  <div>
+                    <p className="activity-title">{item.name || item.url}</p>
                     <p className="activity-meta">{new Date(item.createdAt).toLocaleDateString()}</p>
                   </div>
                   <span className={`status-badge status-${item.status}`}>{item.status}</span>
