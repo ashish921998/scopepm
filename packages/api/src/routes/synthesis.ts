@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
 import { synthesis, interview, project } from '../db/schema'
 import { and, desc, eq } from 'drizzle-orm'
-import { getAnthropicClient, synthesizeInterviews } from '../lib/anthropic'
+import { getAnthropicClient, MAX_SYNTHESIS_INTERVIEWS, synthesizeInterviews } from '../lib/anthropic'
 import { getUserId, parseInteger, parseJsonFromText } from '../lib/utils'
 import { AppEnv } from '../lib/hono'
 import { logger } from '../lib/logger'
@@ -173,7 +173,8 @@ app.post('/:projectId/generate', async (c) => {
       insights: i.insights || '',
     }))
 
-    // synthesizeInterviews internally caps to MAX_SYNTHESIS_INTERVIEWS
+    // Store the count actually sent to the AI, not total analyzed
+    const synthesizedCount = Math.min(interviews.length, MAX_SYNTHESIS_INTERVIEWS)
     const synthesisText = await synthesizeInterviews(client, interviewInsights)
     const parsed = parseJsonFromText(synthesisText)
 
@@ -186,13 +187,23 @@ app.post('/:projectId/generate', async (c) => {
     const hasUsableData = themes.length > 0 || painPoints.length > 0 || featureRequests.length > 0 || summary
 
     if (!hasUsableData) {
-      // Upsert as failed so the user can retry
+      // Upsert as failed and clear stale data so the UI doesn't show outdated results
+      const failedValues = {
+        status: 'failed' as const,
+        interviewCount: synthesizedCount,
+        themes: null,
+        painPoints: null,
+        featureRequests: null,
+        consensus: null,
+        aiSummary: null,
+        updatedAt: new Date(),
+      }
       await db
         .insert(synthesis)
-        .values({ userId, projectId, status: 'failed', interviewCount: interviews.length, updatedAt: new Date() })
+        .values({ userId, projectId, ...failedValues })
         .onConflictDoUpdate({
           target: [synthesis.userId, synthesis.projectId],
-          set: { status: 'failed', interviewCount: interviews.length, updatedAt: new Date() },
+          set: failedValues,
         })
 
       return c.json({ error: 'Synthesis produced no usable data — please try again' }, 422)
@@ -204,7 +215,7 @@ app.post('/:projectId/generate', async (c) => {
       featureRequests: JSON.stringify(featureRequests),
       consensus: JSON.stringify(consensus),
       aiSummary: summary,
-      interviewCount: interviews.length,
+      interviewCount: synthesizedCount,
       status: 'completed' as const,
       updatedAt: new Date(),
     }

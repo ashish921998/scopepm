@@ -129,7 +129,7 @@ Format your response as JSON:
   "summary": "2-3 paragraph narrative summary of top patterns, key takeaways, and recommended next steps"
 }`
 
-const MAX_SYNTHESIS_INTERVIEWS = 20
+export const MAX_SYNTHESIS_INTERVIEWS = 20
 
 export async function synthesizeInterviews(
   client: Anthropic,

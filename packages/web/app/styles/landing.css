@@ -18,6 +18,10 @@
   --accent-soft: rgba(196, 85, 58, 0.08);
   --accent-medium: rgba(196, 85, 58, 0.15);
 
+  /* Error / danger */
+  --error: #dc2626;
+  --error-soft: rgba(220, 38, 38, 0.1);
+
   /* Borders - subtle warm greys */
   --border: rgba(26, 25, 24, 0.08);
   --border-hover: rgba(26, 25, 24, 0.15);
@@ -1579,8 +1583,8 @@ section {
 }
 
 .priority-high {
-  background: rgba(220, 38, 38, 0.1);
-  color: #dc2626;
+  background: var(--error-soft);
+  color: var(--error);
 }
 
 .priority-medium {
@@ -1762,8 +1766,8 @@ section {
 }
 
 .status-failed {
-  background: rgba(220, 38, 38, 0.1);
-  color: #dc2626;
+  background: var(--error-soft);
+  color: var(--error);
 }
 
 /* Insights Display */
