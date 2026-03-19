@@ -1,0 +1,29 @@
+packages/api/src/routes/synthesis.ts
+  cd6c50a4ffe3f410 145,147-151,161,194
+packages/web/app/routes/dashboard/synthesis.$projectId.tsx
+  cd6c50a4ffe3f410 110,117,120,124,128,160,177,179-181,183,185,216
+packages/api/src/routes/competitors.ts
+  cd6c50a4ffe3f410 158-160,163-164,166-168
+packages/web/app/routes/dashboard/competitors.tsx
+  cd6c50a4ffe3f410 83,92,96,99,103
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "192f1892a029749d2b004d560fe9f8df821f44ee",
+  "prompts": {
+    "cd6c50a4ffe3f410": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d052a-f5e2-7393-a710-da2164c31fad",
+        "model": "unknown"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 41,
+      "total_deletions": 15,
+      "accepted_lines": 34,
+      "overriden_lines": 0
+    }
+  }
+}
