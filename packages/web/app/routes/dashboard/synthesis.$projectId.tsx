@@ -45,6 +45,56 @@ function parseJson<T>(value: string | null): T | null {
   }
 }
 
+function safeNumber(value: unknown): number {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : 0
+}
+
+function safeStringArray(value: unknown): string[] {
+  return Array.isArray(value) ? value.filter((v): v is string => typeof v === 'string' && v.trim().length > 0) : []
+}
+
+function safeThemes(raw: unknown): ThemeItem[] {
+  if (!Array.isArray(raw)) return []
+  return raw
+    .filter((item): item is Record<string, unknown> =>
+      item != null && typeof item === 'object' && typeof (item as Record<string, unknown>).name === 'string'
+    )
+    .map((item) => ({
+      name: String(item.name).trim(),
+      description: typeof item.description === 'string' ? item.description.trim() : '',
+      frequency: safeNumber(item.frequency),
+      interviewIds: Array.isArray(item.interviewIds) ? item.interviewIds.filter((v): v is number => typeof v === 'number') : [],
+      relatedQuotes: safeStringArray(item.relatedQuotes),
+    }))
+    .filter((t) => t.name.length > 0)
+}
+
+function safeFrequencyItems(raw: unknown, labelKey: 'point' | 'request'): FrequencyItem[] {
+  if (!Array.isArray(raw)) return []
+  return raw
+    .filter((item): item is Record<string, unknown> =>
+      item != null && typeof item === 'object' && typeof (item as Record<string, unknown>)[labelKey] === 'string'
+    )
+    .map((item) => ({
+      [labelKey]: String(item[labelKey]).trim(),
+      frequency: safeNumber(item.frequency),
+      interviewIds: Array.isArray(item.interviewIds) ? item.interviewIds.filter((v): v is number => typeof v === 'number') : [],
+    }))
+    .filter((f) => {
+      const label = f[labelKey]
+      return typeof label === 'string' && label.length > 0
+    })
+}
+
+function safeConsensus(raw: unknown): Consensus | null {
+  if (raw == null || typeof raw !== 'object' || Array.isArray(raw)) return null
+  const obj = raw as Record<string, unknown>
+  const agreements = safeStringArray(obj.agreements)
+  const outliers = safeStringArray(obj.outliers)
+  if (agreements.length === 0 && outliers.length === 0) return null
+  return { agreements, outliers }
+}
+
 export const Route = createFileRoute('/dashboard/synthesis/$projectId')({
   component: SynthesisPage,
 })
@@ -131,13 +181,10 @@ function SynthesisPage() {
     )
   }
 
-  const parsedThemes = parseJson<ThemeItem[]>(synthesis.themes)
-  const themes = Array.isArray(parsedThemes) ? parsedThemes : []
-  const parsedPainPoints = parseJson<FrequencyItem[]>(synthesis.painPoints)
-  const painPoints = Array.isArray(parsedPainPoints) ? parsedPainPoints : []
-  const parsedFeatureRequests = parseJson<FrequencyItem[]>(synthesis.featureRequests)
-  const featureRequests = Array.isArray(parsedFeatureRequests) ? parsedFeatureRequests : []
-  const consensus = parseJson<Consensus>(synthesis.consensus)
+  const themes = safeThemes(parseJson<unknown[]>(synthesis.themes))
+  const painPoints = safeFrequencyItems(parseJson<unknown[]>(synthesis.painPoints), 'point')
+  const featureRequests = safeFrequencyItems(parseJson<unknown[]>(synthesis.featureRequests), 'request')
+  const consensus = safeConsensus(parseJson<Record<string, unknown>>(synthesis.consensus))
 
   return (
     <div className="container">

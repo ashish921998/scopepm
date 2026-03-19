@@ -125,7 +125,7 @@ export const featureSpec = pgTable('feature_spec', {
 
 export const competitor = pgTable('competitor', {
   id: serial('id').primaryKey(),
-  userId: integer('user_id').notNull().references(() => user.id),
+  userId: integer('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
   projectId: integer('project_id').references(() => project.id, { onDelete: 'cascade' }),
   url: varchar('url', { length: 2048 }).notNull(),
   name: varchar('name', { length: 255 }),
@@ -143,7 +143,7 @@ export const competitor = pgTable('competitor', {
 
 export const synthesis = pgTable('synthesis', {
   id: serial('id').primaryKey(),
-  userId: integer('user_id').notNull().references(() => user.id),
+  userId: integer('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
   projectId: integer('project_id').notNull().references(() => project.id, { onDelete: 'cascade' }),
   themes: text('themes'),
   painPoints: text('pain_points'),

@@ -6,6 +6,87 @@ import { getUserId, parseInteger, parseJsonFromText } from '../lib/utils'
 import { AppEnv } from '../lib/hono'
 import { logger } from '../lib/logger'
 
+// --- Normalization helpers for LLM output ---
+
+type NormalizedTheme = {
+  name: string
+  description: string
+  frequency: number
+  interviewIds: number[]
+  relatedQuotes: string[]
+}
+
+type NormalizedFrequencyItem = {
+  point?: string
+  request?: string
+  frequency: number
+  interviewIds: number[]
+}
+
+type NormalizedConsensus = {
+  agreements: string[]
+  outliers: string[]
+}
+
+function toFiniteNumber(value: unknown, fallback: number): number {
+  if (typeof value === 'number' && Number.isFinite(value) && value >= 0) return value
+  return fallback
+}
+
+function toStringArray(value: unknown): string[] {
+  if (!Array.isArray(value)) return []
+  return value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+}
+
+function toNumberArray(value: unknown): number[] {
+  if (!Array.isArray(value)) return []
+  return value.filter((item): item is number => typeof item === 'number' && Number.isFinite(item))
+}
+
+function normalizeThemes(raw: unknown): NormalizedTheme[] {
+  if (!Array.isArray(raw)) return []
+  return raw
+    .filter((item): item is Record<string, unknown> =>
+      item != null && typeof item === 'object' && typeof (item as Record<string, unknown>).name === 'string'
+    )
+    .map((item) => ({
+      name: String(item.name).trim(),
+      description: typeof item.description === 'string' ? item.description.trim() : '',
+      frequency: toFiniteNumber(item.frequency, 0),
+      interviewIds: toNumberArray(item.interviewIds),
+      relatedQuotes: toStringArray(item.relatedQuotes),
+    }))
+    .filter((t) => t.name.length > 0)
+}
+
+function normalizeFrequencyItems(raw: unknown, labelKey: 'point' | 'request'): NormalizedFrequencyItem[] {
+  if (!Array.isArray(raw)) return []
+  return raw
+    .filter((item): item is Record<string, unknown> =>
+      item != null && typeof item === 'object' && typeof (item as Record<string, unknown>)[labelKey] === 'string'
+    )
+    .map((item) => ({
+      [labelKey]: String(item[labelKey]).trim(),
+      frequency: toFiniteNumber(item.frequency, 0),
+      interviewIds: toNumberArray(item.interviewIds),
+    }))
+    .filter((f) => {
+      const label = f[labelKey]
+      return typeof label === 'string' && label.length > 0
+    })
+}
+
+function normalizeConsensus(raw: unknown): NormalizedConsensus {
+  if (raw == null || typeof raw !== 'object' || Array.isArray(raw)) {
+    return { agreements: [], outliers: [] }
+  }
+  const obj = raw as Record<string, unknown>
+  return {
+    agreements: toStringArray(obj.agreements),
+    outliers: toStringArray(obj.outliers),
+  }
+}
+
 const app = new Hono<AppEnv>()
 
 // Get synthesis for a project
@@ -61,7 +142,7 @@ app.post('/:projectId/generate', async (c) => {
     return c.json({ error: 'Project not found' }, 404)
   }
 
-  // Fetch analyzed interviews for this project, most recent first
+  // Fetch all analyzed interviews for this project
   const interviews = await db
     .select()
     .from(interview)
@@ -73,7 +154,6 @@ app.post('/:projectId/generate', async (c) => {
       )
     )
     .orderBy(desc(interview.createdAt))
-    .limit(20)
 
   if (interviews.length < 2) {
     return c.json({ error: 'At least 2 analyzed interviews are required for synthesis' }, 400)
@@ -93,23 +173,38 @@ app.post('/:projectId/generate', async (c) => {
       insights: i.insights || '',
     }))
 
+    // synthesizeInterviews internally caps to MAX_SYNTHESIS_INTERVIEWS
     const synthesisText = await synthesizeInterviews(client, interviewInsights)
     const parsed = parseJsonFromText(synthesisText)
 
-    const themes = Array.isArray(parsed.themes) ? parsed.themes : []
-    const painPoints = Array.isArray(parsed.painPoints) ? parsed.painPoints : []
-    const featureRequests = Array.isArray(parsed.featureRequests) ? parsed.featureRequests : []
-    const consensus = parsed.consensus && typeof parsed.consensus === 'object' && !Array.isArray(parsed.consensus)
-      ? parsed.consensus
-      : {}
+    const themes = normalizeThemes(parsed.themes)
+    const painPoints = normalizeFrequencyItems(parsed.painPoints, 'point')
+    const featureRequests = normalizeFrequencyItems(parsed.featureRequests, 'request')
+    const consensus = normalizeConsensus(parsed.consensus)
+    const summary = typeof parsed.summary === 'string' && parsed.summary.trim() ? parsed.summary.trim() : null
+
+    const hasUsableData = themes.length > 0 || painPoints.length > 0 || featureRequests.length > 0 || summary
+
+    if (!hasUsableData) {
+      // Upsert as failed so the user can retry
+      await db
+        .insert(synthesis)
+        .values({ userId, projectId, status: 'failed', interviewCount: interviews.length, updatedAt: new Date() })
+        .onConflictDoUpdate({
+          target: [synthesis.userId, synthesis.projectId],
+          set: { status: 'failed', interviewCount: interviews.length, updatedAt: new Date() },
+        })
+
+      return c.json({ error: 'Synthesis produced no usable data — please try again' }, 422)
+    }
 
     const synthesisValues = {
       themes: JSON.stringify(themes),
       painPoints: JSON.stringify(painPoints),
       featureRequests: JSON.stringify(featureRequests),
       consensus: JSON.stringify(consensus),
-      aiSummary: typeof parsed.summary === 'string' ? parsed.summary : null,
-      interviewCount: Math.min(interviews.length, 20),
+      aiSummary: summary,
+      interviewCount: interviews.length,
       status: 'completed' as const,
       updatedAt: new Date(),
     }

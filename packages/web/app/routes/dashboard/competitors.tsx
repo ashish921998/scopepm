@@ -382,13 +382,14 @@ function CompetitorsPage() {
 
                 {item.description && <p className="competitor-description">{item.description}</p>}
 
-                {item.status === 'analyzed' && (
-                  <>
-                    {parseFeatures(item.features).length > 0 && (
+                {item.status === 'analyzed' && (() => {
+                  const parsedFeatures = parseFeatures(item.features)
+                  return <>
+                    {parsedFeatures.length > 0 && (
                       <div className="competitor-section">
                         <h4 className="competitor-section-title">Features</h4>
                         <div className="feature-tags">
-                          {parseFeatures(item.features).map((feature, i) => (
+                          {parsedFeatures.map((feature, i) => (
                             <span key={i} className="feature-tag">{feature}</span>
                           ))}
                         </div>
@@ -409,7 +410,7 @@ function CompetitorsPage() {
                       </div>
                     )}
                   </>
-                )}
+                })()}
 
                 <div className="competitor-actions">
                   {(item.status === 'pending' || item.status === 'failed') && (

@@ -15,6 +15,13 @@
       "when": 1773903775170,
       "tag": "0001_typical_tombstone",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1774051200000,
+      "tag": "0002_cascade_user_fks",
+      "breakpoints": true
     }
   ]
 }
