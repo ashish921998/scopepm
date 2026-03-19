@@ -107,21 +107,25 @@ function SynthesisPage() {
   const [error, setError] = useState('')
 
   useEffect(() => {
+    let isCurrent = true
     const loadSynthesis = async () => {
       setLoading(true)
       setError('')
       setSynthesis(null)
       try {
         const res = await apiFetch<{ synthesis: SynthesisData | null }>(`/api/synthesis/${projectId}`)
+        if (!isCurrent) return
         setSynthesis(res.synthesis)
       } catch (err) {
+        if (!isCurrent) return
         setSynthesis(null)
         setError(err instanceof Error ? err.message : 'Failed to load synthesis')
       } finally {
-        setLoading(false)
+        if (isCurrent) setLoading(false)
       }
     }
     void loadSynthesis()
+    return () => { isCurrent = false }
   }, [projectId])
 
   const handleGenerate = async () => {
@@ -153,7 +157,7 @@ function SynthesisPage() {
     )
   }
 
-  if (!synthesis) {
+  if (!synthesis || synthesis.status === 'failed') {
     return (
       <div className="container">
         <div className="page-header">
@@ -170,11 +174,15 @@ function SynthesisPage() {
 
         <div className="empty-state">
           <div className="empty-icon">📊</div>
-          <h3>No synthesis yet</h3>
-          <p>Generate a synthesis to discover patterns across your interviews. You need at least 2 analyzed interviews.</p>
-          {error && <p style={{ color: 'var(--accent)', marginTop: '0.5rem' }}>{error}</p>}
+          <h3>{synthesis?.status === 'failed' ? 'Synthesis failed' : 'No synthesis yet'}</h3>
+          <p>
+            {synthesis?.status === 'failed'
+              ? 'The previous synthesis could not produce usable results. Try generating again.'
+              : 'Generate a synthesis to discover patterns across your interviews. You need at least 2 analyzed interviews.'}
+          </p>
+          {error && <p style={{ color: 'var(--error)', marginTop: '0.5rem' }}>{error}</p>}
           <button className="btn-primary" onClick={handleGenerate} disabled={generating} style={{ marginTop: '1rem' }}>
-            {generating ? 'Generating...' : 'Generate Synthesis'}
+            {generating ? 'Generating...' : synthesis?.status === 'failed' ? 'Retry Synthesis' : 'Generate Synthesis'}
           </button>
         </div>
       </div>
@@ -205,7 +213,7 @@ function SynthesisPage() {
         </div>
       </div>
 
-      {error && <p style={{ color: 'var(--accent)', marginBottom: '1rem' }}>{error}</p>}
+      {error && <p style={{ color: 'var(--error)', marginBottom: '1rem' }}>{error}</p>}
 
       {synthesis.aiSummary && (
         <div className="synthesis-summary-card">

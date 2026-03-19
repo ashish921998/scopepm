@@ -142,9 +142,13 @@ app.post('/:projectId/generate', async (c) => {
     return c.json({ error: 'Project not found' }, 404)
   }
 
-  // Fetch all analyzed interviews for this project
+  // Fetch only the columns synthesizeInterviews needs, capped to MAX_SYNTHESIS_INTERVIEWS
   const interviews = await db
-    .select()
+    .select({
+      id: interview.id,
+      title: interview.title,
+      insights: interview.insights,
+    })
     .from(interview)
     .where(
       and(
@@ -154,6 +158,7 @@ app.post('/:projectId/generate', async (c) => {
       )
     )
     .orderBy(desc(interview.createdAt))
+    .limit(MAX_SYNTHESIS_INTERVIEWS)
 
   if (interviews.length < 2) {
     return c.json({ error: 'At least 2 analyzed interviews are required for synthesis' }, 400)
@@ -184,7 +189,9 @@ app.post('/:projectId/generate', async (c) => {
     const consensus = normalizeConsensus(parsed.consensus)
     const summary = typeof parsed.summary === 'string' && parsed.summary.trim() ? parsed.summary.trim() : null
 
-    const hasUsableData = themes.length > 0 || painPoints.length > 0 || featureRequests.length > 0 || summary
+    const hasUsableData =
+      themes.length > 0 || painPoints.length > 0 || featureRequests.length > 0 ||
+      consensus.agreements.length > 0 || consensus.outliers.length > 0 || summary != null
 
     if (!hasUsableData) {
       // Upsert as failed and clear stale data so the UI doesn't show outdated results

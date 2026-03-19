@@ -155,10 +155,17 @@ app.post('/:id/analyze', async (c) => {
         if (isPrivateHostname(targetHostname)) {
           throw new Error('Redirect to private address')
         }
-        response = await fetch(currentUrl, {
-          headers: { 'User-Agent': 'ScopePM/1.0 (competitor analysis)' },
-          redirect: 'manual',
-        })
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 10_000)
+        try {
+          response = await fetch(currentUrl, {
+            headers: { 'User-Agent': 'ScopePM/1.0 (competitor analysis)' },
+            redirect: 'manual',
+            signal: controller.signal,
+          })
+        } finally {
+          clearTimeout(timeoutId)
+        }
         if (response.status >= 300 && response.status < 400) {
           const location = response.headers.get('location')
           if (!location) break

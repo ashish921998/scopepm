@@ -80,6 +80,7 @@ function CompetitorsPage() {
   }, [search.new, initialProjectId])
 
   useEffect(() => {
+    let isCurrent = true
     const loadData = async () => {
       setLoading(true)
       setError('')
@@ -88,15 +89,18 @@ function CompetitorsPage() {
           apiFetch<{ projects: Project[] }>('/api/projects'),
           apiFetch<{ competitors: Competitor[] }>(initialProjectId ? `/api/competitors?projectId=${initialProjectId}` : '/api/competitors'),
         ])
+        if (!isCurrent) return
         setProjects(projectData.projects)
         setCompetitors(competitorData.competitors)
       } catch (err) {
+        if (!isCurrent) return
         setError(err instanceof Error ? err.message : 'Failed to load competitors')
       } finally {
-        setLoading(false)
+        if (isCurrent) setLoading(false)
       }
     }
     void loadData()
+    return () => { isCurrent = false }
   }, [initialProjectId])
 
   const projectNameMap = useMemo(
