@@ -82,7 +82,7 @@ function CompetitorsPage() {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true)
-      setError(null)
+      setError('')
       try {
         const [projectData, competitorData] = await Promise.all([
           apiFetch<{ projects: Project[] }>('/api/projects'),
