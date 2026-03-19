@@ -1,0 +1,33 @@
+packages/web/app/routes/dashboard/synthesis.$projectId.tsx
+  68b06a80dcfe9bf0 63,68
+packages/api/drizzle/0001_typical_tombstone.sql
+  68b06a80dcfe9bf0 1-20
+packages/web/app/routes/dashboard/competitors.tsx
+  68b06a80dcfe9bf0 141,143
+packages/api/drizzle/0000_closed_jasper_sitwell.sql
+  68b06a80dcfe9bf0 28-29
+CLAUDE.md
+  68b06a80dcfe9bf0 99
+packages/api/src/routes/competitors.ts
+  68b06a80dcfe9bf0 203-214
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.15",
+  "base_commit_sha": "585fb25ef74da2085f6611babc1529798f27d98d",
+  "prompts": {
+    "68b06a80dcfe9bf0": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "019d04e8-6997-78f1-91b3-a59650a1b154",
+        "model": "unknown"
+      },
+      "human_author": "Ashish Huddar <ashish.hudar@gmail.com>",
+      "messages": [],
+      "total_additions": 40,
+      "total_deletions": 97,
+      "accepted_lines": 39,
+      "overriden_lines": 0
+    }
+  }
+}
