@@ -157,17 +157,26 @@ function CompetitorsPage() {
     setSaving(false)
   }
 
-  const handleAnalyze = async (id: number) => {
+  const handleAnalyze = async (id: number, rerun = false) => {
     setAnalyzing(id)
     setError('')
 
     try {
       const data = await apiFetch<{ competitor: Competitor }>(`/api/competitors/${id}/analyze`, {
         method: 'POST',
+        body: JSON.stringify({ rerun }),
       })
       setCompetitors((current) => current.map((item) => item.id === id ? data.competitor : item))
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to analyze competitor')
+      // Optimistically mark as failed, then refresh with authoritative server state
+      setCompetitors((current) => current.map((item) => item.id === id ? { ...item, status: 'failed' } : item))
+      try {
+        const data = await apiFetch<{ competitor: Competitor }>(`/api/competitors/${id}`)
+        setCompetitors((current) => current.map((item) => item.id === id ? data.competitor : item))
+      } catch {
+        // Ignore refresh failure — optimistic update is already applied
+      }
     } finally {
       setAnalyzing(null)
     }
@@ -423,7 +432,16 @@ function CompetitorsPage() {
                       className="btn-primary btn-sm"
                       disabled={analyzing === item.id}
                     >
-                      {analyzing === item.id ? 'Analyzing...' : 'Analyze with AI'}
+                      {analyzing === item.id ? 'Analyzing...' : item.status === 'failed' ? 'Retry Analysis' : 'Analyze with AI'}
+                    </button>
+                  )}
+                  {item.status === 'analyzed' && (
+                    <button
+                      onClick={() => handleAnalyze(item.id, true)}
+                      className="btn-secondary btn-sm"
+                      disabled={analyzing === item.id}
+                    >
+                      {analyzing === item.id ? 'Re-analyzing...' : 'Re-analyze'}
                     </button>
                   )}
                   <button onClick={() => handleEditStart(item)} className="btn-secondary btn-sm">

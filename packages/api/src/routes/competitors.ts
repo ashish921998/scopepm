@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { competitor, project } from '../db/schema'
-import { and, desc, eq } from 'drizzle-orm'
+import { and, desc, eq, inArray } from 'drizzle-orm'
 import { getAnthropicClient, analyzeCompetitor } from '../lib/anthropic'
 import { extractTextFromHtml } from '../lib/html'
 import { getString, getStringArray, getUserId, isPrivateHostname, parseInteger, parseJsonFromText } from '../lib/utils'
@@ -143,41 +143,76 @@ app.post('/:id/analyze', async (c) => {
     return c.json({ error: 'Unauthorized' }, 403)
   }
 
+  const body = await c.req.json().catch(() => ({}))
+  const rerun = body && typeof body === 'object' && 'rerun' in body && body.rerun === true
+
+  // If already analyzed and not a rerun, return the existing competitor
+  if (found.status === 'analyzed' && !rerun) {
+    return c.json({ competitor: found })
+  }
+
+  // Atomic compare-and-set: only proceed if row is in a startable state
+  const allowedStatuses = rerun ? ['pending', 'failed', 'analyzed'] : ['pending', 'failed']
+  const [locked] = await db
+    .update(competitor)
+    .set({ status: 'analyzing', updatedAt: new Date() })
+    .where(and(eq(competitor.id, id), inArray(competitor.status, allowedStatuses)))
+    .returning()
+
+  if (!locked) {
+    return c.json({ error: 'Analysis already in progress' }, 409)
+  }
+
   try {
     // Fetch the competitor's website
+    const MAX_BODY_BYTES = 5 * 1024 * 1024 // 5 MB
     let html: string
     try {
       const maxRedirects = 5
       let currentUrl = found.url
       let response: Response | undefined
-      for (let i = 0; i <= maxRedirects; i++) {
-        const targetHostname = new URL(currentUrl).hostname
-        if (isPrivateHostname(targetHostname)) {
-          throw new Error('Redirect to private address')
-        }
-        const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), 10_000)
-        try {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 30_000)
+      try {
+        for (let i = 0; i <= maxRedirects; i++) {
+          const targetHostname = new URL(currentUrl).hostname
+          if (isPrivateHostname(targetHostname)) {
+            throw new Error('Redirect to private address')
+          }
           response = await fetch(currentUrl, {
             headers: { 'User-Agent': 'ScopePM/1.0 (competitor analysis)' },
             redirect: 'manual',
             signal: controller.signal,
           })
-        } finally {
-          clearTimeout(timeoutId)
+          if (response.status >= 300 && response.status < 400) {
+            const location = response.headers.get('location')
+            if (!location) break
+            currentUrl = new URL(location, currentUrl).href
+            continue
+          }
+          break
         }
-        if (response.status >= 300 && response.status < 400) {
-          const location = response.headers.get('location')
-          if (!location) break
-          currentUrl = new URL(location, currentUrl).href
-          continue
+        if (!response || !response.ok) {
+          throw new Error(`HTTP ${response?.status ?? 'no response'}`)
         }
-        break
+
+        const contentType = response.headers.get('content-type') || ''
+        if (!contentType.includes('text/') && !contentType.includes('html')) {
+          throw new Error('Response is not HTML/text')
+        }
+
+        const contentLength = response.headers.get('content-length')
+        if (contentLength && parseInt(contentLength, 10) > MAX_BODY_BYTES) {
+          throw new Error('Response body too large')
+        }
+
+        html = await response.text()
+        if (html.length > MAX_BODY_BYTES) {
+          html = html.slice(0, MAX_BODY_BYTES)
+        }
+      } finally {
+        clearTimeout(timeoutId)
       }
-      if (!response || !response.ok) {
-        throw new Error(`HTTP ${response?.status ?? 'no response'}`)
-      }
-      html = await response.text()
     } catch (fetchError) {
       await db
         .update(competitor)

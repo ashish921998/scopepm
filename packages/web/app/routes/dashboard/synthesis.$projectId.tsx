@@ -138,6 +138,7 @@ function SynthesisPage() {
       setSynthesis(res.synthesis)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate synthesis')
+      setSynthesis(null)
     } finally {
       setGenerating(false)
     }
