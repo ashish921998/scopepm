@@ -57,6 +57,8 @@ function SynthesisPage() {
   const [error, setError] = useState('')
 
   const loadSynthesis = async () => {
+    setLoading(true)
+    setError('')
     try {
       const res = await apiFetch<{ synthesis: SynthesisData | null }>(`/api/synthesis/${projectId}`)
       setSynthesis(res.synthesis)
@@ -182,7 +184,7 @@ function SynthesisPage() {
                   <div className="synthesis-frequency-bar-track">
                     <div
                       className="synthesis-frequency-bar-fill"
-                      style={{ width: `${(theme.frequency / synthesis.interviewCount) * 100}%` }}
+                      style={{ width: `${synthesis.interviewCount ? (theme.frequency / synthesis.interviewCount) * 100 : 0}%` }}
                     />
                   </div>
                   {theme.relatedQuotes && theme.relatedQuotes.length > 0 && (
@@ -214,7 +216,7 @@ function SynthesisPage() {
                   <div className="synthesis-frequency-bar-track">
                     <div
                       className="synthesis-frequency-bar-fill"
-                      style={{ width: `${(pp.frequency / synthesis.interviewCount) * 100}%` }}
+                      style={{ width: `${synthesis.interviewCount ? (pp.frequency / synthesis.interviewCount) * 100 : 0}%` }}
                     />
                   </div>
                 </div>
@@ -239,7 +241,7 @@ function SynthesisPage() {
                   <div className="synthesis-frequency-bar-track">
                     <div
                       className="synthesis-frequency-bar-fill"
-                      style={{ width: `${(fr.frequency / synthesis.interviewCount) * 100}%` }}
+                      style={{ width: `${synthesis.interviewCount ? (fr.frequency / synthesis.interviewCount) * 100 : 0}%` }}
                     />
                   </div>
                 </div>

@@ -61,7 +61,7 @@ app.post('/:projectId/generate', async (c) => {
     return c.json({ error: 'Project not found' }, 404)
   }
 
-  // Fetch all analyzed interviews for this project
+  // Fetch analyzed interviews for this project, most recent first
   const interviews = await db
     .select()
     .from(interview)
@@ -72,6 +72,7 @@ app.post('/:projectId/generate', async (c) => {
         eq(interview.status, 'analyzed')
       )
     )
+    .orderBy(desc(interview.createdAt))
 
   if (interviews.length < 2) {
     return c.json({ error: 'At least 2 analyzed interviews are required for synthesis' }, 400)

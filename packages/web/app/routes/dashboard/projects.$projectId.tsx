@@ -141,7 +141,7 @@ function ProjectDetailPage() {
         </div>
 
         <div className="stats-grid compact-stats-grid">
-          {[...Array(3)].map((_, i) => (
+          {[...Array(4)].map((_, i) => (
             <SkeletonStatCard key={i} />
           ))}
         </div>
