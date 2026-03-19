@@ -152,7 +152,7 @@ app.post('/:id/analyze', async (c) => {
       let response: Response | undefined
       for (let i = 0; i <= maxRedirects; i++) {
         const targetHostname = new URL(currentUrl).hostname
-        if (i > 0 && isPrivateHostname(targetHostname)) {
+        if (isPrivateHostname(targetHostname)) {
           throw new Error('Redirect to private address')
         }
         response = await fetch(currentUrl, {

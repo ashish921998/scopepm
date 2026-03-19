@@ -143,7 +143,7 @@ function SynthesisPage() {
         <div>
           <h1 className="page-title">Cross-Interview Synthesis</h1>
           <p className="page-subtitle">
-            Patterns across {synthesis.interviewCount} interviews · Generated {new Date(synthesis.createdAt).toLocaleDateString()}
+            Patterns across {synthesis.interviewCount} interviews · Generated {new Date(synthesis.updatedAt).toLocaleDateString()}
           </p>
         </div>
         <div className="page-header-actions">

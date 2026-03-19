@@ -70,7 +70,7 @@ function DashboardIndex() {
         </div>
 
         <div className="stats-grid">
-          {[...Array(4)].map((_, i) => (
+          {[...Array(5)].map((_, i) => (
             <SkeletonStatCard key={i} />
           ))}
         </div>
