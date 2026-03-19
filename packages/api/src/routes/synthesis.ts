@@ -117,7 +117,7 @@ app.post('/:projectId/generate', async (c) => {
           featureRequests: JSON.stringify(featureRequests),
           consensus: JSON.stringify(consensus),
           aiSummary: typeof parsed.summary === 'string' ? parsed.summary : null,
-          interviewCount: interviews.length,
+          interviewCount: Math.min(interviews.length, 20),
           status: 'completed',
         })
         .returning()

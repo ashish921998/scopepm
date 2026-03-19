@@ -45,3 +45,19 @@ export function getStringArray(value: unknown): string[] {
     ? value.filter((item): item is string => typeof item === 'string')
     : []
 }
+
+export function isPrivateHostname(hostname: string): boolean {
+  const h = hostname.toLowerCase()
+  return (
+    h === 'localhost' ||
+    h === '169.254.169.254' ||
+    /^127\./.test(h) ||
+    /^10\./.test(h) ||
+    /^192\.168\./.test(h) ||
+    /^172\.(1[6-9]|2\d|3[01])\./.test(h) ||
+    h === '0.0.0.0' ||
+    h === '[::1]' ||
+    h.endsWith('.local') ||
+    h.endsWith('.internal')
+  )
+}

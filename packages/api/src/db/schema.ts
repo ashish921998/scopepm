@@ -134,8 +134,8 @@ export const competitor = pgTable('competitor', {
   pricing: text('pricing'),
   positioning: text('positioning'),
   status: varchar('status', { length: 50 }).notNull().default('pending'),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => ({
   userIdIdx: index('competitor_user_id_idx').on(table.userId),
   projectIdIdx: index('competitor_project_id_idx').on(table.projectId),

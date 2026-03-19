@@ -3,7 +3,7 @@ import { competitor, project } from '../db/schema'
 import { and, desc, eq } from 'drizzle-orm'
 import { getAnthropicClient, analyzeCompetitor } from '../lib/anthropic'
 import { extractTextFromHtml } from '../lib/html'
-import { getString, getStringArray, getUserId, parseInteger, parseJsonFromText } from '../lib/utils'
+import { getString, getStringArray, getUserId, isPrivateHostname, parseInteger, parseJsonFromText } from '../lib/utils'
 import { AppEnv } from '../lib/hono'
 import { logger } from '../lib/logger'
 
@@ -91,22 +91,7 @@ app.post('/', async (c) => {
 
   try {
     const parsed = new URL(url)
-    const hostname = parsed.hostname.toLowerCase()
-
-    // Block cloud metadata, localhost, and private IP ranges
-    const blocked =
-      hostname === 'localhost' ||
-      hostname === '169.254.169.254' ||
-      /^127\./.test(hostname) ||
-      /^10\./.test(hostname) ||
-      /^192\.168\./.test(hostname) ||
-      /^172\.(1[6-9]|2\d|3[01])\./.test(hostname) ||
-      hostname === '0.0.0.0' ||
-      hostname === '[::1]' ||
-      hostname.endsWith('.local') ||
-      hostname.endsWith('.internal')
-
-    if (blocked) {
+    if (isPrivateHostname(parsed.hostname)) {
       return c.json({ error: 'URL points to a private or reserved address' }, 400)
     }
   } catch {
@@ -168,6 +153,10 @@ app.post('/:id/analyze', async (c) => {
       })
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`)
+      }
+      const finalHostname = new URL(response.url).hostname
+      if (isPrivateHostname(finalHostname)) {
+        throw new Error('Redirect to private address')
       }
       html = await response.text()
     } catch (fetchError) {
